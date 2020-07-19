@@ -1,5 +1,6 @@
 package fbrs.controller;
 
+import fbrs.model.Seller;
 import fbrs.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +43,7 @@ public class UsersController implements Initializable {
     private CheckBox selectAll;
 
     private FilteredList<User> users;
+    private int viewType = TYPE_SELLER;
 
     @FXML
     public void back(ActionEvent event) throws IOException {
@@ -59,12 +61,18 @@ public class UsersController implements Initializable {
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getId()).matches(regex));
+        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getId()).matches(regex) || String.valueOf(p.getPhone()).matches(regex));
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<User> observableList = FXCollections.observableArrayList();
+        observableList.add(new Seller(1,"سليمان","0592813232",10,1));
+        observableList.add(new Seller(2,"محمد","0592813232",10,1));
+        observableList.add(new Seller(3,"خليل","0592813232",10,1));
+        observableList.add(new Seller(4,"محمود","0592813232",10,1));
+        observableList.add(new Seller(5,"عبد","0592813232",10,1));
+        observableList.add(new Seller(6,"أحمد","0592813232",10,1));
         users = new FilteredList<>(observableList);
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -74,8 +82,21 @@ public class UsersController implements Initializable {
         marketColumn.setCellValueFactory(new PropertyValueFactory<>("market"));
         shipTypeColumn.setCellValueFactory(new PropertyValueFactory<>("shipType"));
 
+
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
         selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
+
+        //todo:update Title based on type;
+        switch (this.viewType) {
+            case TYPE_SELLER:
+                //Todo:get sellers from database;
+                table.getColumns().remove(shipTypeColumn);
+                break;
+            case TYPE_FISHERMAN:
+                //Todo:get fishermen from database;
+                table.getColumns().remove(marketColumn);
+                table.getColumns().add(shipTypeColumn);
+        }
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> search());
 
@@ -88,16 +109,7 @@ public class UsersController implements Initializable {
     }
 
     public void setViewType(int viewType) {
-        //todo:update Title based on type;
-        switch (viewType) {
-            case TYPE_SELLER:
-                //Todo:get sellers from database;
-                table.getColumns().remove(shipTypeColumn);
-                break;
-            case TYPE_FISHERMAN:
-                //Todo:get fishermen from database;
-                table.getColumns().remove(marketColumn);
-        }
+        this.viewType = viewType;
     }
 
     private void selectAllBoxes(ActionEvent e) {

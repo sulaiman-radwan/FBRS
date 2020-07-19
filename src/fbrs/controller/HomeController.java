@@ -36,6 +36,7 @@ public class HomeController {
         //access the controller and call a method
         UsersController controller = loader.getController();
         controller.setViewType(type);
+        controller.initialize(null, null);
 
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
