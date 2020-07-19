@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="org.jfxtras:jmetro:8.6.13" type="repository">
+    <properties maven-id="org.jfxtras:jmetro:8.6.13" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jfxtras/jmetro/8.6.13/jmetro-8.6.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/controlsfx/controlsfx/8.40.14/controlsfx-8.40.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
