@@ -5,23 +5,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fbrs.controller.UsersController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="fbrs.controller.UsersController">
     <center>
         <VBox spacing="16.0" BorderPane.alignment="CENTER">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="عنوان">
                 <font>
-                    <Font size="24.0" />
+                    <Font size="24.0"/>
                 </font>
             </Text>
             <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false" />
-                    <TableColumn fx:id="idColumn" prefWidth="75.0" sortable="false" text="الرقم" />
-                    <TableColumn fx:id="nameColumn" prefWidth="150.0" sortable="false" text="الاسم" />
-                    <TableColumn fx:id="phoneColumn" prefWidth="125.0" sortable="false" text="الجوال" />
-                    <TableColumn fx:id="balanceColumn" prefWidth="75.0" sortable="false" text="الرصيد" />
-                    <TableColumn fx:id="marketColumn" prefWidth="100.0" sortable="false" text="السوق" />
-                    <TableColumn fx:id="shipTypeColumn" prefWidth="100.0" sortable="false" text="نوع المركبة" />
+                    <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
+                    <TableColumn fx:id="idColumn" prefWidth="75.0" sortable="false" text="الرقم"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="150.0" sortable="false" text="الاسم"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="125.0" sortable="false" text="الجوال"/>
+                    <TableColumn fx:id="balanceColumn" prefWidth="75.0" sortable="false" text="الرصيد"/>
+                    <TableColumn fx:id="marketColumn" prefWidth="100.0" sortable="false" text="السوق"/>
+                    <TableColumn fx:id="shipTypeColumn" prefWidth="100.0" sortable="false" text="نوع المركبة"/>
                 </columns>
             </TableView>
         </VBox>
@@ -29,21 +32,22 @@
     <left>
         <VBox spacing="8.0" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
             </padding>
             <Button mnemonicParsing="false" onAction="#back" text="رجوع">
                 <VBox.margin>
-                    <Insets bottom="16.0" />
+                    <Insets bottom="16.0"/>
                 </VBox.margin>
             </Button>
-            <TextField fx:id="searchField" promptText=" بحث" />
+            <TextField fx:id="searchField" promptText=" بحث"/>
             <Button fx:id="newUserBtn" mnemonicParsing="false" onAction="#newUser" text="مستخدم جديد">
                 <VBox.margin>
-                    <Insets top="8.0" />
+                    <Insets top="8.0"/>
                 </VBox.margin>
             </Button>
-            <Button fx:id="printUserBtn" mnemonicParsing="false" onAction="#printUser" text="طباعة مستخدم" />
-            <Button fx:id="deleteSelectedBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false" onAction="#deleteSelected" text="حذف المحدد" />
+            <Button fx:id="printUserBtn" mnemonicParsing="false" onAction="#printUser" text="طباعة مستخدم"/>
+            <Button fx:id="deleteSelectedBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
+                    onAction="#deleteSelected" text="حذف المحدد"/>
         </VBox>
     </left>
 </BorderPane>
