@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="500.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fbrs.controller.PrintDetailsController">
+<top>
+    <Label text="إختر الأعمدة المراد طباعتها" BorderPane.alignment="CENTER">
+        <font>
+            <Font size="24.0" />
+        </font>
+        <BorderPane.margin>
+            <Insets bottom="30.0" top="30.0" />
+        </BorderPane.margin>
+    </Label>
+</top>
+<center>
+    <VBox fx:id="printList" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="50.0" top="20.0" />
+         </BorderPane.margin></VBox>
+</center>
+<bottom>
+    <Button mnemonicParsing="false" onAction="#onPrint" text="طباعة" BorderPane.alignment="CENTER">
+        <BorderPane.margin>
+            <Insets bottom="30.0" />
+        </BorderPane.margin>
+        <font>
+            <Font name="Times New Roman" size="24.0" />
+        </font>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
+</bottom>
+</BorderPane>
