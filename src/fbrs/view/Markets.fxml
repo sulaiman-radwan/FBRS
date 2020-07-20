@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.MarketsController">
+    <top>
+        <HBox prefHeight="66.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <Button fx:id="backBtn" alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                    onAction="#back" text="رجوع">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <HBox.margin>
+                    <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                </HBox.margin>
+            </Button>
+            <AnchorPane prefHeight="66.0" prefWidth="640.0">
+                <HBox.margin>
+                    <Insets bottom="28.0"/>
+                </HBox.margin>
+                <Text layoutX="267.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="الأسواق">
+                    <font>
+                        <Font size="36.0"/>
+                    </font>
+                </Text>
+            </AnchorPane>
+        </HBox>
+    </top>
+    <center>
+        <GridPane BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <BorderPane.margin>
+                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+            </BorderPane.margin>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox prefHeight="80.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <Button fx:id="AddNewMarketBtn" mnemonicParsing="false" onAction="#AddNewMarket" text="إضافة سوق جديد">
+                <HBox.margin>
+                    <Insets left="200.0" top="32.0"/>
+                </HBox.margin>
+            </Button>
+            <Button fx:id="printAllMarketsBtn" mnemonicParsing="false" onAction="#printAllMarkets"
+                    text="طباعة تقرير كل الأسواق">
+                <HBox.margin>
+                    <Insets left="150.0" top="32.0"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </bottom>
+</BorderPane>
