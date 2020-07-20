@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("view/home.fxml"));
-        primaryStage.setTitle("FBRS");
+        primaryStage.setTitle("برنامج إدارة بُكس السمك");
         primaryStage.getIcons().add(new Image("fbrs/photos/App_icon.png"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

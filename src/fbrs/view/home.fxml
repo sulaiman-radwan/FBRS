@@ -1,85 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0" spacing="32.0" style="-fx-background-color: #FFF;" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fbrs.controller.HomeController">
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity"
+      minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
+      spacing="32.0" style="-fx-background-color: #FFF;"
+      stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/10.0.2-internal"
+      fx:controller="fbrs.controller.HomeController">
     <opaqueInsets>
-        <Insets />
+        <Insets/>
     </opaqueInsets>
     <padding>
-        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
     </padding>
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="برنامج إدارة بُكس السمك" textAlignment="CENTER">
         <font>
-            <Font size="24.0" />
+            <Font size="26.0"/>
         </font>
     </Text>
-    <GridPane hgap="16.0" prefHeight="400.0" prefWidth="768.0" vgap="16.0">
+    <GridPane alignment="CENTER" hgap="8.0" vgap="8.0">
         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
         </rowConstraints>
-        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="الأسواق">
+        <Button contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="128.0" prefWidth="256.0"
+                text="الأسواق">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Market.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewFishermen" text="الصيادين" GridPane.columnIndex="1">
+        <Button contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewFishermen" prefHeight="128.0"
+                prefWidth="256.0" text="الصيادين" GridPane.columnIndex="1">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Fisherman.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewSellers" text="التجار" GridPane.rowIndex="1">
+        <Button contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewSellers" prefHeight="128.0"
+                prefWidth="256.0" text="التجار" GridPane.rowIndex="1">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/seller.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text=" تبييض كشف صياد" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text=" تبييض كشف صياد" GridPane.columnIndex="1"
+                GridPane.rowIndex="1">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Report.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="طباعة تقارير سريعة" GridPane.rowIndex="2">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="طباعة تقارير سريعة" GridPane.rowIndex="2">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/print.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="المخزن" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="المخزن" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Warehouse.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="كشف استلام" GridPane.rowIndex="3">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="كشف استلام" GridPane.rowIndex="3">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Report.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="كشف تسليم" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="كشف تسليم" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Report.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="القيود" GridPane.rowIndex="4">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="القيود" GridPane.rowIndex="4">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/progress.png"/>
+                </ImageView>
+            </graphic>
         </Button>
-        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="سلة المحذوفات" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
+                prefHeight="128.0" prefWidth="256.0" text="سلة المحذوفات" GridPane.columnIndex="1"
+                GridPane.rowIndex="4">
             <cursor>
-                <Cursor fx:constant="HAND" />
+                <Cursor fx:constant="HAND"/>
             </cursor>
+            <graphic>
+                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../photos/Trash.png"/>
+                </ImageView>
+            </graphic>
         </Button>
     </GridPane>
 </VBox>

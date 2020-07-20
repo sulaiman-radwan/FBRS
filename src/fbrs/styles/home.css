@@ -1,11 +1,11 @@
 .vbox {
     -fx-background-color: #FFF;
-    -fx-text-fill:  #131313;
+    -fx-text-fill: #131313;
 }
 
 .button {
     -fx-background-color: #FFF;
-    -fx-text-fill:  #131313;
+    -fx-text-fill: #131313;
     -fx-min-width: 100%;
     -fx-min-height: 100%;
     -fx-font-size: 18px;
