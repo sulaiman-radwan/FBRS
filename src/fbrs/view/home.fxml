@@ -1,100 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
-      spacing="32.0" xmlns="http://javafx.com/javafx/8"
-      fx:controller="fbrs.controller.HomeController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0" spacing="32.0" style="-fx-background-color: #FFF;" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fbrs.controller.HomeController">
     <opaqueInsets>
-        <Insets/>
+        <Insets />
     </opaqueInsets>
     <padding>
-        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
     </padding>
-    <children>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="FBRS" textAlignment="CENTER">
-            <font>
-                <Font size="24.0"/>
-            </font>
-        </Text>
-        <GridPane hgap="16.0" vgap="16.0">
-            <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            </rowConstraints>
-            <children>
-                <Button mnemonicParsing="false" text="الأسواق">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#viewFishermen" text="الصيادين" GridPane.columnIndex="1">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#viewSellers" text="التجار" GridPane.rowIndex="1">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text=" تبييض كشف صياد"
-                        GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="طباعة تقارير سريعة"
-                        GridPane.rowIndex="2">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="المخزن" GridPane.columnIndex="1"
-                        GridPane.rowIndex="2">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="كشف استلام" GridPane.rowIndex="3">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="كشف تسليم" GridPane.columnIndex="1"
-                        GridPane.rowIndex="3">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="القيود" GridPane.rowIndex="4">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="سلة المحذوفات"
-                        GridPane.columnIndex="1" GridPane.rowIndex="4">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-            </children>
-        </GridPane>
-    </children>
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="برنامج إدارة بُكس السمك" textAlignment="CENTER">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Text>
+    <GridPane hgap="16.0" prefHeight="400.0" prefWidth="768.0" vgap="16.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="الأسواق">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewFishermen" text="الصيادين" GridPane.columnIndex="1">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" onAction="#viewSellers" text="التجار" GridPane.rowIndex="1">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text=" تبييض كشف صياد" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="طباعة تقارير سريعة" GridPane.rowIndex="2">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="المخزن" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="كشف استلام" GridPane.rowIndex="3">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="كشف تسليم" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="القيود" GridPane.rowIndex="4">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <Button contentDisplay="CENTER" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="سلة المحذوفات" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+    </GridPane>
 </VBox>
