@@ -6,17 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,22 +34,14 @@ public class UsersController implements Initializable {
     public Button newUserBtn;
     public Button printUserBtn;
     public Button deleteSelectedBtn;
-    private CheckBox selectAll;
+    public BorderPane rootPane;
+    public Text Title;
 
     private FilteredList<User> users;
 
     @FXML
-    public void back(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("../view/home.fxml"));
-        Scene home = new Scene(parent);
-
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        window.setScene(home);
-        JMetro jMetro = new JMetro(Style.LIGHT);
-        jMetro.setScene(home);
-
-        window.show();
+    public void back(ActionEvent event) {
+        NavigationUtil.navTo(rootPane, NavigationUtil.HOME_FXML, event);
     }
 
     private void search() {
@@ -79,7 +66,7 @@ public class UsersController implements Initializable {
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> search());
 
-        selectAll = new CheckBox();
+        CheckBox selectAll = new CheckBox();
         selectColumn.setGraphic(selectAll);
         selectAll.setOnAction(this::selectAllBoxes);
 
@@ -91,10 +78,12 @@ public class UsersController implements Initializable {
         //todo:update Title based on type;
         switch (viewType) {
             case TYPE_SELLER:
+                Title.setText("التجار");
                 //Todo:get sellers from database;
                 table.getColumns().remove(shipTypeColumn);
                 break;
             case TYPE_FISHERMAN:
+                Title.setText("الصيادين");
                 //Todo:get fishermen from database;
                 table.getColumns().remove(marketColumn);
         }
@@ -106,8 +95,9 @@ public class UsersController implements Initializable {
         }
     }
 
-    public void newUser(ActionEvent event) {
-        //Todo
+    public void newUser(ActionEvent event) throws IOException {
+        NavigationUtil.createNewPrimaryStage("../view/addNewUser.fxml",
+                "إضافة مستخدم جديد", "fbrs/photos/App_icon.png");
     }
 
     public void printUser(ActionEvent event) {

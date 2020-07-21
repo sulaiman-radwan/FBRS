@@ -1,12 +1,17 @@
 package fbrs.controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 
-public class RecycleBinController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class RecycleBinController implements Initializable {
     public TableView table;
     public TableColumn selectColumn;
     public TableColumn idColumn;
@@ -17,6 +22,7 @@ public class RecycleBinController {
     public Button restoreBtn;
     public Button FinalDeletionBtn;
     public Button EmptyRecycleBinBtn;
+    public BorderPane rootPane;
 
     public void restore(ActionEvent actionEvent) {
     }
@@ -28,5 +34,11 @@ public class RecycleBinController {
     }
 
     public void back(ActionEvent actionEvent) {
+        NavigationUtil.navTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 }

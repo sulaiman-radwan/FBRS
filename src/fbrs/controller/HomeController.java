@@ -3,47 +3,62 @@ package fbrs.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
-
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import static fbrs.controller.UsersController.TYPE_FISHERMAN;
-import static fbrs.controller.UsersController.TYPE_SELLER;
-
-public class HomeController {
+public class HomeController implements Initializable {
+    public Parent homeVBox;
 
     @FXML
-    public void viewSellers(ActionEvent event) throws IOException {
-        viewUsers(TYPE_SELLER, event);
+    public void viewSellers() throws IOException {
+        viewUsers(UsersController.TYPE_SELLER);
     }
 
     @FXML
-    public void viewFishermen(ActionEvent event) throws IOException {
-        viewUsers(TYPE_FISHERMAN, event);
+    public void viewFishermen() throws IOException {
+        viewUsers(UsersController.TYPE_FISHERMAN);
     }
 
-    private void viewUsers(int type, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/users.fxml"));
-        Parent parent = loader.load();
+    private void viewUsers(int viewType) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.USERS_FXML));
 
-        Scene scene = new Scene(parent);
+        Parent root = loader.load();
+        homeVBox.getScene().setRoot(root);
 
-        //access the controller and call a method
         UsersController controller = loader.getController();
-        controller.setViewType(type);
-
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        JMetro jMetro = new JMetro(Style.LIGHT);
-        jMetro.setScene(scene);
-
-        window.setScene(scene);
-        window.show();
+        controller.setViewType(viewType);
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public void onStorage() throws IOException {
+        NavigationUtil.createNewPrimaryStage("../view/storage.fxml",
+                "المخزن", "fbrs/photos/Warehouse.png");
+    }
+
+    public void onRecycleBin(ActionEvent actionEvent) {
+        NavigationUtil.navTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
+    }
+
+    public void onAllEntries(ActionEvent actionEvent) {
+        NavigationUtil.navTo(homeVBox, NavigationUtil.VIEW_ALL_ENTRIES_FXML, actionEvent);
+    }
+
+    public void onInAndOutRecord(ActionEvent actionEvent) {
+        NavigationUtil.navTo(homeVBox, NavigationUtil.IN_AND_OUT_RECORD_FXML, actionEvent);
+    }
+
+    public void onFishermanInputReport(ActionEvent actionEvent) {
+        NavigationUtil.navTo(homeVBox, NavigationUtil.FISHERMAN_INPUT_REPORT_FXML, actionEvent);
+    }
+
+    public void onMarkets(ActionEvent actionEvent) {
+        NavigationUtil.navTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
+    }
 }
