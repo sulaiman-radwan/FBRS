@@ -18,8 +18,8 @@
                 <columns>
                     <TableColumn fx:id="fromColumn" prefWidth="110.0" sortable="false" text="من"/>
                     <TableColumn fx:id="toColumn" prefWidth="110.0" sortable="false" text="إلى"/>
-                    <TableColumn fx:id="dateCreateColumn" prefWidth="120.0" sortable="false" text="تاريخ الإنشاء"/>
-                    <TableColumn fx:id="dateUpdateColumn" prefWidth="120.0" sortable="false" text="تاريخ التعديل"/>
+                    <TableColumn fx:id="dateCreatedColumn" prefWidth="120.0" sortable="false" text="تاريخ الإنشاء"/>
+                    <TableColumn fx:id="dateUpdatedColumn" prefWidth="120.0" sortable="false" text="تاريخ التعديل"/>
                     <TableColumn fx:id="typeColumn" prefWidth="110.0" sortable="false" text="نوع القيد"/>
                     <TableColumn fx:id="quantityColumn1" sortable="false" text="الكمية"/>
                     <TableColumn fx:id="note" prefWidth="150.0" sortable="false" text="ملاحظات"/>

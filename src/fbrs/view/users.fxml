@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.UsersController">
     <center>
@@ -34,18 +36,27 @@
                 <VBox.margin>
                     <Insets top="16.0"/>
                 </VBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
             </Button>
             <Button fx:id="printUserBtn" mnemonicParsing="false" onAction="#printUser" prefWidth="150.0"
                     text="طباعة مستخدم">
                 <VBox.margin>
                     <Insets top="16.0"/>
                 </VBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
             </Button>
             <Button fx:id="deleteSelectedBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
                     onAction="#deleteSelected" prefWidth="150.0" text="حذف المحدد">
                 <VBox.margin>
                     <Insets top="16.0"/>
                 </VBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
             </Button>
         </VBox>
     </left>
@@ -55,12 +66,16 @@
                 <HBox.margin>
                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
                 </HBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
             </Button>
             <AnchorPane prefHeight="60.0" prefWidth="673.0">
                 <HBox.margin>
                     <Insets bottom="28.0"/>
                 </HBox.margin>
-                <Text layoutX="330.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="عنوان">
+                <Text fx:id="Title" layoutX="330.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="عنوان">
                     <font>
                         <Font size="24.0"/>
                     </font>

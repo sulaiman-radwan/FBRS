@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity"
+      minHeight="-Infinity" fx:id="homeVBox"
       minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
       spacing="32.0" style="-fx-background-color: #FFF;"
       stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/10.0.2-internal"
@@ -36,7 +36,7 @@
             <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
             <RowConstraints valignment="CENTER" vgrow="ALWAYS"/>
         </rowConstraints>
-        <Button contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+        <Button onAction="#onMarkets" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                 minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="128.0" prefWidth="256.0"
                 text="الأسواق">
             <cursor>
@@ -72,7 +72,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onFishermanInputReport" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text=" تبييض كشف صياد" GridPane.columnIndex="1"
                 GridPane.rowIndex="1">
@@ -97,7 +97,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onStorage" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text="المخزن" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <cursor>
@@ -109,7 +109,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onInAndOutRecord" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text="كشف استلام" GridPane.rowIndex="3">
             <cursor>
@@ -121,7 +121,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onInAndOutRecord" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text="كشف تسليم" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <cursor>
@@ -133,7 +133,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onAllEntries" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text="القيود" GridPane.rowIndex="4">
             <cursor>
@@ -145,7 +145,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+        <Button onAction="#onRecycleBin" contentDisplay="TOP" layoutX="10.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
                 prefHeight="128.0" prefWidth="256.0" text="سلة المحذوفات" GridPane.columnIndex="1"
                 GridPane.rowIndex="4">
