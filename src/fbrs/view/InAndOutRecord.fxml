@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.InAndOutRecordController">
+    <center>
+        <VBox spacing="16.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="numberColumn" prefWidth="122.0" sortable="false" text="العدد"/>
+                    <TableColumn fx:id="idColumn" prefWidth="133.0" sortable="false" text="رقم المستخدم"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="279.0" sortable="false" text="اسم المستخدم"/>
+                    <TableColumn fx:id="noteColumn" prefWidth="265.0" sortable="false" text="ملاحظات"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <top>
+        <HBox prefHeight="66.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <Button fx:id="backBtn" alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                    onAction="#back" text="رجوع">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <HBox.margin>
+                    <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                </HBox.margin>
+            </Button>
+            <AnchorPane prefHeight="66.0" prefWidth="640.0">
+                <HBox.margin>
+                    <Insets bottom="28.0"/>
+                </HBox.margin>
+                <Text layoutX="139.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="كشف استلام أو تسليم">
+                    <font>
+                        <Font size="36.0"/>
+                    </font>
+                </Text>
+            </AnchorPane>
+        </HBox>
+    </top>
+    <bottom>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="100.0" prefWidth="800.0"
+                   BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="16.0"/>
+            </BorderPane.margin>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="52.0" prefWidth="798.0">
+                <HBox layoutX="311.0" layoutY="10.0">
+                    <Label text="العدد الاجمالي">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets right="16.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label text="120">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Label>
+                </HBox>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                <HBox layoutX="16.0" layoutY="15.0" prefWidth="824.0">
+                    <Label text="العدد">
+                        <HBox.margin>
+                            <Insets right="16.0"/>
+                        </HBox.margin>
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Label>
+                    <TextField fx:id="number">
+                        <HBox.margin>
+                            <Insets right="32.0"/>
+                        </HBox.margin>
+                    </TextField>
+                    <Label text="تاجر/صياد">
+                        <HBox.margin>
+                            <Insets right="16.0"/>
+                        </HBox.margin>
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Label>
+                    <TextField fx:id="user">
+                        <HBox.margin>
+                            <Insets right="32.0"/>
+                        </HBox.margin>
+                    </TextField>
+                    <TextField fx:id="note" promptText="ملاحظات">
+                        <HBox.margin>
+                            <Insets right="32.0"/>
+                        </HBox.margin>
+                    </TextField>
+                    <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" text="إضافة">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Button>
+                </HBox>
+            </AnchorPane>
+        </SplitPane>
+    </bottom>
+</BorderPane>
+
