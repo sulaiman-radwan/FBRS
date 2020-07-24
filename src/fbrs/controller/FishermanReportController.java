@@ -34,13 +34,13 @@ public class FishermanReportController implements Initializable {
     }
 
     public void specialCases(ActionEvent actionEvent) throws IOException {
-        NavigationUtil.createNewPrimaryStage("../view/specialCases.fxml",
-                "حالات خاصة للبُكس", "fbrs/photos/App_icon.png");
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.SPECIAL_CASES_FXML,
+                "حالات خاصة للبُكس", "/fbrs/photos/App_icon.png");
     }
 
     public void editFisherman(ActionEvent actionEvent) throws IOException {
-        NavigationUtil.createNewPrimaryStage("../view/FishermanProfile.fxml",
-                "تفاصيل الصياد", "fbrs/photos/Fisherman.png");
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.FISHERMAN_PROFILE_FXML,
+                "تفاصيل الصياد", "/fbrs/photos/Fisherman.png");
     }
 
     @Override

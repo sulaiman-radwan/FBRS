@@ -23,8 +23,8 @@ public class MarketsController implements Initializable {
     }
 
     public void printAllMarkets() throws IOException {
-        NavigationUtil.createNewPrimaryStage("../view/printDetails.fxml",
-                "تفاصيل الطباعة", "fbrs/photos/print.png");
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.STORAGE_FXML,
+                "تفاصيل الطباعة", "/fbrs/photos/print.png");
     }
 
     @Override

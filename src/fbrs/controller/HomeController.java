@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,8 +39,8 @@ public class HomeController implements Initializable {
     }
 
     public void onStorage() throws IOException {
-        NavigationUtil.createNewPrimaryStage("../view/storage.fxml",
-                "المخزن", "fbrs/photos/Warehouse.png");
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.STORAGE_FXML,
+                "المخزن", "/fbrs/photos/Warehouse.png");
     }
 
     public void onRecycleBin(ActionEvent actionEvent) {

@@ -1,5 +1,6 @@
 package fbrs;
 
+import fbrs.controller.NavigationUtil;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,9 +18,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("view/home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource(NavigationUtil.HOME_FXML));
         primaryStage.setTitle("برنامج إدارة بُكس السمك");
-        primaryStage.getIcons().add(new Image("fbrs/photos/App_icon.png"));
+        primaryStage.getIcons().add(new Image("/fbrs/photos/App_icon.png"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         //primaryStage.setMaximized(true);

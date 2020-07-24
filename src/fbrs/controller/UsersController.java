@@ -96,8 +96,8 @@ public class UsersController implements Initializable {
     }
 
     public void newUser(ActionEvent event) throws IOException {
-        NavigationUtil.createNewPrimaryStage("../view/addNewUser.fxml",
-                "إضافة مستخدم جديد", "fbrs/photos/App_icon.png");
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.ADD_NEW_USER_FXML,
+                "إضافة مستخدم جديد", "/fbrs/photos/App_icon.png");
     }
 
     public void printUser(ActionEvent event) {
