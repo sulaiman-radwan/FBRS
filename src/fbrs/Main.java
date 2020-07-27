@@ -1,6 +1,6 @@
 package fbrs;
 
-import fbrs.controller.NavigationUtil;
+import fbrs.utils.NavigationUtil;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

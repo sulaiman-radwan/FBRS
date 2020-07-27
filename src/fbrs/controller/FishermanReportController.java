@@ -1,5 +1,6 @@
 package fbrs.controller;
 
+import fbrs.utils.NavigationUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

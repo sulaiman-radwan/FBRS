@@ -1,6 +1,7 @@
 package fbrs.controller;
 
 import fbrs.model.User;
+import fbrs.utils.NavigationUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -41,7 +42,7 @@ public class UsersController implements Initializable {
 
     @FXML
     public void back(ActionEvent event) {
-        NavigationUtil.navTo(rootPane, NavigationUtil.HOME_FXML, event);
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, event);
     }
 
     private void search() {

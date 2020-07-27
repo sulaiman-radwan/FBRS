@@ -1,5 +1,6 @@
 package fbrs.controller;
 
+import fbrs.utils.NavigationUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -27,7 +28,7 @@ public class FishermanInputReportController implements Initializable {
     public BorderPane rootPane;
 
     public void back(ActionEvent actionEvent) {
-        NavigationUtil.navTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
     }
 
     public void onAdd(ActionEvent actionEvent) {

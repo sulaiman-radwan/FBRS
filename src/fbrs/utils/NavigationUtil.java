@@ -1,4 +1,4 @@
-package fbrs.controller;
+package fbrs.utils;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +31,7 @@ public class NavigationUtil {
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
 
 
-    public static void navTo(Parent rootPane, String path, ActionEvent event) {
+    public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(NavigationUtil.class.getResource(path));
             rootPane.getScene().setRoot(root);

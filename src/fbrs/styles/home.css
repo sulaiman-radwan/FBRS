@@ -1,10 +1,9 @@
-.vbox {
-    -fx-background-color: #FFF;
-    -fx-text-fill: #131313;
+.root {
+    -fx-background-color: white;
 }
 
 .button {
-    -fx-background-color: #FFF;
+    -fx-background-color: white;
     -fx-text-fill: #131313;
     -fx-min-width: 100%;
     -fx-min-height: 100%;
@@ -12,8 +11,9 @@
 }
 
 .button:hover {
-    -fx-border-color: #E6E6E6;
-    -fx-border-width: 5;
+    -fx-background-color: #E6E6E6;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
     -fx-border-radius: 1;
 }
 

@@ -1,5 +1,6 @@
 package fbrs.controller;
 
+import fbrs.utils.NavigationUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,22 +45,22 @@ public class HomeController implements Initializable {
     }
 
     public void onRecycleBin(ActionEvent actionEvent) {
-        NavigationUtil.navTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
     }
 
     public void onAllEntries(ActionEvent actionEvent) {
-        NavigationUtil.navTo(homeVBox, NavigationUtil.VIEW_ALL_ENTRIES_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.VIEW_ALL_ENTRIES_FXML, actionEvent);
     }
 
     public void onInAndOutRecord(ActionEvent actionEvent) {
-        NavigationUtil.navTo(homeVBox, NavigationUtil.IN_AND_OUT_RECORD_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.IN_AND_OUT_RECORD_FXML, actionEvent);
     }
 
     public void onFishermanInputReport(ActionEvent actionEvent) {
-        NavigationUtil.navTo(homeVBox, NavigationUtil.FISHERMAN_INPUT_REPORT_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.FISHERMAN_INPUT_REPORT_FXML, actionEvent);
     }
 
     public void onMarkets(ActionEvent actionEvent) {
-        NavigationUtil.navTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
     }
 }
