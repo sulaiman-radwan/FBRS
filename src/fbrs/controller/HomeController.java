@@ -63,4 +63,12 @@ public class HomeController implements Initializable {
     public void onMarkets(ActionEvent actionEvent) {
         NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
     }
+
+    public void onBackup(ActionEvent actionEvent) {
+        //Todo;
+    }
+
+    public void onHelp(ActionEvent actionEvent) {
+        //Todo;
+    }
 }
