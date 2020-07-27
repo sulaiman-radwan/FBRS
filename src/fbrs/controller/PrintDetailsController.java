@@ -19,7 +19,7 @@ public class PrintDetailsController implements Initializable {
         CreateCheckBoxTree(array, printList);
     }
 
-    public static void CreateCheckBoxTree(String[] array, VBox vBox){
+    private void CreateCheckBoxTree(String[] array, VBox vBox){
         CheckBoxTreeItem<String> rootItem = createCheckBoxTreeItem("الكل");
         rootItem.setExpanded(true);
         for(int i = 0; i < array.length; i++) {
@@ -33,7 +33,7 @@ public class PrintDetailsController implements Initializable {
         vBox.getChildren().addAll(treeView);
     }
 
-    public static CheckBoxTreeItem<String> createCheckBoxTreeItem(String value) {
+    private CheckBoxTreeItem<String> createCheckBoxTreeItem(String value) {
         CheckBoxTreeItem<String> checkBoxTreeItem = new CheckBoxTreeItem<>(value);
         checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             // هاي الميثود عشان لما يعمل صح بترسل إشارة، هان بتعمل الشفل بعد ما يعمل صح على الفلتر المطلوب

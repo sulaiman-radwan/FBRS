@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0"
+            prefWidth="1000.0" style="-fx-background-color: Gainsboro;"
+            fx:controller="fbrs.controller.EntriesController">
+    <center>
+        <VBox spacing="16.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+            <TableView fx:id="table" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
+                    <TableColumn fx:id="fromColumn" prefWidth="150.0" sortable="false" text="من"/>
+                    <TableColumn fx:id="toColumn" prefWidth="150.0" sortable="false" text="إلى"/>
+                    <TableColumn fx:id="dateCreatedColumn" prefWidth="100.0" sortable="false" text="تاريخ الإنشاء"/>
+                    <TableColumn fx:id="dateUpdatedColumn" prefWidth="105.0" sortable="false" text="تاريخ التعديل"/>
+                    <TableColumn fx:id="typeColumn" prefWidth="150.0" sortable="false" text="نوع القيد"/>
+                    <TableColumn fx:id="quantityColumn1" prefWidth="100.0" sortable="false" text="الكمية"/>
+                    <TableColumn fx:id="note" prefWidth="200.0" sortable="false" text="ملاحظات"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <top>
+        <VBox BorderPane.alignment="CENTER">
+            <HBox fx:id="HBox" alignment="CENTER_LEFT" prefHeight="75.0">
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <Button fx:id="backBtn" alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                        onAction="#back" text="رجوع">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                    </HBox.margin>
+                </Button>
+                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="جميع القيود">
+                        <font>
+                            <Font size="28.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets/>
+                        </HBox.margin>
+                    </Text>
+                    <Label fx:id="accountLabel" text="الرصيد">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="32.0" top="32.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label fx:id="count" text="100">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="16.0" top="32.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label fx:id="buksaLabel" text="بُكسة">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="16.0" top="32.0"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+            </HBox>
+            <Separator/>
+            <HBox alignment="CENTER" prefHeight="75.0" spacing="16.0">
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <Button fx:id="EditUserProfileBtn" layoutX="498.0" layoutY="42.0" mnemonicParsing="false"
+                        onAction="#onEditUserProfile" prefWidth="150.0" text="تعديل التفاصيل">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="onDeleteBtn" mnemonicParsing="false" onAction="#onDelete" prefWidth="150.0"
+                        text="حذف المحدد">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <DatePicker onAction="#fromComboBox" prefWidth="150.0" promptText="تاريخ الإنشاء">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                </DatePicker>
+                <DatePicker onAction="#dateUpdatedComboBox" prefWidth="150.0" promptText="تاريخ التعديل">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </DatePicker>
+                <Button fx:id="TypeEntriesBtn" layoutX="42.0" layoutY="42.0" mnemonicParsing="false"
+                        onAction="#onEntryType" prefWidth="150.0" text="نوع القيد">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="SpecialCasesBtn" layoutX="498.0" layoutY="42.0" mnemonicParsing="false"
+                        onAction="#onSpecialCases" prefWidth="150.0" text="حالات خاصة للبكس">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <padding>
+                    <Insets bottom="16.0" top="16.0"/>
+                </padding>
+            </HBox>
+        </VBox>
+    </top>
+</BorderPane>

@@ -12,7 +12,7 @@
     <top>
         <Label text="المخزن" BorderPane.alignment="CENTER">
             <font>
-                <Font size="36.0"/>
+                <Font size="28.0"/>
             </font>
             <BorderPane.margin>
                 <Insets bottom="30.0" top="30.0"/>

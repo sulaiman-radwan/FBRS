@@ -49,11 +49,7 @@ public class HomeController implements Initializable {
     }
 
     public void onAllEntries(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.VIEW_ALL_ENTRIES_FXML, actionEvent);
-    }
-
-    public void onInAndOutRecord(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.IN_AND_OUT_RECORD_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.ENTRIES_FXML, actionEvent);
     }
 
     public void onFishermanInputReport(ActionEvent actionEvent) {
@@ -70,5 +66,23 @@ public class HomeController implements Initializable {
 
     public void onHelp(ActionEvent actionEvent) {
         //Todo;
+    }
+
+    public void onInAndOutRecordSeller(ActionEvent actionEvent) throws IOException {
+        viewOnInAndOutRecord(InAndOutRecordController.TYPE_SELLER);
+    }
+
+    public void onInAndOutRecordFisherman(ActionEvent actionEvent) throws IOException {
+        viewOnInAndOutRecord(InAndOutRecordController.TYPE_FISHERMAN);
+    }
+
+    private void viewOnInAndOutRecord(int viewType) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.IN_AND_OUT_RECORD_FXML));
+
+        Parent root = loader.load();
+        homeVBox.getScene().setRoot(root);
+
+        InAndOutRecordController controller = loader.getController();
+        controller.setViewType(viewType);
     }
 }

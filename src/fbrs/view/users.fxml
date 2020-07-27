@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity"
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.UsersController">
     <center>
@@ -62,6 +61,9 @@
     </left>
     <top>
         <HBox prefHeight="60.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="8.0"/>
+            </padding>
             <Button mnemonicParsing="false" onAction="#back" text="رجوع">
                 <HBox.margin>
                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
@@ -70,17 +72,13 @@
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
-            <AnchorPane prefHeight="60.0" prefWidth="673.0">
-                <HBox.margin>
-                    <Insets bottom="28.0"/>
-                </HBox.margin>
-                <Text fx:id="Title" layoutX="330.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                      text="عنوان">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                <Text fx:id="Title" strokeType="OUTSIDE" strokeWidth="0.0" text="عنوان">
                     <font>
-                        <Font size="24.0"/>
+                        <Font size="28.0"/>
                     </font>
                 </Text>
-            </AnchorPane>
+            </HBox>
         </HBox>
     </top>
 </BorderPane>

@@ -36,7 +36,7 @@
         </rowConstraints>
         <Button contentDisplay="TOP" graphicTextGap="8.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
-                onAction="#onMarkets" prefHeight="150.0" prefWidth="160.0" text="الأسواق">
+                onAction="#onMarkets" prefHeight="150.0" prefWidth="175.0" text="الأسواق">
             <cursor>
                 <Cursor fx:constant="HAND"/>
             </cursor>
@@ -48,7 +48,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
-                onAction="#viewFishermen" prefHeight="150.0" prefWidth="160.0" text="الصيادين" GridPane.rowIndex="1">
+                onAction="#viewFishermen" prefHeight="150.0" prefWidth="175.0" text="الصيادين" GridPane.rowIndex="1">
             <cursor>
                 <Cursor fx:constant="HAND"/>
             </cursor>
@@ -60,7 +60,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" maxHeight="1.7976931348623157E308"
                 maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false"
-                onAction="#viewSellers" prefHeight="150.0" prefWidth="160.0" text="التجار" GridPane.rowIndex="2">
+                onAction="#viewSellers" prefHeight="150.0" prefWidth="175.0" text="التجار" GridPane.rowIndex="2">
             <cursor>
                 <Cursor fx:constant="HAND"/>
             </cursor>
@@ -72,7 +72,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onFishermanInputReport" prefHeight="150.0" prefWidth="160.0"
+                mnemonicParsing="false" onAction="#onFishermanInputReport" prefHeight="150.0" prefWidth="175.0"
                 text=" تبييض كشف صياد" GridPane.columnIndex="1">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -85,7 +85,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onStorage" prefHeight="150.0" prefWidth="160.0" text="المخزن"
+                mnemonicParsing="false" onAction="#onStorage" prefHeight="150.0" prefWidth="175.0" text="المخزن"
                 GridPane.columnIndex="2" GridPane.rowIndex="1">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -98,7 +98,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onInAndOutRecord" prefHeight="150.0" prefWidth="160.0"
+                mnemonicParsing="false" onAction="#onInAndOutRecordSeller" prefHeight="150.0" prefWidth="175.0"
                 text="كشف استلام" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -111,7 +111,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onInAndOutRecord" prefHeight="150.0" prefWidth="160.0"
+                mnemonicParsing="false" onAction="#onInAndOutRecordFisherman" prefHeight="150.0" prefWidth="175.0"
                 text="كشف تسليم" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -124,7 +124,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onAllEntries" prefHeight="150.0" prefWidth="160.0" text="القيود"
+                mnemonicParsing="false" onAction="#onAllEntries" prefHeight="150.0" prefWidth="175.0" text="القيود"
                 GridPane.columnIndex="2">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -137,7 +137,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onRecycleBin" prefHeight="150.0" prefWidth="160.0"
+                mnemonicParsing="false" onAction="#onRecycleBin" prefHeight="150.0" prefWidth="175.0"
                 text="سلة المحذوفات" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -150,7 +150,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onBackup" prefHeight="150.0" prefWidth="160.0" text="النسخ الاحتياطي"
+                mnemonicParsing="false" onAction="#onBackup" prefHeight="150.0" prefWidth="175.0" text="النسخ الاحتياطي"
                 GridPane.columnIndex="3" GridPane.rowIndex="0">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -163,7 +163,7 @@
         </Button>
         <Button contentDisplay="TOP" graphicTextGap="8.0" layoutX="10.0" layoutY="12.0"
                 maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
-                mnemonicParsing="false" onAction="#onHelp" prefHeight="150.0" prefWidth="160.0" text="مساعدة"
+                mnemonicParsing="false" onAction="#onHelp" prefHeight="150.0" prefWidth="175.0" text="مساعدة"
                 GridPane.columnIndex="3" GridPane.rowIndex="1">
             <cursor>
                 <Cursor fx:constant="HAND"/>
