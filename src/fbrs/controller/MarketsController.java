@@ -24,7 +24,7 @@ public class MarketsController implements Initializable {
     }
 
     public void printAllMarkets() throws IOException {
-        NavigationUtil.createNewPrimaryStage(NavigationUtil.STORAGE_FXML,
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.PRINT_DETAILS_FXML,
                 "تفاصيل الطباعة", "/fbrs/photos/print.png");
     }
 

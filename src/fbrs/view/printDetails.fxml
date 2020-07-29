@@ -10,7 +10,7 @@
 <top>
     <Label text="إختر الأعمدة المراد طباعتها" BorderPane.alignment="CENTER">
         <font>
-            <Font size="24.0" />
+            <Font size="28.0" />
         </font>
         <BorderPane.margin>
             <Insets bottom="30.0" top="30.0" />

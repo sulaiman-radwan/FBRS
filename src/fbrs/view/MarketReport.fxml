@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fbrs.controller.MarketReportController">
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.MarketReportController">
     <center>
         <VBox spacing="16.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
@@ -33,8 +35,8 @@
                     <Insets/>
                 </VBox.margin>
             </TextField>
-            <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport" prefWidth="150.0"
-                    text="طباعة التقارير المختصرة">
+            <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport"
+                    prefWidth="150.0" text="طباعة التقارير المختصرة">
                 <VBox.margin>
                     <Insets top="20.0"/>
                 </VBox.margin>
@@ -51,8 +53,8 @@
                     <Insets top="20.0"/>
                 </VBox.margin>
             </Button>
-            <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false" onAction="#newSeller"
-                    prefHeight="25.0" prefWidth="150.0" text="تاجر جديد">
+            <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
+                    onAction="#newSeller" prefHeight="25.0" prefWidth="150.0" text="تاجر جديد">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -71,27 +73,24 @@
             </Button>
         </VBox>
     </left>
-   <top>
-       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-           <Button alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#back" text="رجوع">
-               <cursor>
-                   <Cursor fx:constant="HAND"/>
-               </cursor>
-               <HBox.margin>
-                   <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
-               </HBox.margin>
-           </Button>
-           <AnchorPane prefWidth="700.0">
-               <HBox.margin>
-                   <Insets bottom="28.0"/>
-               </HBox.margin>
-               <Text layoutX="284.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="تقرير السوق"
-                     AnchorPane.bottomAnchor="26.96484375" AnchorPane.topAnchor="25.15234375">
-                   <font>
-                       <Font size="36.0"/>
-                   </font>
-               </Text>
-           </AnchorPane>
-       </HBox>
-   </top>
+    <top>
+        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <Button alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#back"
+                    text="رجوع">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <HBox.margin>
+                    <Insets bottom="16.0" left="16.0" top="16.0"/>
+                </HBox.margin>
+            </Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="تقرير السوق">
+                    <font>
+                        <Font size="36.0"/>
+                    </font>
+                </Text>
+            </HBox>
+        </HBox>
+    </top>
 </BorderPane>
