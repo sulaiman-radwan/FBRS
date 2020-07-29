@@ -60,8 +60,9 @@ public class HomeController implements Initializable {
         NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
     }
 
-    public void onBackup(ActionEvent actionEvent) {
-        //Todo;
+    public void onBackup(ActionEvent actionEvent) throws IOException {
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.BACKUP_FXML,
+                "النسخ الاحتياطي", "/fbrs/photos/restore.png");
     }
 
     public void onHelp(ActionEvent actionEvent) {

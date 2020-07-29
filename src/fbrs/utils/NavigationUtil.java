@@ -28,6 +28,7 @@ public class NavigationUtil {
     public final static String SPECIAL_CASES_FXML = "/fbrs/view/SpecialCases.fxml";
     public final static String STORAGE_FXML = "/fbrs/view/storage.fxml";
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
+    public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
@@ -62,6 +63,7 @@ public class NavigationUtil {
 
         JMetro jMetro = new JMetro(Style.LIGHT);
         jMetro.setScene(scene);
+
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.show();
     }

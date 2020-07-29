@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="16.0"
+      style="-fx-background-color: white;"
+      fx:controller="fbrs.controller.BackupController">
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+    </padding>
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="النسخ الاحتياطي">
+        <font>
+            <Font size="28.0"/>
+        </font>
+    </Text>
+    <AnchorPane>
+        <StackPane prefHeight="64.0" style="-fx-border-color: black;"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
+            <VBox spacing="16.0">
+                <StackPane.margin>
+                    <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                </StackPane.margin>
+                <HBox spacing="10.0">
+                    <Label maxHeight="1.7976931348623157E308" prefWidth="50.0" text="الاسم">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <TextField prefWidth="250.0">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </TextField>
+                    <Button mnemonicParsing="false" prefWidth="96.0" text="تصدير">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Button>
+                </HBox>
+            </VBox>
+        </StackPane>
+        <Label layoutX="164.0" layoutY="105.0" style="-fx-background-color: white;" text="تصدير نسخة احتياطية"
+               AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <AnchorPane layoutX="26.0" layoutY="58.0" style="-fx-background-color: white;">
+        <StackPane prefHeight="64.0" style="-fx-border-color: black; -fx-background-color: white;"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
+            <VBox spacing="8.0">
+                <StackPane.margin>
+                    <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                </StackPane.margin>
+                <HBox spacing="10.0">
+                    <Label maxHeight="1.7976931348623157E308" prefWidth="50.0" text="الملف">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <TextField prefWidth="250.0">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </TextField>
+                    <Button mnemonicParsing="false" prefWidth="96.0" text="استعراض">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Button>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0">
+                    <Button mnemonicParsing="false" prefWidth="96.0" text="استيراد">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Button>
+                </HBox>
+            </VBox>
+        </StackPane>
+        <Label layoutX="164.0" layoutY="105.0" style="-fx-background-color: white;" text="استيراد نسخة احتياطية"
+               AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+</VBox>
