@@ -4,18 +4,45 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public abstract class User {
+    public final static int ADMIN_TYPE = 0;
+    public final static int SELLER_TYPE = 1;
+    public final static int FISHERMAN_LAUNCH_TYPE = 5;
+    public final static int FISHERMAN_HASAKA_TYPE = 6;
+
     int id;
+    int darshKey;
     String name;
     String phone;
     int balance;
     BooleanProperty selected;
 
-    public User(int id, String name, String phone, int balance) {
+    public User(int id, int darshKey, String name, String phone, int balance) {
         this.id = id;
+        this.darshKey = darshKey;
         this.name = name;
         this.phone = phone;
         this.balance = balance;
         this.selected = new SimpleBooleanProperty(false);
+    }
+
+    public static int getUserTypeID(String type) {
+        switch (type) {
+            case "صياد لنش":
+                return FISHERMAN_LAUNCH_TYPE;
+            case "صياد حسكة":
+                return FISHERMAN_HASAKA_TYPE;
+            case "تاجر":
+                return SELLER_TYPE;
+        }
+        return -1;
+    }
+
+    public int getDarshKey() {
+        return darshKey;
+    }
+
+    public void setDarshKey(int darshKey) {
+        this.darshKey = darshKey;
     }
 
     public int getId() {

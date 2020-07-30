@@ -6,20 +6,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.UsersController">
     <center>
         <VBox spacing="16.0" BorderPane.alignment="CENTER">
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <TableView onMouseClicked="#onClick" fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="35.0" sortable="false"/>
-                    <TableColumn fx:id="idColumn" prefWidth="72.0" sortable="false" text="الرقم"/>
-                    <TableColumn fx:id="nameColumn" prefWidth="156.0" sortable="false" text="الاسم"/>
-                    <TableColumn fx:id="phoneColumn" prefWidth="111.0" sortable="false" text="الجوال"/>
+                    <TableColumn fx:id="idColumn" prefWidth="75.0" sortable="false" text="الرقم"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="160.0" sortable="false" text="الاسم"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="120.0" sortable="false" text="الجوال"/>
                     <TableColumn fx:id="balanceColumn" prefWidth="85.0" sortable="false" text="الرصيد"/>
-                    <TableColumn fx:id="marketColumn" prefWidth="81.0" sortable="false" text="السوق"/>
-                    <TableColumn fx:id="shipTypeColumn" prefWidth="76.0" sortable="false" text="نوع المركبة"/>
+                    <TableColumn fx:id="marketColumn" prefWidth="150.0" sortable="false" text="السوق"/>
+                    <TableColumn fx:id="shipTypeColumn" prefWidth="95.0" sortable="false" text="نوع المركبة"/>
                 </columns>
             </TableView>
         </VBox>

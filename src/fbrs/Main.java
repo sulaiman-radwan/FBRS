@@ -1,5 +1,6 @@
 package fbrs;
 
+import fbrs.model.DatabaseManager;
 import fbrs.utils.NavigationUtil;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,11 +24,18 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("/fbrs/photos/App_icon.png"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        //primaryStage.setMaximized(true);
+        primaryStage.setMaximized(true);
 
         JMetro jMetro = new JMetro(Style.LIGHT);
         jMetro.setScene(scene);
 
         primaryStage.show();
+        DatabaseManager.getInstance().getConnection();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        DatabaseManager.getInstance().exit();
     }
 }

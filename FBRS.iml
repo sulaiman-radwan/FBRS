@@ -7,6 +7,7 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="org.postgresql:postgresql:42.2.12" level="project" />
     <orderEntry type="library" name="org.jfxtras:jmetro:8.6.13" level="project" />
   </component>
 </module>

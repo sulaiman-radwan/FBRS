@@ -23,7 +23,7 @@
                     <TableColumn fx:id="dateCreatedColumn" prefWidth="100.0" sortable="false" text="تاريخ الإنشاء"/>
                     <TableColumn fx:id="dateUpdatedColumn" prefWidth="105.0" sortable="false" text="تاريخ التعديل"/>
                     <TableColumn fx:id="typeColumn" prefWidth="150.0" sortable="false" text="نوع القيد"/>
-                    <TableColumn fx:id="quantityColumn1" prefWidth="100.0" sortable="false" text="الكمية"/>
+                    <TableColumn fx:id="quantityColumn" prefWidth="100.0" sortable="false" text="الكمية"/>
                     <TableColumn fx:id="note" prefWidth="200.0" sortable="false" text="ملاحظات"/>
                 </columns>
             </TableView>

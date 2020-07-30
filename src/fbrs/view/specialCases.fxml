@@ -54,7 +54,7 @@
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <ComboBox fx:id="type_user" prefHeight="25.0" prefWidth="183.0" promptText="اختر نوع الحالة"
+                <ComboBox fx:id="userType" prefHeight="25.0" prefWidth="183.0" promptText="اختر نوع الحالة"
                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </GridPane>
         </VBox>

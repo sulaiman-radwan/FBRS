@@ -32,11 +32,10 @@ public class InAndOutRecordController implements Initializable {
         NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
     }
 
-    public void onAdd(ActionEvent actionEvent) {
+    public void onAdd() {
     }
 
     public void setViewType(int viewType) {
-        //todo:update Title based on type;
         switch (viewType) {
             case TYPE_SELLER:
                 Title.setText("كشف إستلام من التجار");

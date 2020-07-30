@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="500.0" prefWidth="450.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.UserProfileController">
     <top>
@@ -21,7 +22,7 @@
     </top>
     <center>
         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-            <GridPane prefHeight="381.0" prefWidth="350.0">
+            <GridPane fx:id="gridPane" prefHeight="381.0" prefWidth="350.0">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="146.0"/>
                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="204.0"/>
@@ -39,12 +40,12 @@
                 <VBox.margin>
                     <Insets left="50.0" right="50.0"/>
                 </VBox.margin>
-                <TextField fx:id="id" promptText="ادخل الرقم التعريفي الجديد" text="201"
+                <CustomTextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER_RIGHT" fx:id="id" promptText="ادخل الرقم التعريفي الجديد" text="201"
                            GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <font>
                         <Font size="14.0"/>
                     </font>
-                </TextField>
+                </CustomTextField>
                 <Label text="الاسم" GridPane.rowIndex="2">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>
@@ -61,7 +62,7 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <Label fx:id="marketLabel" text="السوق" GridPane.rowIndex="4">
+                <Label fx:id="TypeLabel" text="السوق" GridPane.rowIndex="4">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>
                     </font>
@@ -81,8 +82,6 @@
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <ComboBox fx:id="marketComboBox" prefHeight="25.0" prefWidth="208.0"
-                          promptText="اختر السوق الجديد" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 <Label text="الرقم التعريفي" GridPane.rowIndex="1">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>

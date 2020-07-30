@@ -28,12 +28,12 @@
                             <Font size="14.0"/>
                         </font>
                     </Label>
-                    <TextField prefWidth="250.0">
+                    <TextField fx:id="ExportFile" prefWidth="250.0">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button mnemonicParsing="false" prefWidth="96.0" text="تصدير">
+                    <Button onAction="#onExport" mnemonicParsing="false" prefWidth="96.0" text="تصدير">
                         <font>
                             <Font size="14.0"/>
                         </font>
@@ -61,19 +61,19 @@
                             <Font size="14.0"/>
                         </font>
                     </Label>
-                    <TextField prefWidth="250.0">
+                    <TextField fx:id="BrowseFile" prefWidth="250.0">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button mnemonicParsing="false" prefWidth="96.0" text="استعراض">
+                    <Button onAction="#onBrowse" mnemonicParsing="false" prefWidth="96.0" text="استعراض">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </Button>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0">
-                    <Button mnemonicParsing="false" prefWidth="96.0" text="استيراد">
+                    <Button onAction="#onImport" mnemonicParsing="false" prefWidth="96.0" text="استيراد">
                         <font>
                             <Font size="14.0"/>
                         </font>
