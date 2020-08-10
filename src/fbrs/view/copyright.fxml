@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="700.0"
+            xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.CopyrightController">
+    <top>
+        <Label text="برمجة OSUMM 😀 " BorderPane.alignment="CENTER">
+            <font>
+                <Font size="28.0"/>
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="30.0" top="30.0"/>
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <GridPane prefHeight="285.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <BorderPane.margin>
+                <Insets bottom="16.0" left="16.0" right="16.0"/>
+            </BorderPane.margin>
+            <Label text="المشرف العام  :  د.م.اسامه إبراهيم رضوان">
+                <font>
+                    <Font name="Times New Roman" size="18.0"/>
+                </font>
+                <GridPane.margin>
+                    <Insets left="30.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label text="مدير المشروع :  م.سليمان إبراهيم رضوان" GridPane.rowIndex="1">
+                <font>
+                    <Font name="Times New Roman" size="18.0"/>
+                </font>
+                <GridPane.margin>
+                    <Insets left="30.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label text="Supervisor  : Osama Radwan" GridPane.columnIndex="1" GridPane.halignment="RIGHT"
+                   GridPane.valignment="CENTER">
+                <font>
+                    <Font name="Times New Roman" size="18.0"/>
+                </font>
+            </Label>
+            <Label text="Project manager : Sulaiman Radwan" GridPane.columnIndex="1" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <font>
+                    <Font name="Times New Roman" size="18.0"/>
+                </font>
+            </Label>
+            <VBox alignment="CENTER_LEFT" spacing="20.0" GridPane.rowIndex="2">
+                <GridPane.margin>
+                    <Insets left="30.0"/>
+                </GridPane.margin>
+                <Label text="المبرمجين : م.اسامه رمضان الزيان">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                </Label>
+                <Label text="م.محمد أسامة الهباش">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets left="80.0"/>
+                    </VBox.margin>
+                </Label>
+                <Label text="م.محمد نافذ أبو عقلين">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets left="80.0"/>
+                    </VBox.margin>
+                </Label>
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label text="programers : Usama R. Al Zayan">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                </Label>
+                <Label text="Mohammed AlHabbash">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets right="100.0"/>
+                    </VBox.margin>
+                </Label>
+                <Label text="Mohammed Abo Aqlain">
+                    <font>
+                        <Font name="Times New Roman" size="18.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets right="100.0"/>
+                    </VBox.margin>
+                </Label>
+            </VBox>
+        </GridPane>
+    </center>
+</BorderPane>

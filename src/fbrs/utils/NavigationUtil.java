@@ -1,6 +1,10 @@
 package fbrs.utils;
 
+import fbrs.controller.AddNewUserController;
+import fbrs.controller.EntriesController;
 import fbrs.controller.UserProfileController;
+import fbrs.model.Market;
+import fbrs.model.Seller;
 import fbrs.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +33,7 @@ public class NavigationUtil {
     public final static String STORAGE_FXML = "/fbrs/view/storage.fxml";
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
+    public static final String COPYRIGHT_FXML = "/fbrs/view/copyright.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
@@ -40,22 +45,24 @@ public class NavigationUtil {
         }
     }
 
-    public static void createNewPrimaryStage(String path, String nameStage, String photoPath) throws IOException {
+    public static void createNewPrimaryStage(String path, String stageName, String photoPath) throws IOException {
         Parent root = FXMLLoader.load(NavigationUtil.class.getResource(path));
-        showPrimaryStage(nameStage, photoPath, root);
+        showPrimaryStage(stageName, photoPath, root);
     }
 
-    public static void ViewUserProfile(String path, String nameStage, String photoPath, User user) throws IOException {
-        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(path));
+    public static Stage ViewUserProfile(User user) throws IOException {
+        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.USERS_PROFILE_FXML));
         Parent root = loader.load();
-        showPrimaryStage(nameStage, photoPath, root);
+        Stage stage = showPrimaryStage((user instanceof Seller ? "تعديل تفاصيل التاجر" : "تعديل تفاصيل الصايد"),
+                (user instanceof Seller ? "/fbrs/photos/seller.png" : "/fbrs/photos/Fisherman.png"), root);
         UserProfileController controller = loader.getController();
         controller.viewUser(user);
+        return stage;
     }
 
-    private static void showPrimaryStage(String nameStage, String photoPath, Parent root) {
+    private static Stage showPrimaryStage(String stageName, String photoPath, Parent root) {
         Stage primaryStage = new Stage();
-        primaryStage.setTitle(nameStage);
+        primaryStage.setTitle(stageName);
         primaryStage.getIcons().add(new Image(photoPath));
         primaryStage.setResizable(false);
         Scene scene = new Scene(root);
@@ -66,5 +73,27 @@ public class NavigationUtil {
 
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.show();
+        return primaryStage;
+    }
+
+    public static Stage AddSpecificUser(String stageName, Market market, int viewType) throws IOException {
+        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.ADD_NEW_USER_FXML));
+        Parent root = loader.load();
+        Stage stage = showPrimaryStage(stageName, "/fbrs/photos/App_icon.png", root);
+        AddNewUserController controller = loader.getController();
+        controller.newSpecificUser(market, viewType);
+        return stage;
+    }
+
+    public static Stage viewUserEntries(User user) throws IOException {
+        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.ENTRIES_FXML));
+        Parent root = loader.load();
+        Stage stage = showPrimaryStage(((user instanceof Seller ? "قيود التاجر : " : "قيود الصياد : ") + user.getName()),
+                (user instanceof Seller ? "/fbrs/photos/seller.png" : "/fbrs/photos/Fisherman.png"), root);
+
+        EntriesController controller = loader.getController();
+        controller.hideBackButton(false);
+        controller.setViewType(user);
+        return stage;
     }
 }

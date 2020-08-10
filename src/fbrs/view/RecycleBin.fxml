@@ -17,10 +17,10 @@
             <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
-                    <TableColumn fx:id="idColumn" prefWidth="88.0" sortable="false" text="رفم التاجر"/>
-                    <TableColumn fx:id="nameColumn" prefWidth="213.0" sortable="false" text="اسم التاجر"/>
-                    <TableColumn fx:id="phoneColumn" prefWidth="181.0" sortable="false" text="الجوال"/>
-                    <TableColumn fx:id="balanceColumn" prefWidth="86.0" sortable="false" text="الرصيد"/>
+                    <TableColumn fx:id="idColumn" prefWidth="120.0" sortable="false" text="رفم المستخدم"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="250.0" sortable="false" text="اسم المستخدم"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="180.0" sortable="false" text="الجوال"/>
+                    <TableColumn fx:id="balanceColumn" prefWidth="85.0" sortable="false" text="الرصيد"/>
                 </columns>
             </TableView>
         </VBox>
@@ -46,7 +46,7 @@
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
-            <Button fx:id="FinalDeletionBtn" mnemonicParsing="false" onAction="#FinalDeletion" prefWidth="150.0"
+            <Button fx:id="FinalDeletionBtn" mnemonicParsing="false" onAction="#deleteSelected" prefWidth="150.0"
                     text="حذف نهائي">
                 <cursor>
                     <Cursor fx:constant="HAND"/>

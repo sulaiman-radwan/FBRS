@@ -6,7 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.MarketReportController">
     <center>
@@ -14,7 +15,8 @@
             <BorderPane.margin>
                 <Insets/>
             </BorderPane.margin>
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <TableView onMouseClicked="#onClick" fx:id="table" prefHeight="200.0" prefWidth="200.0"
+                       VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
                     <TableColumn fx:id="idColumn" prefWidth="88.0" sortable="false" text="رفم التاجر"/>
@@ -22,6 +24,9 @@
                     <TableColumn fx:id="phoneColumn" prefWidth="181.0" sortable="false" text="الجوال"/>
                     <TableColumn fx:id="balanceColumn" prefWidth="86.0" sortable="false" text="الرصيد"/>
                 </columns>
+                <VBox.margin>
+                    <Insets left="16.0"/>
+                </VBox.margin>
             </TableView>
         </VBox>
     </center>
@@ -30,13 +35,19 @@
             <padding>
                 <Insets bottom="16.0" left="16.0" right="16.0" top="8.0"/>
             </padding>
-            <TextField fx:id="searchField" promptText=" بحث">
+            <TextField fx:id="searchField" prefWidth="180.0" promptText=" بحث">
                 <VBox.margin>
                     <Insets/>
                 </VBox.margin>
             </TextField>
+            <DatePicker fx:id="datePicker" onAction="#onChangeDate" prefWidth="180.0"
+                        promptText="عرض التقرير من تاريخ">
+                <VBox.margin>
+                    <Insets top="20.0"/>
+                </VBox.margin>
+            </DatePicker>
             <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport"
-                    prefWidth="150.0" text="طباعة التقارير المختصرة">
+                    prefWidth="180.0" text="طباعة التقارير المختصرة">
                 <VBox.margin>
                     <Insets top="20.0"/>
                 </VBox.margin>
@@ -45,7 +56,7 @@
                 </cursor>
             </Button>
             <Button fx:id="printDetailedReportBtn" mnemonicParsing="false" onAction="#printDetailedReport"
-                    prefWidth="150.0" text="طباعة التقارير مع التفصيل">
+                    prefWidth="180.0" text="طباعة التقارير مع التفصيل">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -54,7 +65,7 @@
                 </VBox.margin>
             </Button>
             <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
-                    onAction="#newSeller" prefHeight="25.0" prefWidth="150.0" text="تاجر جديد">
+                    onAction="#newSeller" prefWidth="180.0" text="تاجر جديد">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -62,7 +73,7 @@
                     <Insets top="20.0"/>
                 </VBox.margin>
             </Button>
-            <Button fx:id="resetAccountsBtn" mnemonicParsing="false" onAction="#resetAccounts" prefWidth="150.0"
+            <Button fx:id="resetAccountsBtn" mnemonicParsing="false" onAction="#zeroBalances" prefWidth="180.0"
                     text="تصفير الحسابات">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
@@ -85,7 +96,7 @@
                 </HBox.margin>
             </Button>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="تقرير السوق">
+                <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="تقرير السوق">
                     <font>
                         <Font size="36.0"/>
                     </font>

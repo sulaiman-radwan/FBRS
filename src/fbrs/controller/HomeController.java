@@ -16,12 +16,12 @@ public class HomeController implements Initializable {
 
     @FXML
     public void viewSellers() throws IOException {
-        viewUsers(UsersController.TYPE_SELLER);
+        viewUsers(UsersController.SELLER_TYPE);
     }
 
     @FXML
     public void viewFishermen() throws IOException {
-        viewUsers(UsersController.TYPE_FISHERMAN);
+        viewUsers(UsersController.FISHERMAN_TYPE);
     }
 
     private void viewUsers(int viewType) throws IOException {
@@ -48,8 +48,19 @@ public class HomeController implements Initializable {
         NavigationUtil.navigateTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
     }
 
-    public void onAllEntries(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.ENTRIES_FXML, actionEvent);
+    public void onAllEntries() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.ENTRIES_FXML));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        homeVBox.getScene().setRoot(root);
+
+        EntriesController controller = loader.getController();
+        controller.setViewType(null);
     }
 
     public void onFishermanInputReport(ActionEvent actionEvent) {
@@ -60,20 +71,20 @@ public class HomeController implements Initializable {
         NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
     }
 
-    public void onBackup(ActionEvent actionEvent) throws IOException {
+    public void onBackup() throws IOException {
         NavigationUtil.createNewPrimaryStage(NavigationUtil.BACKUP_FXML,
                 "النسخ الاحتياطي", "/fbrs/photos/restore.png");
     }
 
-    public void onHelp(ActionEvent actionEvent) {
+    public void onHelp() {
         //Todo;
     }
 
-    public void onInAndOutRecordSeller(ActionEvent actionEvent) throws IOException {
+    public void onInAndOutRecordSeller() throws IOException {
         viewOnInAndOutRecord(InAndOutRecordController.TYPE_SELLER);
     }
 
-    public void onInAndOutRecordFisherman(ActionEvent actionEvent) throws IOException {
+    public void onInAndOutRecordFisherman() throws IOException {
         viewOnInAndOutRecord(InAndOutRecordController.TYPE_FISHERMAN);
     }
 
@@ -85,5 +96,9 @@ public class HomeController implements Initializable {
 
         InAndOutRecordController controller = loader.getController();
         controller.setViewType(viewType);
+    }
+
+    public void onCopyright() throws IOException {
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.COPYRIGHT_FXML, "©2020 OSMMU", "/fbrs/photos/copyright.png");
     }
 }

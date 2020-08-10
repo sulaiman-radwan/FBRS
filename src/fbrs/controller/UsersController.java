@@ -1,7 +1,12 @@
 package fbrs.controller;
 
+import fbrs.model.DatabaseModel;
+import fbrs.model.Fisherman;
+import fbrs.model.Seller;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -11,16 +16,19 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class UsersController implements Initializable {
-    public static final int TYPE_SELLER = 1;
-    public static final int TYPE_FISHERMAN = 2;
+    public static final int SELLER_TYPE = 1;
+    public static final int FISHERMAN_TYPE = 2;
 
     //UI
     public TableColumn<User, Boolean> selectColumn;
@@ -28,8 +36,8 @@ public class UsersController implements Initializable {
     public TableColumn<User, String> nameColumn;
     public TableColumn<User, String> phoneColumn;
     public TableColumn<User, Integer> balanceColumn;
-    public TableColumn<User, Boolean> marketColumn;
-    public TableColumn<User, Boolean> shipTypeColumn;
+    public TableColumn<Seller, String> marketColumn;
+    public TableColumn<Fisherman, String> shipTypeColumn;
     public TextField searchField;
     public TableView<User> table;
     public Button newUserBtn;
@@ -38,7 +46,10 @@ public class UsersController implements Initializable {
     public BorderPane rootPane;
     public Text Title;
 
+    private Map<Integer, String> shipTypes;
     private FilteredList<User> users;
+    private int viewType;
+    private DatabaseModel model;
 
     @FXML
     public void back(ActionEvent event) {
@@ -47,47 +58,93 @@ public class UsersController implements Initializable {
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getId()).matches(regex));
+        users.setPredicate(user -> user.toString().matches(regex));
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<User> observableList = FXCollections.observableArrayList();
-        users = new FilteredList<>(observableList);
+        model = DatabaseModel.getModel();
+        shipTypes = new HashMap<>();
 
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        shipTypes.put(5, "لنش");
+        shipTypes.put(6, "حسكة");
+
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("darshKey"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         balanceColumn.setCellValueFactory(new PropertyValueFactory<>("balance"));
-        marketColumn.setCellValueFactory(new PropertyValueFactory<>("market"));
-        shipTypeColumn.setCellValueFactory(new PropertyValueFactory<>("shipType"));
+        selectColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
+
+        marketColumn.setCellValueFactory(param ->
+                new SimpleStringProperty(model.getMarketByID(param.getValue().getMarket()).getName()));
+        shipTypeColumn.setCellValueFactory(param ->
+                new SimpleStringProperty(shipTypes.get(param.getValue().getShipType())));
 
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
         selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> search());
 
+        table.setEditable(true);
+
+        selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
+
         CheckBox selectAll = new CheckBox();
         selectColumn.setGraphic(selectAll);
         selectAll.setOnAction(this::selectAllBoxes);
 
-        table.setItems(users);
-        table.setEditable(true);
+        table.setRowFactory(
+                tableView -> {
+                    final TableRow<User> row = new TableRow<>();
+                    final ContextMenu rowMenu = new ContextMenu();
+                    User user = table.getSelectionModel().getSelectedItem();
+                    MenuItem editItem = new MenuItem("تعديل");
+                    editItem.setOnAction(event -> {
+                        try {
+                            Stage stage = NavigationUtil.ViewUserProfile(table.getSelectionModel().getSelectedItem());
+                            stage.setOnCloseRequest(we -> table.refresh());
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+                    MenuItem removeItem = new MenuItem("حذف");
+                    removeItem.setOnAction(event -> {
+                        System.out.println(user);
+                        model.deactivateUser(table.getSelectionModel().getSelectedItem());
+                        refreshTable();
+                    });
+                    rowMenu.getItems().addAll(editItem, removeItem);
+
+                    row.contextMenuProperty().bind(
+                            Bindings.when(row.emptyProperty().not())
+                                    .then(rowMenu)
+                                    .otherwise((ContextMenu) null));
+                    return row;
+                });
+
+        table.getSortOrder().add(idColumn);
     }
 
     public void setViewType(int viewType) {
-        //todo:update Title based on type;
+        this.viewType = viewType;
+        ObservableList<User> observableList = FXCollections.observableArrayList();
+        users = new FilteredList<>(observableList);
+
         switch (viewType) {
-            case TYPE_SELLER:
+            case SELLER_TYPE:
                 Title.setText("التجار");
-                //Todo:get sellers from database;
                 table.getColumns().remove(shipTypeColumn);
+                observableList.addAll(model.getAllSellers());
                 break;
-            case TYPE_FISHERMAN:
+            case FISHERMAN_TYPE:
                 Title.setText("الصيادين");
-                //Todo:get fishermen from database;
                 table.getColumns().remove(marketColumn);
+                observableList.addAll(model.getAllFishermen());
         }
+
+        table.setItems(users);
+        table.refresh();
+        table.getSortOrder().add(idColumn);
     }
 
     private void selectAllBoxes(ActionEvent e) {
@@ -96,16 +153,55 @@ public class UsersController implements Initializable {
         }
     }
 
-    public void newUser(ActionEvent event) throws IOException {
-        NavigationUtil.createNewPrimaryStage(NavigationUtil.ADD_NEW_USER_FXML,
-                "إضافة مستخدم جديد", "/fbrs/photos/App_icon.png");
+    public void newUser() throws IOException {
+        Stage stage;
+        switch (viewType) {
+            case SELLER_TYPE:
+                stage = NavigationUtil.AddSpecificUser("إضافة تاجر جديد", null, viewType);
+                break;
+            case FISHERMAN_TYPE:
+                stage = NavigationUtil.AddSpecificUser("إضافة صياد جديد", null, viewType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + viewType);
+        }
+        stage.setOnCloseRequest(we -> setViewType(viewType));
     }
 
-    public void printUser(ActionEvent event) {
+    public void onClick(MouseEvent mouseEvent) throws IOException {
+        User user = table.getSelectionModel().getSelectedItem();
+        if (mouseEvent.getButton() == MouseButton.PRIMARY
+                && mouseEvent.getClickCount() == 2
+                && (user != null)) {
+            Stage stage = NavigationUtil.viewUserEntries(user);
+            stage.setOnCloseRequest(we -> {
+                setViewType(viewType);
+                search();
+            });
+        }
+    }
+
+    private void refreshTable() {
+        setViewType(viewType);
+        table.refresh();
+    }
+
+    private List<User> getSelectedUsers() {
+        List<User> selectedUsers = new ArrayList<>();
+        for (User user : users) {
+            if (user.isSelected()) {
+                selectedUsers.add(user);
+            }
+        }
+        return selectedUsers;
+    }
+
+    public void printUser() {
         //Todo
     }
 
-    public void deleteSelected(ActionEvent event) {
-        //Todo
+    public void deleteSelected() {
+        model.deactivateUsers(getSelectedUsers());
+        refreshTable();
     }
 }

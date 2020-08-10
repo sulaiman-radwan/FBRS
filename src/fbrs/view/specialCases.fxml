@@ -49,12 +49,12 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <TextField fx:id="name" promptText="أدخل عدد البُكس" GridPane.columnIndex="1">
+                <TextField fx:id="buksaCount" promptText="أدخل عدد البُكس" GridPane.columnIndex="1">
                     <font>
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <ComboBox fx:id="type_user" prefHeight="25.0" prefWidth="183.0" promptText="اختر نوع الحالة"
+                <ComboBox fx:id="specialCases" prefHeight="25.0" prefWidth="183.0" promptText="اختر نوع الحالة"
                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </GridPane>
         </VBox>
