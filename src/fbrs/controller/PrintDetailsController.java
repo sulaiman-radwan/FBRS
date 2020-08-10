@@ -1,6 +1,5 @@
 package fbrs.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeView;
@@ -12,6 +11,7 @@ import java.util.ResourceBundle;
 
 public class PrintDetailsController implements Initializable {
     public VBox printList;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String[] array = {"رقم التاجر", "اسم التاجر", "جوال التاجر", "رصيد التاجر"};
@@ -19,16 +19,16 @@ public class PrintDetailsController implements Initializable {
         CreateCheckBoxTree(array, printList);
     }
 
-    private void CreateCheckBoxTree(String[] array, VBox vBox){
+    private void CreateCheckBoxTree(String[] array, VBox vBox) {
         CheckBoxTreeItem<String> rootItem = createCheckBoxTreeItem("الكل");
         rootItem.setExpanded(true);
-        for(int i = 0; i < array.length; i++) {
-            CheckBoxTreeItem<String> item = createCheckBoxTreeItem(array[i]);
+        for (String s : array) {
+            CheckBoxTreeItem<String> item = createCheckBoxTreeItem(s);
             rootItem.getChildren().add(item);
         }
 
         TreeView<String> treeView = new TreeView<>(rootItem);
-        treeView.setCellFactory(CheckBoxTreeCell.<String>forTreeView());
+        treeView.setCellFactory(CheckBoxTreeCell.forTreeView());
 
         vBox.getChildren().addAll(treeView);
     }
@@ -45,6 +45,6 @@ public class PrintDetailsController implements Initializable {
         return checkBoxTreeItem;
     }
 
-    public void onPrint(ActionEvent actionEvent) {
+    public void onPrint() {
     }
 }

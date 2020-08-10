@@ -1,37 +1,36 @@
 package fbrs.controller;
 
+import fbrs.model.Entry;
 import fbrs.model.Fisherman;
 import fbrs.model.Seller;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
-import javafx.scene.layout.HBox;
 
 public class EntriesController implements Initializable {
-    private User user;
-
     //UI
-    private Popup popup = new Popup();
-    public TableView table;
-    public TableColumn selectColumn;
-    public TableColumn fromColumn;
-    public TableColumn dateCreatedColumn;
-    public TableColumn dateUpdatedColumn;
-    public TableColumn toColumn;
-    public TableColumn typeColumn;
-    public TableColumn quantityColumn1;
-    public TableColumn note;
+    public TableView<Entry> table;
+    public TableColumn<Entry, Boolean> selectColumn;
+    public TableColumn<Entry, String> fromColumn;
+    public TableColumn<Entry, Date> dateCreatedColumn;
+    public TableColumn<Entry, Date> dateUpdatedColumn;
+    public TableColumn<Entry, String> toColumn;
+    public TableColumn<Entry, String> typeColumn;
+    public TableColumn<Entry, Integer> quantityColumn;
+    public TableColumn<Entry, String> note;
     public HBox HBox;
     public Button backBtn;
     public BorderPane rootPane;
@@ -44,25 +43,28 @@ public class EntriesController implements Initializable {
     public Button SpecialCasesBtn;
     public Button EditUserProfileBtn;
 
+    private Popup popup;
+    private User user;
 
     public void back(ActionEvent actionEvent) {
         NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
         popup.hide();
     }
 
-    public void fromComboBox(ActionEvent actionEvent) {
+    public void fromComboBox() {
     }
 
-    public void toComboBox(ActionEvent actionEvent) {
+    public void toComboBox() {
     }
 
-    public void dateUpdatedComboBox(ActionEvent actionEvent) {
+    public void dateUpdatedComboBox() {
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        String[] array = {"استيلاء الاحتلال" ,"إرجاع زيادة" ,"خلاف بين تاجر وصياد"
-                ,"ضياع بُكس", "توبة تاجر", "قيد تسليم", "قيد بيع"};
+        popup = new Popup();
+        String[] array = {"استيلاء الاحتلال", "إرجاع زيادة", "خلاف بين تاجر وصياد"
+                , "ضياع بُكس", "توبة تاجر", "قيد تسليم", "قيد بيع"};
         popup.getContent().add(CreateCheckBoxTree(array));
         if (user == null) {
             title.setText("جميع القيود");
@@ -74,41 +76,43 @@ public class EntriesController implements Initializable {
         }
     }
 
-    public void onDelete(ActionEvent actionEvent) {
+    public void onDelete() {
 
     }
 
     public void setViewType(User user) {
         this.user = user;
         if (user instanceof Seller) {
-            title.setText("قيود تاجر " + user.getName());
-            HBox.setMargin(title,new Insets(16, 0, 0, 200));
+            title.setText("قيود التاجر : " + user.getName());
         } else if (user instanceof Fisherman) {
-            title.setText("قيود صياد " + user.getName());
-            HBox.setMargin(title,new Insets(16, 0, 0, 200));
+            title.setText("قيود الصياد : " + user.getName());
         } else {
             System.out.println("Error: A valid user was not sent");
         }
     }
 
-    public void onEntryType(ActionEvent actionEvent) throws IOException {
+    public void hideBackButton(boolean visible) {
+        backBtn.setVisible(visible);
+    }
+
+    public void onEntryType() {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         if (!popup.isShowing())
             popup.show(stage);
         else
             popup.hide();
-
     }
-    private TreeView<String> CreateCheckBoxTree(String[] array){
+
+    private TreeView<String> CreateCheckBoxTree(String[] array) {
         CheckBoxTreeItem<String> rootItem = createCheckBoxTreeItem("إظهار جميع القيود");
         rootItem.setExpanded(true);
-        for(int i = 0; i < array.length; i++) {
-            CheckBoxTreeItem<String> item = createCheckBoxTreeItem(array[i]);
+        for (String s : array) {
+            CheckBoxTreeItem<String> item = createCheckBoxTreeItem(s);
             rootItem.getChildren().add(item);
         }
 
         TreeView<String> treeView = new TreeView<>(rootItem);
-        treeView.setCellFactory(CheckBoxTreeCell.<String>forTreeView());
+        treeView.setCellFactory(CheckBoxTreeCell.forTreeView());
         return treeView;
     }
 
@@ -124,13 +128,12 @@ public class EntriesController implements Initializable {
         return checkBoxTreeItem;
     }
 
-    public void onEditUserProfile(ActionEvent actionEvent) throws IOException {
-        NavigationUtil.ViewUserProfile(NavigationUtil.USERS_PROFILE_FXML,
-                "تعديل تفاصيل المستخدم", "/fbrs/photos/App_icon.png", user);
+    public void onEditUserProfile() throws IOException {
+        NavigationUtil.ViewUserProfile(user);
 
     }
 
-    public void onSpecialCases(ActionEvent actionEvent) throws IOException {
+    public void onSpecialCases() throws IOException {
         NavigationUtil.createNewPrimaryStage(NavigationUtil.SPECIAL_CASES_FXML,
                 "حالات خاصة للبُكس", "/fbrs/photos/App_icon.png");
     }

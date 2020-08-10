@@ -43,7 +43,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="تبيض كشف صياد" HBox.hgrow="ALWAYS">
                     <font>
-                        <Font size="36.0"/>
+                        <Font size="28.0"/>
                     </font>
                 </Text>
             </HBox>

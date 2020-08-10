@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="500.0" prefWidth="450.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.AddNewUserController">
@@ -59,7 +58,7 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <Label text="السوق" GridPane.rowIndex="3">
+                <Label fx:id="marketLabel" text="السوق" GridPane.rowIndex="3">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>
                     </font>
@@ -67,20 +66,25 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <TextField fx:id="name" promptText="أدخل الاسم" GridPane.columnIndex="1">
+                <TextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER" fx:id="nameTextField"
+                           promptText="أدخل الاسم" GridPane.columnIndex="1">
                     <font>
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <TextField fx:id="phone" promptText="أدخل رقم الجوال" GridPane.columnIndex="1"
+                <TextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER" fx:id="phoneTextField"
+                           promptText="أدخل رقم الجوال" GridPane.columnIndex="1"
                            GridPane.rowIndex="1">
                     <font>
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <ComboBox fx:id="type_user" prefHeight="25.0" prefWidth="150.0" promptText="اختر نوع المستخدم"
+                <ComboBox nodeOrientation="LEFT_TO_RIGHT" onAction="#onSelectUserType" fx:id="userTypeComboBox"
+                          prefHeight="25.0" prefWidth="180.0"
+                          promptText="اختر نوع المستخدم"
                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <ComboBox fx:id="market" prefHeight="25.0" prefWidth="150.0" promptText="اختر السوق"
+                <ComboBox nodeOrientation="LEFT_TO_RIGHT" fx:id="marketComboBox" prefHeight="25.0" prefWidth="180.0"
+                          promptText="اختر السوق"
                           GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             </GridPane>
         </VBox>

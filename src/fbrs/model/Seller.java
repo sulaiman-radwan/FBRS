@@ -3,8 +3,8 @@ package fbrs.model;
 public class Seller extends User {
     private int market;
 
-    public Seller(int id, String name, String phone, int balance, int market) {
-        super(id, name, phone, balance);
+    public Seller(int id, int darshKey, String name, String phone, int balance, int market) {
+        super(id, darshKey, name, phone, balance);
         this.market = market;
     }
 

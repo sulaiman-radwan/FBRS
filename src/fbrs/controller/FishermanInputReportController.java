@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class FishermanInputReportController implements Initializable {
+    //IU
+    public TableView table;
     public TableColumn numColumn;
     public TableColumn numberColumn;
     public TableColumn priceColumn;
@@ -22,7 +24,6 @@ public class FishermanInputReportController implements Initializable {
     public TextField number;
     public TextField name;
     public Button addBtn;
-    public TableView table;
     public Label id;
     public TextField price;
     public BorderPane rootPane;
@@ -31,7 +32,7 @@ public class FishermanInputReportController implements Initializable {
         NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
     }
 
-    public void onAdd(ActionEvent actionEvent) {
+    public void onAdd() {
     }
 
     @Override
