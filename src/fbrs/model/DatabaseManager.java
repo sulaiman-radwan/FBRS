@@ -419,6 +419,71 @@ public class DatabaseManager {
         return key;
     }
 
+    /* This method will return the balance of a user given its id, if there are no
+    * entries for that user, it will return 0 */
+    public int getUserBalance(int id){
+        Connection connection = getConnection();
+
+        try {
+
+            String query = "select coalesce ((select sum(quantity) from entries e where taker_id = ?),0) - " +
+                    "coalesce ((select sum(quantity) from entries e2 where giver_id = ?), 0);";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, id);
+
+            ResultSet balance = preparedStmt.executeQuery();
+
+            if(balance.next()){
+                return balance.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    /* This method returns the last date(Timestamp) that a user balance was 0, and returns null
+    * if that user has not got a balance 0 yet */
+    public Timestamp getLastDeficit(int id){
+        Connection connection = getConnection();
+
+        try {
+
+            String query = "with filtered_entries(date_updated, quantity) as (" +
+                    "(select date_updated, quantity from entries where taker_id = ?)" +
+                    "union " +
+                    "(select date_updated, -1 * quantity from entries e2 where giver_id = ?) " +
+                    "order by date_updated asc" +
+                    "), running_sum (date_updated, running_sum) as(" +
+                    "select date_updated , sum(fe.quantity ) over(order by fe.date_updated rows unbounded preceding) as running_sum " +
+                    "from filtered_entries fe" +
+                    ") " +
+                    "select date_updated from running_sum " +
+                    "where running_sum = 0 " +
+                    "order by date_updated desc " +
+                    "limit 1;";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, id);
+
+            ResultSet lastDeficit = preparedStmt.executeQuery();
+
+            if(lastDeficit.next()){
+                return lastDeficit.getTimestamp(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public void exit() {
         try {
             getConnection().close();
