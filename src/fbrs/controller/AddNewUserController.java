@@ -3,8 +3,8 @@ package fbrs.controller;
 import fbrs.model.DatabaseModel;
 import fbrs.model.Market;
 import fbrs.model.User;
+import fbrs.utils.UIUtil;
 import javafx.fxml.Initializable;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
@@ -32,48 +32,46 @@ public class AddNewUserController implements Initializable {
 
     public void onClickAdd() {
         support.setErrorDecorationEnabled(true); // validate and show errors now!
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
         int id = -1;
         Market market = marketComboBox.getValue();
-        String name = nameTextField.getText();
-        String phone = phoneTextField.getText();
+        String name = nameTextField.getText().trim();
+        String phone = phoneTextField.getText().trim();
         String userType = userTypeComboBox.getValue();
 
-        String message = "";
+        String title = "";
+        String message;
+        String header;
 
         if (support.isInvalid()) {
             Toolkit.getDefaultToolkit().beep();
         } else {
             if (userType.equals("تاجر")) {
                 id = model.addUser(market.getId(), name, phone, User.getUserTypeID(userType));
-                message = "تمت إضافة التاجر لسوق " + market + " بنجاح";
+                title = "تمت إضافة التاجر لسوق " + market + " بنجاح";
 
             } else {
                 id = model.addUser(-1, name, phone, User.getUserTypeID(userType));
-                message = "تمت إضافة " + userType + " بنجاح";
+                title = "تمت إضافة " + userType + " بنجاح";
             }
         }
         if (id == -1) {
-            message = "فشلت علمية الإضافة";
-            alert.setHeaderText(message);
-            alert.setContentText("يرجى التأكد من إدخال البيانات بشكل صحيح وعدم إستخدام إسم مستخدم موجود بالفعل");
-            alert.showAndWait();
+            title = "خطأ";
+            header = "فشلت علمية الإضافة";
+            message = "يرجى التأكد من إدخال البيانات بشكل صحيح وعدم إستخدام إسم مستخدم موجود بالفعل";
+            UIUtil.showAlert(title, header, message, Alert.AlertType.ERROR);
         } else {
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            alert.setTitle(message);
-            alert.setHeaderText("الاسم :" + name);
-            alert.setContentText("الرقم التعريفي = " + id);
-            alert.showAndWait();
+            header = "الاسم :" + name;
+            message = "الرقم التعريفي = " + id;
+            UIUtil.showAlert(title, header, message, Alert.AlertType.INFORMATION);
             support.setErrorDecorationEnabled(false); // we don't want errors to bother us for now.
             reset();
         }
     }
 
     private void reset() {
-        nameTextField.setText("");
-        phoneTextField.setText("");
+        nameTextField.clear();
+        phoneTextField.clear();
         marketComboBox.setValue(null);
         userTypeComboBox.setValue(userTypeComboBox.getPromptText());
     }
@@ -95,15 +93,15 @@ public class AddNewUserController implements Initializable {
 
     public void onSelectUserType() {
         if (userTypeComboBox.getValue().equals("صياد لنش") || userTypeComboBox.getValue().equals("صياد حسكة")) {
-            marketComboBox.setVisible(false);
-            marketLabel.setVisible(false);
+            marketComboBox.setDisable(true);
+            marketLabel.setDisable(true);
             Validator<String> validator = (Control control, String value) ->
                     ValidationResult.fromMessageIf(control, null, Severity.ERROR, false);
             support.registerValidator(marketComboBox, validator);
         } else {
             support.registerValidator(marketComboBox, Validator.createEmptyValidator("يجب إختيار السوق", Severity.ERROR));
-            marketComboBox.setVisible(true);
-            marketLabel.setVisible(true);
+            marketComboBox.setDisable(false);
+            marketLabel.setDisable(false);
         }
     }
 

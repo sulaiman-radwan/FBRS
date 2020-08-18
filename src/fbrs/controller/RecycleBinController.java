@@ -3,12 +3,12 @@ package fbrs.controller;
 import fbrs.model.DatabaseModel;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
+import fbrs.utils.UIUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,8 +16,10 @@ import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class RecycleBinController implements Initializable {
     //IU
@@ -42,37 +44,27 @@ public class RecycleBinController implements Initializable {
     }
 
     public void deleteSelected() {
-        ArrayList<User> selectedUsers = getSelectedUsers();
+        List<User> selectedUsers = getSelectedUsers();
         if (!selectedUsers.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("تأكيد حذف النهائي");
-            alert.setHeaderText("سيتم حذف المستخدمين المحددين بشكل نهائي");
-            alert.setContentText("هل أنت متأكد من الحذف النهائي");
-            confirmDelete(selectedUsers, alert);
+            confirmDelete(selectedUsers);
         }
     }
 
     public void EmptyRecycleBin() {
-        ArrayList<User> AllUsers = new ArrayList<>(users);
+        List<User> AllUsers = new ArrayList<>(users);
         if (!AllUsers.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("تأكيد إفراغ سلة المحذوفات");
-            alert.setHeaderText("تأكيد حذف جميع المستخدمين بشكل نهائي");
-            alert.setContentText("هل أنت متأكد من إفراغ سلة المحذوفات");
-            confirmDelete(AllUsers, alert);
+            confirmDelete(AllUsers);
         }
     }
 
-    private void confirmDelete(ArrayList<User> users, Alert alert) {
-        alert.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+    private void confirmDelete(List<User> users) {
+        Optional<ButtonType> result =
+                UIUtil.showConfirmDialog("سيتم حذف المستخدمين المحددين بشكل نهائي",
+                        "هل أنت متأكد من الحذف النهائي");
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             model.deactivateUsers(users);
             model.deleteUsers(users);
             refreshTable();
-        } else {
-            alert.close();
         }
     }
 
@@ -111,14 +103,8 @@ public class RecycleBinController implements Initializable {
         table.setItems(users);
     }
 
-    private ArrayList<User> getSelectedUsers() {
-        ArrayList<User> selectedUsers = new ArrayList<>();
-        for (User user : users) {
-            if (user.isSelected()) {
-                selectedUsers.add(user);
-            }
-        }
-        return selectedUsers;
+    private List<User> getSelectedUsers() {
+        return users.stream().filter(User::isSelected).collect(Collectors.toList());
     }
 
     private void selectAllBoxes(ActionEvent e) {

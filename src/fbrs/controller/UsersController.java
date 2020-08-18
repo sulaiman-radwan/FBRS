@@ -12,9 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,10 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class UsersController implements Initializable {
     public static final int SELLER_TYPE = 1;
@@ -63,7 +58,7 @@ public class UsersController implements Initializable {
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getDarshKey()).matches(regex));
+        users.setPredicate(user -> user.toString().matches(regex));
     }
 
     @Override
@@ -98,36 +93,36 @@ public class UsersController implements Initializable {
         selectColumn.setGraphic(selectAll);
         selectAll.setOnAction(this::selectAllBoxes);
 
-        table.setRowFactory(
-                tableView -> {
-                    final TableRow<User> row = new TableRow<>();
-                    final ContextMenu rowMenu = new ContextMenu();
-                    User user = table.getSelectionModel().getSelectedItem();
-                    MenuItem editItem = new MenuItem("تعديل");
-                    editItem.setOnAction(event -> {
-                        try {
-                            Stage stage = NavigationUtil.ViewUserProfile(table.getSelectionModel().getSelectedItem());
-                            stage.setOnCloseRequest(we -> setViewType(viewType));
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
+        table.setRowFactory(tableView -> {
+            final TableRow<User> row = new TableRow<>();
+            final ContextMenu rowMenu = new ContextMenu();
+            User user = table.getSelectionModel().getSelectedItem();
+            MenuItem editItem = new MenuItem("تعديل");
+            editItem.setOnAction(event -> {
+                try {
+                    Stage stage = NavigationUtil.ViewUserProfile(user);
+                    stage.setOnCloseRequest(we -> {
+                        table.refresh();
+                        search();
                     });
-                    MenuItem removeItem = new MenuItem("حذف");
-                    removeItem.setOnAction(event -> {
-                        System.out.println(user);
-                        model.deactivateUser(table.getSelectionModel().getSelectedItem());
-                        refreshTable();
-                    });
-                    rowMenu.getItems().addAll(editItem, removeItem);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+            MenuItem removeItem = new MenuItem("حذف");
+            removeItem.setOnAction(event -> {
+                model.deactivateUser(user);
+                refreshTable();
+                search();
+            });
+            rowMenu.getItems().addAll(editItem, removeItem);
 
-                    row.contextMenuProperty().bind(
-                            Bindings.when(row.emptyProperty().not())
-                                    .then(rowMenu)
-                                    .otherwise((ContextMenu) null));
-                    return row;
-                });
-
-
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty().not())
+                            .then(rowMenu)
+                            .otherwise((ContextMenu) null));
+            return row;
+        });
     }
 
     public void setViewType(int viewType) {
@@ -149,6 +144,7 @@ public class UsersController implements Initializable {
 
         table.setItems(users);
         table.refresh();
+        table.getSortOrder().add(idColumn);
     }
 
     private void selectAllBoxes(ActionEvent e) {
@@ -177,13 +173,11 @@ public class UsersController implements Initializable {
         if (mouseEvent.getButton() == MouseButton.PRIMARY
                 && mouseEvent.getClickCount() == 2
                 && (user != null)) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.ENTRIES_FXML));
-
-            Parent root = loader.load();
-            rootPane.getScene().setRoot(root);
-
-            EntriesController controller = loader.getController();
-            controller.setViewType(user);
+            Stage stage = NavigationUtil.viewUserEntries(user);
+            stage.setOnCloseRequest(we -> {
+                setViewType(viewType);
+                search();
+            });
         }
     }
 
@@ -192,8 +186,8 @@ public class UsersController implements Initializable {
         table.refresh();
     }
 
-    private ArrayList<User> getSelectedUsers() {
-        ArrayList<User> selectedUsers = new ArrayList<>();
+    private List<User> getSelectedUsers() {
+        List<User> selectedUsers = new ArrayList<>();
         for (User user : users) {
             if (user.isSelected()) {
                 selectedUsers.add(user);

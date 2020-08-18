@@ -3,19 +3,21 @@ package fbrs.controller;
 import fbrs.model.DatabaseModel;
 import fbrs.model.Market;
 import fbrs.utils.NavigationUtil;
+import fbrs.utils.UIUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -42,12 +44,30 @@ public class MarketsController implements Initializable {
         dialog.setTitle("إضافة سوق جديد");
         dialog.setHeaderText("إضافة سوق جديد");
         dialog.setContentText("أدخل إسم السوق الجديد");
-        dialog.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-
+        UIUtil.formatDialog(dialog);
         Optional<String> result = dialog.showAndWait();
 
-        // The Java 8 way to get the response value (with lambda expression).
-        result.ifPresent(model::addMarket);
+        result.ifPresent(newMarketName -> {
+            newMarketName = newMarketName.trim();
+            if (newMarketName.isEmpty()) {
+                Toolkit.getDefaultToolkit().beep();
+                UIUtil.showAlert("خطأ", "إسم السوق فارغ",
+                        "الرجاء التأكد من إدخال اسم السوق قبل الضغط على إضافة", Alert.AlertType.ERROR);
+                AddNewMarket();
+            } else {
+                if (model.isValidMarketName(newMarketName)) {
+                    model.addMarket(newMarketName);
+                    UIUtil.showAlert("تم العملية بنجاح", "تم إضافة السوق بنجاح",
+                            "اسم السوق الجديد : " + newMarketName, Alert.AlertType.CONFIRMATION);
+                    viewMarkets();
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                    UIUtil.showAlert("خطأ", "السوق المضاف موجود بالفعل : " + newMarketName,
+                            "يجب إضافة إسم سوق غير موجود بالفعل", Alert.AlertType.ERROR);
+                    AddNewMarket();
+                }
+            }
+        });
     }
 
     public void printAllMarkets() throws IOException {
@@ -58,6 +78,10 @@ public class MarketsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = DatabaseModel.getModel();
+        viewMarkets();
+    }
+
+    private void viewMarkets() {
         List<Market> markets = model.getAllMarkets();
 
         // Create a pane and set its properties
@@ -75,7 +99,7 @@ public class MarketsController implements Initializable {
     private Button createMarketButton(Market market) {
         Button button = new Button(market.getName());
         button.setCursor(Cursor.HAND);
-        button.setId(market.getId() + "");
+        button.setId(String.valueOf(market.getId()));
         button.setPrefWidth(150);
         button.setOnAction(event -> {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.MARKET_REPORT_FXML));

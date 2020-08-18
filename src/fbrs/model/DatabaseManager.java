@@ -84,6 +84,22 @@ public class DatabaseManager {
 
     }
 
+    public int updateDarshKeyByUserType(int id, int userType) {
+
+        String query = "UPDATE users SET darsh_key = ? WHERE user_id = ?";
+        try {
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            int DarshKey = generateDarshKey(userType);
+            preparedStmt.setInt(1, DarshKey);
+            preparedStmt.setInt(2, id);
+            preparedStmt.executeUpdate();
+            return DarshKey;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return -1;
+    }
+
     public boolean updateUserPhone(int id, String phone) {
         try {
             String query = "UPDATE users SET phone = ? WHERE user_id = ?";
@@ -135,7 +151,7 @@ public class DatabaseManager {
         return false;
     }
 
-    public void deactivateUsers(ArrayList<User> users) {
+    public void deactivateUsers(List<User> users) {
         for (User user : users) {
             deactivateUser(user);
         }
@@ -154,7 +170,7 @@ public class DatabaseManager {
         }
     }
 
-    public void reactivateUsers(ArrayList<User> users) {
+    public void reactivateUsers(List<User> users) {
         for (User user : users) {
             reactivateUser(user);
         }
@@ -173,7 +189,7 @@ public class DatabaseManager {
         }
     }
 
-    public void deleteUsers(ArrayList<User> users) {
+    public void deleteUsers(List<User> users) {
         for (User user : users) {
             deleteUser(user);
         }
@@ -192,11 +208,30 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteEntry(List<Entry> entries) {
+        for (Entry entry : entries) {
+            deleteEntry(entry);
+        }
+    }
+
+    public void deleteEntry(Entry entry) {
+        try {
+            String query = "DELETE FROM entries WHERE entry_id = ?;";
+
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            preparedStmt.setInt(1, entry.getId());
+            preparedStmt.executeUpdate();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public ObservableList<Market> getAllMarkets() {
         ObservableList<Market> markets = FXCollections.observableArrayList();
 
         try {
-            String query = "SELECT * FROM markets;";
+            String query = "SELECT market_id, market_name FROM markets ORDER BY market_id;";
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
@@ -217,51 +252,35 @@ public class DatabaseManager {
         return markets;
     }
 
-    public ObservableList<Seller> getSellersByMarket(int marketId) {
-        ObservableList<Seller> sellers = FXCollections.observableArrayList();
-
-        try {
-            String query = "SELECT * FROM users WHERE market_id = ? AND is_active = TRUE and is_deleted = FALSE;";
-
-            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
-            preparedStmt.setInt(1, marketId);
-            getSeller(sellers, preparedStmt);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return sellers;
-    }
-
-    private void getSeller(List<Seller> sellers, PreparedStatement preparedStmt) throws SQLException {
-        ResultSet resultSet = preparedStmt.executeQuery();
-
-        int id;
-        int darshKey;
-        String name;
-        String phone;
-        int balance = 0;
-        int marketID;
-
-        while (resultSet.next()) {
-            id = resultSet.getInt("user_id");
-            darshKey = resultSet.getInt("darsh_key");
-            name = resultSet.getString("name");
-            phone = resultSet.getString("phone");
-            marketID = resultSet.getInt("market_id");
-            sellers.add(new Seller(id, darshKey, name, phone, balance, marketID));
-        }
-    }
-
     public ObservableList<Seller> getAllSellers() {
         ObservableList<Seller> sellers = FXCollections.observableArrayList();
 
         try {
-            String query = "SELECT * FROM users WHERE user_type = 1 AND is_active = TRUE and is_deleted = FALSE;";
+            String query = "SELECT user_id, darsh_key, name, phone, market_id, " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e1 WHERE taker_id = users.user_id), 0) - " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e2 WHERE giver_id = users.user_id), 0) as balance FROM users " +
+                    "WHERE user_type = 1 AND is_active = TRUE and is_deleted = FALSE " +
+                    "ORDER BY darsh_key;";
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
-            getSeller(sellers, preparedStmt);
+            ResultSet resultSet = preparedStmt.executeQuery();
+
+            int id;
+            int darshKey;
+            String name;
+            String phone;
+            int balance;
+            int marketID;
+
+            while (resultSet.next()) {
+                id = resultSet.getInt("user_id");
+                darshKey = resultSet.getInt("darsh_key");
+                name = resultSet.getString("name");
+                phone = resultSet.getString("phone");
+                balance = resultSet.getInt("balance");
+                marketID = resultSet.getInt("market_id");
+                sellers.add(new Seller(id, darshKey, name, phone, balance, marketID));
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -274,7 +293,11 @@ public class DatabaseManager {
         ObservableList<Fisherman> fishermen = FXCollections.observableArrayList();
 
         try {
-            String query = "SELECT * FROM users WHERE user_type > 4 AND is_active = TRUE and is_deleted = FALSE;";
+            String query = "SELECT user_id, darsh_key, name, phone, user_type, market_id, " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e1 WHERE taker_id = users.user_id), 0) - " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e2 WHERE giver_id = users.user_id), 0) as balance FROM users " +
+                    "WHERE user_type > 4 AND is_active = TRUE and is_deleted = FALSE " +
+                    "ORDER BY darsh_key;";
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
@@ -283,7 +306,7 @@ public class DatabaseManager {
             int darshKey;
             String name;
             String phone;
-            int balance = 0;
+            int balance;
             int shipType;
 
             while (resultSet.next()) {
@@ -291,6 +314,7 @@ public class DatabaseManager {
                 darshKey = resultSet.getInt("darsh_key");
                 name = resultSet.getString("name");
                 phone = resultSet.getString("phone");
+                balance = resultSet.getInt("balance");
                 shipType = resultSet.getInt("user_type");
                 fishermen.add(new Fisherman(id, darshKey, name, phone, balance, shipType));
             }
@@ -302,11 +326,112 @@ public class DatabaseManager {
         return fishermen;
     }
 
+    public List<EntryType> getEntryTypes() {
+        List<EntryType> entryTypes = new ArrayList<>();
+
+        try {
+            String query = "SELECT type_id, type_name, category, short_desc FROM entry_types ORDER BY type_id;";
+
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+
+            int id;
+            String name;
+            int category;
+            String shortDesc;
+
+            while (resultSet.next()) {
+                id = resultSet.getInt("type_id");
+                name = resultSet.getString("type_name");
+                category = resultSet.getInt("category");
+                shortDesc = resultSet.getString("short_desc");
+                entryTypes.add(new EntryType(id, name, category, shortDesc));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entryTypes;
+    }
+
+    public ObservableList<Entry> getAllEntries(Timestamp FromDateCreated, Timestamp ToDateCreated,
+                                               Timestamp FromDateUpdated, Timestamp ToDateUpdated, int userID) {
+        ObservableList<Entry> entries = FXCollections.observableArrayList();
+
+        //Change the creation hour to the last hour of the day to request today's Entries
+        ToDateCreated.setHours(24);
+        ToDateCreated.setMinutes(59);
+        ToDateCreated.setSeconds(59);
+
+        //Change the deletion hour to the last hour of the day to request today's Entries
+        ToDateUpdated.setHours(24);
+        ToDateUpdated.setMinutes(59);
+        ToDateUpdated.setSeconds(59);
+
+        try {
+            String query;
+            if (userID == -1) {
+                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment " +
+                        "FROM entries " +
+                        "WHERE (date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?) " +
+                        "ORDER BY date_created DESC;";
+            } else {
+                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment " +
+                        "FROM entries " +
+                        "WHERE ((date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?)) " +
+                        "AND ((giver_id = ?) OR (taker_id = ?)) " +
+                        "ORDER BY date_created DESC;";
+            }
+
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            preparedStmt.setTimestamp(1, FromDateCreated);
+            preparedStmt.setTimestamp(2, ToDateCreated);
+            preparedStmt.setTimestamp(3, FromDateUpdated);
+            preparedStmt.setTimestamp(4, ToDateUpdated);
+            if (userID != -1) {
+                preparedStmt.setInt(5, userID);
+                preparedStmt.setInt(6, userID);
+            }
+            ResultSet resultSet = preparedStmt.executeQuery();
+
+            int id;
+            int type;
+            int giverId;
+            int takerId;
+            int quantity;
+            int price;
+            Timestamp dateCreated;
+            Timestamp dateUpdated;
+            String comment;
+
+            while (resultSet.next()) {
+                id = resultSet.getInt("entry_id");
+                type = resultSet.getInt("entry_type");
+                giverId = resultSet.getInt("giver_id");
+                takerId = resultSet.getInt("taker_id");
+                dateCreated = resultSet.getTimestamp("date_created");
+                dateCreated.setNanos(0);
+                dateUpdated = resultSet.getTimestamp(("date_updated"));
+                dateUpdated.setNanos(0);
+                quantity = resultSet.getInt("quantity");
+                price = resultSet.getInt("price");
+                comment = resultSet.getString("comment");
+                entries.add(new Entry(id, type, giverId, takerId, quantity, price, dateCreated, dateUpdated, comment));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entries;
+    }
+
     public ObservableList<User> getDeletedUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
 
         try {
-            String query = "SELECT * FROM users WHERE is_active = FALSE and is_deleted = FALSE;";
+            String query = "SELECT user_id, darsh_key, name, phone  FROM users WHERE is_active = FALSE and is_deleted = FALSE;";
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
@@ -315,15 +440,15 @@ public class DatabaseManager {
             int darshKey;
             String name;
             String phone;
-            int balance = 0;
+            int balance;
 
             while (resultSet.next()) {
                 id = resultSet.getInt("user_id");
                 darshKey = resultSet.getInt("darsh_key");
                 name = resultSet.getString("name");
                 phone = resultSet.getString("phone");
+                balance = calculateUserBalance(id);
                 users.add(new User(id, darshKey, name, phone, balance) {
-
                 });
             }
 
@@ -396,8 +521,38 @@ public class DatabaseManager {
         return id;
     }
 
+    public int addEntry(int entryType, int giverId, int takerId, int quantity, int price, String comment) {
+        int id = -1;
+        Connection connection = getConnection();
+
+        try {
+
+            String query = "INSERT INTO entries(entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment) " +
+                    "VALUES (?,?,?,?,?,now(), now(),?);";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStmt.setInt(1, entryType);
+            preparedStmt.setInt(2, giverId);
+            preparedStmt.setInt(3, takerId);
+            preparedStmt.setInt(4, quantity);
+            preparedStmt.setInt(5, price);
+            preparedStmt.setString(6, comment);
+
+            preparedStmt.executeUpdate();
+
+            ResultSet generatedKeys = preparedStmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                id = generatedKeys.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
     private int generateDarshKey(int userType) {
-        //todo: Correcting the error in the event of changing the type of the Fisherman
         int key = -1;
 
         try {
@@ -417,6 +572,28 @@ public class DatabaseManager {
         }
 
         return key;
+    }
+
+    public int calculateUserBalance(int id) {
+        int balance = -1;
+
+        try {
+            String query = "SELECT COALESCE ((SELECT SUM(quantity) FROM entries e1 WHERE taker_id = ?), 0) - " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e2 WHERE giver_id = ?), 0);";
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, id);
+
+            preparedStmt.executeQuery();
+            ResultSet resultSet = preparedStmt.getResultSet();
+            resultSet.next();
+            balance = resultSet.getInt(1);
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        return balance;
     }
 
     public void exit() {

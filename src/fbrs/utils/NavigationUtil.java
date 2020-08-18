@@ -1,20 +1,18 @@
 package fbrs.utils;
 
 import fbrs.controller.AddNewUserController;
+import fbrs.controller.EntriesController;
 import fbrs.controller.UserProfileController;
-import fbrs.controller.UsersController;
 import fbrs.model.Market;
 import fbrs.model.Seller;
 import fbrs.model.User;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 
@@ -35,6 +33,7 @@ public class NavigationUtil {
     public final static String STORAGE_FXML = "/fbrs/view/storage.fxml";
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
+    public static final String COPYRIGHT_FXML = "/fbrs/view/copyright.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
@@ -61,7 +60,7 @@ public class NavigationUtil {
         return stage;
     }
 
-    private static Stage  showPrimaryStage(String stageName, String photoPath, Parent root) {
+    private static Stage showPrimaryStage(String stageName, String photoPath, Parent root) {
         Stage primaryStage = new Stage();
         primaryStage.setTitle(stageName);
         primaryStage.getIcons().add(new Image(photoPath));
@@ -83,6 +82,18 @@ public class NavigationUtil {
         Stage stage = showPrimaryStage(stageName, "/fbrs/photos/App_icon.png", root);
         AddNewUserController controller = loader.getController();
         controller.newSpecificUser(market, viewType);
+        return stage;
+    }
+
+    public static Stage viewUserEntries(User user) throws IOException {
+        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.ENTRIES_FXML));
+        Parent root = loader.load();
+        Stage stage = showPrimaryStage(((user instanceof Seller ? "قيود التاجر : " : "قيود الصياد : ") + user.getName()),
+                (user instanceof Seller ? "/fbrs/photos/seller.png" : "/fbrs/photos/Fisherman.png"), root);
+
+        EntriesController controller = loader.getController();
+        controller.hideBackButton(false);
+        controller.setViewType(user);
         return stage;
     }
 }

@@ -15,7 +15,7 @@
             <TableView onMouseClicked="#onClick" fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="35.0" sortable="false"/>
-                    <TableColumn fx:id="idColumn" prefWidth="75.0" sortable="false" text="الرقم"/>
+                    <TableColumn fx:id="idColumn" prefWidth="75.0" text="الرقم"/>
                     <TableColumn fx:id="nameColumn" prefWidth="160.0" sortable="false" text="الاسم"/>
                     <TableColumn fx:id="phoneColumn" prefWidth="120.0" sortable="false" text="الجوال"/>
                     <TableColumn fx:id="balanceColumn" prefWidth="85.0" sortable="false" text="الرصيد"/>

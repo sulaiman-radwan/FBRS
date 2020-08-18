@@ -5,14 +5,18 @@ import fbrs.model.Market;
 import fbrs.model.Seller;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
+import fbrs.utils.UIUtil;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +38,7 @@ public class MarketReportController implements Initializable {
     public Button resetAccountsBtn;
     public BorderPane rootPane;
     public Text title;
+    public DatePicker datePicker;
 
     private DatabaseModel model;
     private Market market;
@@ -55,24 +60,27 @@ public class MarketReportController implements Initializable {
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getId()).matches(regex));
+        users.setPredicate(seller -> seller.toString().matches(regex));
     }
 
     public void back(ActionEvent actionEvent) {
         NavigationUtil.navigateTo(rootPane, NavigationUtil.MARKETS_FXML, actionEvent);
     }
 
-    public void printBriefReport(ActionEvent actionEvent) {
+    public void printBriefReport() {
+        //todo:
     }
 
-    public void printDetailedReport(ActionEvent actionEvent) {
+    public void printDetailedReport() {
+        //todo:
     }
 
-    public void newSeller(ActionEvent actionEvent) throws IOException {
+    public void newSeller() throws IOException {
         NavigationUtil.AddSpecificUser("إضافة تاجر جديد إلى سوق " + market.getName(), market, 1);
     }
 
-    public void resetAccounts() {
+    public void zeroBalances() {
+        //todo:
     }
 
     @Override
@@ -94,5 +102,23 @@ public class MarketReportController implements Initializable {
         selectAll.setOnAction(this::selectAllBoxes);
 
         table.setEditable(true);
+        UIUtil.formatDatePicker(datePicker);
+    }
+
+    public void onClick(MouseEvent mouseEvent) throws IOException {
+        User user = table.getSelectionModel().getSelectedItem();
+        if (mouseEvent.getButton() == MouseButton.PRIMARY
+                && mouseEvent.getClickCount() == 2
+                && (user != null)) {
+            Stage stage = NavigationUtil.viewUserEntries(user);
+            stage.setOnCloseRequest(we -> {
+                setMarket(market);
+                search();
+            });
+        }
+    }
+
+    public void onChangeDate() {
+        //todo:
     }
 }
