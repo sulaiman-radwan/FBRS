@@ -88,4 +88,9 @@ public abstract class User {
     public BooleanProperty selectedProperty() {
         return selected;
     }
+
+    @Override
+    public String toString() {
+        return darshKey + " - " + name;
+    }
 }

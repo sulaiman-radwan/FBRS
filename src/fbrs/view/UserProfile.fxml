@@ -5,7 +5,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import org.controlsfx.control.textfield.CustomTextField?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
             minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="500.0" prefWidth="450.0"
@@ -40,12 +39,13 @@
                 <VBox.margin>
                     <Insets left="50.0" right="50.0"/>
                 </VBox.margin>
-                <CustomTextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER_RIGHT" fx:id="id" promptText="ادخل الرقم التعريفي الجديد" text="201"
+                <TextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER_RIGHT" fx:id="idTextField"
+                           promptText="ادخل الرقم التعريفي الجديد" text="201"
                            GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <font>
                         <Font size="14.0"/>
                     </font>
-                </CustomTextField>
+                </TextField>
                 <Label text="الاسم" GridPane.rowIndex="2">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>
@@ -62,7 +62,7 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <Label fx:id="TypeLabel" text="السوق" GridPane.rowIndex="4">
+                <Label fx:id="typeLabel" text="السوق" GridPane.rowIndex="4">
                     <font>
                         <Font name="Times New Roman" size="18.0"/>
                     </font>
@@ -70,13 +70,14 @@
                         <Insets left="30.0"/>
                     </GridPane.margin>
                 </Label>
-                <TextField fx:id="name" promptText="ادخل الاسم الجديد" text="الحج مراد" GridPane.columnIndex="1"
+                <TextField fx:id="nameTextField" promptText="ادخل الاسم الجديد" text="الحج مراد"
+                           GridPane.columnIndex="1"
                            GridPane.rowIndex="2">
                     <font>
                         <Font size="14.0"/>
                     </font>
                 </TextField>
-                <TextField fx:id="phone" promptText="ادخل رقم الجوال الجديد" text="0592662534"
+                <TextField fx:id="phoneTextField" promptText="ادخل رقم الجوال الجديد" text="0592662534"
                            GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <font>
                         <Font size="14.0"/>
@@ -97,7 +98,7 @@
                     <GridPane.margin>
                         <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>
-                    <TextField fx:id="buksa" prefHeight="30.0" prefWidth="135.0"
+                    <TextField fx:id="buksaTextField" prefHeight="30.0" prefWidth="135.0"
                                promptText="ادخل الرصيد الجديد" text="4000">
                         <font>
                             <Font size="14.0"/>
@@ -146,7 +147,7 @@
                         <Font name="Times New Roman" size="18.0"/>
                     </font>
                 </Button>
-                <Button fx:id="userEntryBtn" mnemonicParsing="false" onAction="#onUserEntry"
+                <Button fx:id="userEntryBtn" mnemonicParsing="false" onAction="#onUserEntries"
                         text="قيود المستخدم" GridPane.columnIndex="1">
                     <cursor>
                         <Cursor fx:constant="HAND"/>

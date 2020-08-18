@@ -2,6 +2,7 @@ package fbrs.controller;
 
 import fbrs.model.*;
 import fbrs.utils.NavigationUtil;
+import fbrs.utils.UIUtil;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
@@ -17,11 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
-import org.controlsfx.control.textfield.CustomTextField;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.awt.*;
 import java.io.IOException;
@@ -38,13 +34,13 @@ public class UserProfileController implements Initializable {
     //UI
     public BorderPane rootPane;
     public GridPane gridPane;
-    public CustomTextField id;
-    public TextField name;
-    public TextField phone;
-    public TextField buksa;
+    public TextField idTextField;
+    public TextField nameTextField;
+    public TextField phoneTextField;
+    public TextField buksaTextField;
     public CheckBox isEditable;
     public Label title;
-    public Label TypeLabel;
+    public Label typeLabel;
     public Button onClickSaveBtn;
     public Button AddFromStorageBtn;
     public Button userEntryBtn;
@@ -52,56 +48,46 @@ public class UserProfileController implements Initializable {
     private String[] shipType;
     private DatabaseModel model;
     private List<Market> markets;
-    private ValidationSupport support;
     private ComboBox<Market> marketComboBox;
     private ComboBox<String> FishermanTypeComboBox;
     private User user;
 
     public void onClickSave() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         String updatedFields = "";
         boolean isUpdated = false;
-        final Validator<String> validator = (final Control control, final String value) -> {
-            final boolean condition = value == null || !(value.matches(NUMBER_REGEX));
-            return ValidationResult.fromMessageIf(control, "يجب إدخال أرقام فقط للرقم التعريفي", Severity.ERROR, condition);
-        };
-        support.registerValidator(id, true, validator);
 
-        int newID = Integer.parseInt(id.getText());
+        String newID = idTextField.getText().trim();
+        String newName = nameTextField.getText().trim();
+        String newPhone = phoneTextField.getText().trim();
 
-        if (user.getDarshKey() != newID) {
-            if (!support.isInvalid()) {
-                try {
-                    model.updateDarshKey(user.getId(), newID);
-                    updatedFields += "تم تغيير الرقم التعريفي للرقم : " + newID;
-                    isUpdated = true;
-                    user.setDarshKey(newID);
-                } catch (SQLException exception) {
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setTitle("لم يتم تغيير الرقم التعريفي");
-                    alert.setHeaderText("الرقم التعريفي مستخدم بالفعل من قبل مستخدم آخر الرجاء إختيار رقم آخر");
-                    alert.show();
-                    return;
-                }
+        if (!newID.isEmpty() && user.getDarshKey() != Integer.parseInt(newID)) {
+            try {
+                model.updateDarshKey(user.getId(), Integer.parseInt(newID));
+                updatedFields += "تم تغيير الرقم التعريفي للرقم : " + newID;
+                isUpdated = true;
+                user.setDarshKey(Integer.parseInt(newID));
+            } catch (SQLException exception) {
+                UIUtil.showAlert("لم يتم تغيير الرقم التعريفي",
+                        "الرقم التعريفي مستخدم بالفعل من قبل مستخدم آخر الرجاء إختيار رقم آخر",
+                        null,
+                        Alert.AlertType.ERROR);
+                return;
             }
         }
 
-        if (!user.getName().equals(name.getText())) {
-            if (model.updateUserName(user.getId(), name.getText())) {
-                updatedFields += "\n تم تغيير الاسم ل : " + name.getText();
-                user.setName(name.getText());
+        if (!user.getName().equals(newName)) {
+            if (model.updateUserName(user.getId(), nameTextField.getText())) {
+                updatedFields += "\n تم تغيير الاسم ل : " + nameTextField.getText();
+                user.setName(nameTextField.getText());
                 isUpdated = true;
             }
         }
 
-        if (!phone.getText().isEmpty()) {
-            if (user.getPhone() == null || !user.getPhone().equals(phone.getText())) {
-                if (model.updateUserPhone(user.getId(), phone.getText())) {
-                    updatedFields += "\n تم تغيير رقم الجوال ل : " + phone.getText();
-                    user.setPhone(phone.getText());
-                    isUpdated = true;
-                }
+        if (user.getPhone() == null || !user.getPhone().equals(newPhone)) {
+            if (model.updateUserPhone(user.getId(), phoneTextField.getText())) {
+                updatedFields += "\n تم تغيير رقم الجوال ل : " + phoneTextField.getText();
+                user.setPhone(phoneTextField.getText());
+                isUpdated = true;
             }
         }
 
@@ -121,6 +107,10 @@ public class UserProfileController implements Initializable {
             int shipType = FishermanTypeComboBox.getValue().equals("لنش") ? 5 : 6;
 
             if (fisherman.getShipType() != shipType) {
+                int DarshKey = model.updateDarshKeyByUserType(fisherman.getId(), shipType);
+                this.idTextField.setText(Integer.toString(DarshKey));
+                user.setDarshKey(DarshKey);
+                updatedFields += "تم تغيير الرقم التعريفي للرقم : " + DarshKey;
                 if (model.updateFishermanType(fisherman.getId(), shipType)) {
                     updatedFields += "\n تم تغيير الصياد ل : " + (shipType == 5 ? this.shipType[0] : this.shipType[1]);
                     fisherman.setShipType((shipType));
@@ -129,15 +119,17 @@ public class UserProfileController implements Initializable {
             }
         }
         if (isUpdated) {
-            alert.setTitle("تمت العملية بنجاح");
-            alert.setHeaderText("تم تغيير البيانات بنجاح");
-            alert.setContentText(updatedFields);
+            UIUtil.showAlert("تمت العملية بنجاح",
+                    "تم تغيير البيانات بنجاح",
+                    updatedFields,
+                    Alert.AlertType.INFORMATION);
         } else {
-            alert.setTitle("لم يتم تغيير التفاصيل");
-            alert.setHeaderText("لا يوجد أي تغيرات");
+            UIUtil.showAlert("لم يتم تغيير التفاصيل",
+                    "لا يوجد أي تغيرات",
+                    null,
+                    Alert.AlertType.INFORMATION);
             Toolkit.getDefaultToolkit().beep();
         }
-        alert.show();
     }
 
     @Override
@@ -145,9 +137,12 @@ public class UserProfileController implements Initializable {
         shipType = new String[]{"صياد لنش", "صياد حسكة"};
         model = DatabaseModel.getModel();
         markets = model.getAllMarkets();
-        support = new ValidationSupport();
         marketComboBox = new ComboBox<>();
         FishermanTypeComboBox = new ComboBox<>();
+
+        UIUtil.setNumbersOnly(idTextField);
+        UIUtil.setNumbersOnly(phoneTextField);
+        UIUtil.setNumbersOnly(buksaTextField);
 
         TextFieldSetEditable(false);
 
@@ -166,10 +161,10 @@ public class UserProfileController implements Initializable {
     }
 
     public void TextFieldSetEditable(boolean isCheck) {
-        id.setEditable(isCheck);
-        name.setEditable(isCheck);
-        phone.setEditable(isCheck);
-        buksa.setEditable(isCheck);
+        idTextField.setDisable(!isCheck);
+        nameTextField.setDisable(!isCheck);
+        phoneTextField.setDisable(!isCheck);
+        buksaTextField.setDisable(!isCheck);
         marketComboBox.setDisable(!isCheck);
         FishermanTypeComboBox.setDisable(!isCheck);
     }
@@ -180,22 +175,22 @@ public class UserProfileController implements Initializable {
             title.setText("تعديل تفاصيل التاجر");
             AddFromStorageBtn.setVisible(false);
             userEntryBtn.setText("قيود التاجر");
-            id.setText(Integer.toString(user.getDarshKey()));
-            name.setText(user.getName());
-            phone.setText(user.getPhone());
-            buksa.setText(Integer.toString(user.getBalance()));
+            idTextField.setText(Integer.toString(user.getDarshKey()));
+            nameTextField.setText(user.getName());
+            phoneTextField.setText(user.getPhone());
+            buksaTextField.setText(Integer.toString(user.getBalance()));
             for (Market market : markets) marketComboBox.getItems().add(market);
             gridPane.add(marketComboBox, 1, 4);
             marketComboBox.setValue(model.getMarketByID(((Seller) user).getMarket()));
 
         } else if (user instanceof Fisherman) {
             title.setText("تعديل تفاصيل الصياد");
-            TypeLabel.setText("نوع المركبة");
+            typeLabel.setText("نوع المركبة");
             userEntryBtn.setText("قيود الصياد");
-            id.setText(Integer.toString(user.getDarshKey()));
-            name.setText(user.getName());
-            phone.setText(user.getPhone());
-            buksa.setText(Integer.toString(user.getBalance()));
+            idTextField.setText(Integer.toString(user.getDarshKey()));
+            nameTextField.setText(user.getName());
+            phoneTextField.setText(user.getPhone());
+            buksaTextField.setText(Integer.toString(user.getBalance()));
             FishermanTypeComboBox.setValue(((Fisherman) user).getShipType() == 5 ? "لنش" : "حسكة");
             gridPane.add(FishermanTypeComboBox, 1, 4);
         } else {
@@ -208,16 +203,36 @@ public class UserProfileController implements Initializable {
         dialog.setTitle("إضافة بكس لرصيد الصياد");
         dialog.setHeaderText("إضافة بكس لرصيد الصياد : " + user.getName());
         dialog.setContentText("أدخل عدد البُكس المرادة : ");
-        dialog.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        UIUtil.formatDialog(dialog);
 
         Optional<String> result = dialog.showAndWait();
 
-        //TODO:
-        result.ifPresent(s -> {
+        result.ifPresent(number -> {
+            boolean error = false;
+            number = number.trim();
+            if (number.isEmpty()) {
+                Toolkit.getDefaultToolkit().beep();
+                UIUtil.showAlert("خطأ", "عدد البسكس فارغ",
+                        "الرجاء التأكد من إدخال عدد البُكس قبل الضغط على إضافة",
+                        Alert.AlertType.ERROR);
+                error = true;
+            } else if (!number.matches(NUMBER_REGEX)) {
+                Toolkit.getDefaultToolkit().beep();
+                UIUtil.showAlert("خطأ", "الرقم المدخل غير صالح : " + number,
+                        "الرجاء التأكد من إدخال أرقام فقط", Alert.AlertType.ERROR);
+                error = true;
+            }
+            if (error) {
+                onAddFromStorage();
+            } else {
+                model.addEntry(1, 0, user.getId(), Integer.parseInt(number), 0, null);
+                UIUtil.showAlert("تم العملية بنجاح", "تم إضافة البُكس لرصيد الصياد : " + user.getName(),
+                        "عدد البٌكس المضافة = " + number, Alert.AlertType.CONFIRMATION);
+            }
         });
     }
 
-    public void onUserEntry() throws IOException {
+    public void onUserEntries() throws IOException {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.ENTRIES_FXML));
         Parent root = loader.load();
@@ -229,7 +244,8 @@ public class UserProfileController implements Initializable {
             stage.setTitle("قيود الصياد : " + user.getName());
             stage.getIcons().add(new Image("/fbrs/photos/Fisherman.png"));
         }
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1250, 600);
+        scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         JMetro jMetro = new JMetro(Style.LIGHT);
         jMetro.setScene(scene);
         stage.setScene(scene);

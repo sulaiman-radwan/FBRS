@@ -48,8 +48,19 @@ public class HomeController implements Initializable {
         NavigationUtil.navigateTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
     }
 
-    public void onAllEntries(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.ENTRIES_FXML, actionEvent);
+    public void onAllEntries() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.ENTRIES_FXML));
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        homeVBox.getScene().setRoot(root);
+
+        EntriesController controller = loader.getController();
+        controller.setViewType(null);
     }
 
     public void onFishermanInputReport(ActionEvent actionEvent) {
@@ -85,5 +96,9 @@ public class HomeController implements Initializable {
 
         InAndOutRecordController controller = loader.getController();
         controller.setViewType(viewType);
+    }
+
+    public void onCopyright() throws IOException {
+        NavigationUtil.createNewPrimaryStage(NavigationUtil.COPYRIGHT_FXML, "©2020 OSMMU", "/fbrs/photos/copyright.png");
     }
 }
