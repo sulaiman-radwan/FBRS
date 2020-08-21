@@ -40,11 +40,13 @@
                     <Insets/>
                 </VBox.margin>
             </TextField>
-            <DatePicker fx:id="datePicker" onAction="#onChangeDate" prefWidth="180.0"
-                        promptText="عرض التقرير من تاريخ">
+            <Label text="عرض التقرير من تاريخ">
                 <VBox.margin>
                     <Insets top="20.0"/>
                 </VBox.margin>
+            </Label>
+            <DatePicker fx:id="datePicker" onAction="#onChangeDate" prefWidth="180.0"
+                        promptText="عرض التقرير من تاريخ">
             </DatePicker>
             <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport"
                     prefWidth="180.0" text="طباعة التقارير المختصرة">

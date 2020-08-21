@@ -61,8 +61,8 @@ public class FishermanInputReportController implements Initializable {
             NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
         } else {
             Optional<ButtonType> result =
-                    UIUtil.showConfirmDialog("سيتم فقد البيانات المدخلة في حال عدم إعتمادها",
-                            "هل أنت متأكد من رغبتك في عدم حفظ البانات المدخلة؟");
+                    UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ البيانات المدخلة؟",
+                            "سيتم فقد البيانات المدخلة في حال عدم إعتمادها");
 
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
@@ -203,9 +203,9 @@ public class FishermanInputReportController implements Initializable {
     }
 
     public void onAdmit() {
-        Optional<ButtonType> result
-                = UIUtil.showConfirmDialog("عدد البُكس المضافة = " + buksaCount + "    ,عدد التجار = " + numberOfUsers,
-                "هل تريد إعتماد البيانات المدخلة");
+        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfUsers;
+
+        Optional<ButtonType> result = UIUtil.showConfirmDialog("هل تريد إعتماد البيانات المدخلة؟", contentText);
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             for (Entry entry : entries) {
                 model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(), entry.getPrice(), entry.getComment());
@@ -244,13 +244,14 @@ public class FishermanInputReportController implements Initializable {
 
     public void onDelete() {
         Optional<ButtonType> result =
-                UIUtil.showConfirmDialog("سيتم حذف القيود المحددين بشكل نهائي",
-                        "هل أنت متأكد من الحذف النهائي");
+                UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
+                        "سيتم حذف القيود المحددين بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             entries.removeIf(Entry::isSelected);
         }
         table.refresh();
         updateBuksaCount();
+        numberOfUsers = entries.size();
         isAdmit = entries.size() == 0;
     }
 }

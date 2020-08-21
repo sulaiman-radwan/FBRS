@@ -372,12 +372,12 @@ public class DatabaseManager {
         try {
             String query;
             if (userID == -1) {
-                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment " +
+                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment " +
                         "FROM entries " +
                         "WHERE (date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?) " +
                         "ORDER BY date_created DESC;";
             } else {
-                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment " +
+                query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment " +
                         "FROM entries " +
                         "WHERE ((date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?)) " +
                         "AND ((giver_id = ?) OR (taker_id = ?)) " +
@@ -415,7 +415,7 @@ public class DatabaseManager {
                 dateUpdated = resultSet.getTimestamp(("date_updated"));
                 dateUpdated.setNanos(0);
                 quantity = resultSet.getInt("quantity");
-                price = resultSet.getInt("price");
+                price = resultSet.getInt("unit_price");
                 comment = resultSet.getString("comment");
                 entries.add(new Entry(id, type, giverId, takerId, quantity, price, dateCreated, dateUpdated, comment));
             }
@@ -527,7 +527,7 @@ public class DatabaseManager {
 
         try {
 
-            String query = "INSERT INTO entries(entry_type, giver_id, taker_id, quantity, price, date_created, date_updated, comment) " +
+            String query = "INSERT INTO entries(entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment) " +
                     "VALUES (?,?,?,?,?,now(), now(),?);";
 
             PreparedStatement preparedStmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

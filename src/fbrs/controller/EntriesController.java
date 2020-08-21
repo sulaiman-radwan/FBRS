@@ -10,7 +10,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,7 +45,7 @@ public class EntriesController implements Initializable {
     public TableColumn<Entry, String> typeColumn;
     public TableColumn<Entry, Integer> quantityColumn;
     public TableColumn<Entry, String> comment;
-    public HBox HBox;
+    public HBox HBoxHeader;
     public Button backBtn;
     public BorderPane rootPane;
     public Button onDeleteBtn;
@@ -132,8 +135,8 @@ public class EntriesController implements Initializable {
 
     public void onDelete() {
         Optional<ButtonType> result =
-                UIUtil.showConfirmDialog("سيتم حذف القيود المحددين بشكل نهائي",
-                        "هل أنت متأكد من الحذف النهائي");
+                UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
+                        "سيتم حذف القيود المحددين بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             model.deleteEntry(getSelectedEntry());
             setViewType(user == null ? null : model.getUserById(user.getId()));
@@ -148,6 +151,15 @@ public class EntriesController implements Initializable {
         } else if (user instanceof Fisherman) {
             title.setText("قيود الصياد : " + user.getName());
             balance.setText(String.valueOf(user.getBalance()));
+            Button addFromStorage = new Button("إضافة بُكس من المخزن");
+            addFromStorage.setCursor(Cursor.HAND);
+            addFromStorage.setAlignment(Pos.CENTER_LEFT);
+            addFromStorage.setOnAction(event -> {
+                UIUtil.addFromStorage(user);
+                refreshTable();
+            });
+            HBoxHeader.getChildren().add(addFromStorage);
+            HBox.setMargin(addFromStorage, new Insets(8, 0, 0, 32));
         }
         if (user != null) {
             buksaLabel.setVisible(true);
@@ -197,6 +209,7 @@ public class EntriesController implements Initializable {
         if (!value.matches("جميع القيود")) {
             checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 setSelectCheckBox(checkBoxTreeItem.getValue(), newValue);
+                entries.setPredicate(entry -> getSelectCheckBox(model.getEntryTypeName(entry.getType())));
             });
         }
         return checkBoxTreeItem;
@@ -223,6 +236,8 @@ public class EntriesController implements Initializable {
     public void onEditUserProfile() throws IOException {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(NavigationUtil.USERS_PROFILE_FXML));
+        stage.setTitle(user instanceof Seller ? "تعديل تفاصيل التاجر" : "تعديل تفاصيل الصايد");
+        stage.getIcons().add(new Image(user instanceof Seller ? "/fbrs/photos/seller.png" : "/fbrs/photos/Fisherman.png"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         JMetro jMetro = new JMetro(Style.LIGHT);
@@ -244,7 +259,6 @@ public class EntriesController implements Initializable {
 
         primaryStage.setResizable(false);
         Scene scene = new Scene(root);
-        scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         primaryStage.setScene(scene);
 
         JMetro jMetro = new JMetro(Style.LIGHT);
@@ -252,6 +266,10 @@ public class EntriesController implements Initializable {
 
         SpecialCasesController controller = loader.getController();
         controller.setUser(user);
+
+        scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+
+        primaryStage.setOnCloseRequest(event -> refreshTable());
 
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();

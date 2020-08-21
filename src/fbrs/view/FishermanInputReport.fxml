@@ -151,7 +151,7 @@
                         <Insets right="32.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" text="إضافة">
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" onKeyPressed="#onAdd" text="إضافة">
                     <font>
                         <Font size="14.0"/>
                     </font>

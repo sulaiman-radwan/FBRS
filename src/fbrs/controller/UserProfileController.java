@@ -3,6 +3,7 @@ package fbrs.controller;
 import fbrs.model.*;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
@@ -28,8 +29,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class UserProfileController implements Initializable {
-
-    private static final String NUMBER_REGEX = "\\d*";
+    private static final String PHONE_REGEX = "(^$|^05[0-9]{8}$)";
 
     //UI
     public BorderPane rootPane;
@@ -37,7 +37,7 @@ public class UserProfileController implements Initializable {
     public TextField idTextField;
     public TextField nameTextField;
     public TextField phoneTextField;
-    public TextField buksaTextField;
+    public Label balanceLabel;
     public CheckBox isEditable;
     public Label title;
     public Label typeLabel;
@@ -76,19 +76,23 @@ public class UserProfileController implements Initializable {
         }
 
         if (!user.getName().equals(newName)) {
-            if (model.updateUserName(user.getId(), nameTextField.getText())) {
-                updatedFields += "\n تم تغيير الاسم ل : " + nameTextField.getText();
-                user.setName(nameTextField.getText());
+            if (model.updateUserName(user.getId(), newName)) {
+                updatedFields += "\n تم تغيير الاسم ل : " + newName;
+                user.setName(newName);
                 isUpdated = true;
             }
         }
 
         if (user.getPhone() == null || !user.getPhone().equals(newPhone)) {
-            if (model.updateUserPhone(user.getId(), phoneTextField.getText())) {
-                updatedFields += "\n تم تغيير رقم الجوال ل : " + phoneTextField.getText();
-                user.setPhone(phoneTextField.getText());
-                isUpdated = true;
+            if (newPhone.matches(PHONE_REGEX)) {
+                if (model.updateUserPhone(user.getId(), newPhone)) {
+                    updatedFields += "\n تم تغيير رقم الجوال ل : " + newPhone;
+                    user.setPhone(phoneTextField.getText());
+                }
+            } else {
+                updatedFields += "\n لم يتم تغيير رقم الجوال تأكد من إدخال رقم جوال صالح  : " + newPhone;
             }
+            isUpdated = true;
         }
 
         if (user instanceof Seller) {
@@ -142,7 +146,6 @@ public class UserProfileController implements Initializable {
 
         UIUtil.setNumbersOnly(idTextField);
         UIUtil.setNumbersOnly(phoneTextField);
-        UIUtil.setNumbersOnly(buksaTextField);
 
         TextFieldSetEditable(false);
 
@@ -154,6 +157,22 @@ public class UserProfileController implements Initializable {
         FishermanTypeComboBox.getItems().addAll("لنش", "حسكة");
         FishermanTypeComboBox.setPrefWidth(208.0);
         FishermanTypeComboBox.setPrefHeight(25.0);
+
+        Platform.runLater(() ->
+                rootPane.getScene().getWindow().setOnCloseRequest(event -> {
+                    if (user.getDarshKey() != Integer.parseInt(idTextField.getText())
+                            || !user.getName().equals(nameTextField.getText())
+                            || (user.getPhone() == null && phoneTextField.getText() != null)
+                            || (user.getPhone() != null && !user.getPhone().equals(phoneTextField.getText()))) {
+                        Optional<ButtonType> result =
+                                UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
+                                        "سيتم فقد البيانات المدخلة في حال عدم حفظها");
+                        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
+                            event.consume();
+                        }
+                    }
+                })
+        );
     }
 
     public void onCheck() {
@@ -164,7 +183,6 @@ public class UserProfileController implements Initializable {
         idTextField.setDisable(!isCheck);
         nameTextField.setDisable(!isCheck);
         phoneTextField.setDisable(!isCheck);
-        buksaTextField.setDisable(!isCheck);
         marketComboBox.setDisable(!isCheck);
         FishermanTypeComboBox.setDisable(!isCheck);
     }
@@ -178,7 +196,7 @@ public class UserProfileController implements Initializable {
             idTextField.setText(Integer.toString(user.getDarshKey()));
             nameTextField.setText(user.getName());
             phoneTextField.setText(user.getPhone());
-            buksaTextField.setText(Integer.toString(user.getBalance()));
+            balanceLabel.setText(Integer.toString(user.getBalance()));
             for (Market market : markets) marketComboBox.getItems().add(market);
             gridPane.add(marketComboBox, 1, 4);
             marketComboBox.setValue(model.getMarketByID(((Seller) user).getMarket()));
@@ -190,7 +208,7 @@ public class UserProfileController implements Initializable {
             idTextField.setText(Integer.toString(user.getDarshKey()));
             nameTextField.setText(user.getName());
             phoneTextField.setText(user.getPhone());
-            buksaTextField.setText(Integer.toString(user.getBalance()));
+            balanceLabel.setText(Integer.toString(user.getBalance()));
             FishermanTypeComboBox.setValue(((Fisherman) user).getShipType() == 5 ? "لنش" : "حسكة");
             gridPane.add(FishermanTypeComboBox, 1, 4);
         } else {
@@ -199,37 +217,7 @@ public class UserProfileController implements Initializable {
     }
 
     public void onAddFromStorage() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("إضافة بكس لرصيد الصياد");
-        dialog.setHeaderText("إضافة بكس لرصيد الصياد : " + user.getName());
-        dialog.setContentText("أدخل عدد البُكس المرادة : ");
-        UIUtil.formatDialog(dialog);
-
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(number -> {
-            boolean error = false;
-            number = number.trim();
-            if (number.isEmpty()) {
-                Toolkit.getDefaultToolkit().beep();
-                UIUtil.showAlert("خطأ", "عدد البسكس فارغ",
-                        "الرجاء التأكد من إدخال عدد البُكس قبل الضغط على إضافة",
-                        Alert.AlertType.ERROR);
-                error = true;
-            } else if (!number.matches(NUMBER_REGEX)) {
-                Toolkit.getDefaultToolkit().beep();
-                UIUtil.showAlert("خطأ", "الرقم المدخل غير صالح : " + number,
-                        "الرجاء التأكد من إدخال أرقام فقط", Alert.AlertType.ERROR);
-                error = true;
-            }
-            if (error) {
-                onAddFromStorage();
-            } else {
-                model.addEntry(1, 0, user.getId(), Integer.parseInt(number), 0, null);
-                UIUtil.showAlert("تم العملية بنجاح", "تم إضافة البُكس لرصيد الصياد : " + user.getName(),
-                        "عدد البٌكس المضافة = " + number, Alert.AlertType.CONFIRMATION);
-            }
-        });
+        UIUtil.addFromStorage(user);
     }
 
     public void onUserEntries() throws IOException {
