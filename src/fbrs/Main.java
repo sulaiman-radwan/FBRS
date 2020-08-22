@@ -45,8 +45,7 @@ public class Main extends Application {
 
         loadDataTask.setOnSucceeded(event -> {
             splashScreen.getStage().close();
-            primaryStage.setTitle("برنامج إدارة بُكس السمك : الدرش");
-            JMetro jMetro = new JMetro(Style.LIGHT);
+            primaryStage.setTitle("برنامج الحافظ لإدارة بُكس السمك");
 
             Parent root = null;
             try {
@@ -57,8 +56,13 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+
+            JMetro jMetro = new JMetro(Style.LIGHT);
             jMetro.setScene(scene);
+
+            primaryStage.setResizable(false);
             primaryStage.setMaximized(true);
+
             primaryStage.show();
         });
 
@@ -67,8 +71,7 @@ public class Main extends Application {
 
         primaryStage.setOnCloseRequest(event -> {
             Optional<ButtonType> result =
-                    UIUtil.showConfirmDialog("سيتم إغلاق البرنامج",
-                            "هل أنت متأكد من إغلاق البرنامج");
+                    UIUtil.showConfirmDialog("هل أنت متأكد من إغلاق البرنامج؟", "سيتم إغلاق البرنامج");
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 DatabaseManager.getInstance().exit();
                 exit();

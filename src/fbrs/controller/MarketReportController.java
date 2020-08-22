@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MarketReportController implements Initializable {
@@ -42,25 +43,30 @@ public class MarketReportController implements Initializable {
 
     private DatabaseModel model;
     private Market market;
-    private FilteredList<Seller> users;
+    private FilteredList<Seller> sellers;
 
     public void setMarket(Market market) {
         this.market = market;
         title.setText("تقرير سوق " + market);
 
-        users = new FilteredList<>(model.getSellersByMarket(market.getId()));
-        table.setItems(users);
+        sellers = new FilteredList<>(model.getSellersByMarket(market.getId()));
+        table.setItems(sellers);
+    }
+
+    private void refreshTable() {
+        setMarket(market);
+        search();
+        table.refresh();
     }
 
     private void selectAllBoxes(ActionEvent e) {
-        for (User use : users) {
-            use.setSelected(((CheckBox) e.getSource()).isSelected());
-        }
+        for (User user : sellers)
+            user.setSelected(((CheckBox) e.getSource()).isSelected());
     }
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(seller -> seller.toString().matches(regex));
+        sellers.setPredicate(seller -> seller.toString().matches(regex));
     }
 
     public void back(ActionEvent actionEvent) {
@@ -77,10 +83,30 @@ public class MarketReportController implements Initializable {
 
     public void newSeller() throws IOException {
         NavigationUtil.AddSpecificUser("إضافة تاجر جديد إلى سوق " + market.getName(), market, 1);
+        refreshTable();
     }
 
     public void zeroBalances() {
-        //todo:
+        int buksaCount = 0;
+        int numberOfUsers = 0;
+        for (Seller seller : sellers) {
+            if (seller.getBalance() > 0) {
+                buksaCount += seller.getBalance();
+                numberOfUsers += 1;
+            }
+        }
+        String contentText = "عدد البُكس التي سوف يتم إرجها = " + buksaCount + "    ,عدد التجار = " + numberOfUsers;
+        Optional<ButtonType> result
+                = UIUtil.showConfirmDialog("هل أنت متأكد من تصفير جميع حسابات التجار في هذا السوق؟", contentText);
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            for (Seller seller : sellers) {
+                if (seller.getBalance() > 0) {
+                    model.addEntry(3, seller.getId(), 0, seller.getBalance(), 0,
+                            "تم تصفير الرصيد = " + seller.getBalance());
+                }
+            }
+            refreshTable();
+        }
     }
 
     @Override
@@ -112,8 +138,7 @@ public class MarketReportController implements Initializable {
                 && (user != null)) {
             Stage stage = NavigationUtil.viewUserEntries(user);
             stage.setOnCloseRequest(we -> {
-                setMarket(market);
-                search();
+                refreshTable();
             });
         }
     }

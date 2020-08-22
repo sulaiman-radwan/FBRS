@@ -3,7 +3,6 @@ package fbrs.controller;
 import fbrs.model.*;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,8 +61,8 @@ public class InAndOutRecordController implements Initializable {
             NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
         } else {
             Optional<ButtonType> result =
-                    UIUtil.showConfirmDialog("سيتم فقد البيانات المدخلة في حال عدم إعتمادها",
-                            "هل أنت متأكد من رغبتك في عدم حفظ البانات المدخلة؟");
+                    UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ البيانات المدخلة؟",
+                            "سيتم فقد البيانات المدخلة في حال عدم إعتمادها");
 
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
@@ -91,9 +90,17 @@ public class InAndOutRecordController implements Initializable {
         } else {
             switch (viewType) {
                 case TYPE_SELLER:
-                    entries.add(new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
-                            Integer.parseInt(quantity), 0, null,
-                            null, comment));
+                    //todo :
+                    // Returns more than the quantity delivered
+                    if (Integer.parseInt(quantity) > currentUser.getBalance()) {
+                        entries.add(new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
+                                currentUser.getBalance(), 0, null, null,
+                                comment + " إرجاع زيادة " + (Integer.parseInt(quantity) - currentUser.getBalance())));
+                    } else {
+                        entries.add(new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
+                                Integer.parseInt(quantity), 0, null,
+                                null, comment));
+                    }
                     break;
                 case TYPE_FISHERMAN:
                     entries.add(new Entry(currentUser.getId(), 1, 0, currentUser.getId(),
@@ -199,18 +206,10 @@ public class InAndOutRecordController implements Initializable {
     }
 
     public void onAdmit() {
-        String header = "";
-        switch (viewType) {
-            case TYPE_SELLER:
-                header = "عدد البُكس المضافة = " + buksaCount + "    ,عدد التجار = " + numberOfUsers;
-                break;
-            case TYPE_FISHERMAN:
-                header = "عدد البُكس المضافة = " + buksaCount + "    ,عدد الصيادين = " + numberOfUsers;
-        }
+        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfUsers;
 
         Optional<ButtonType> result =
-                UIUtil.showConfirmDialog(header,
-                        "هل تريد إعتماد البيانات المدخلة");
+                UIUtil.showConfirmDialog("هل تريد إعتماد البيانات المدخلة؟", contentText);
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             for (Entry entry : entries) {
                 model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(),
@@ -233,13 +232,14 @@ public class InAndOutRecordController implements Initializable {
 
     public void onDelete() {
         Optional<ButtonType> result =
-                UIUtil.showConfirmDialog("سيتم حذف القيود المحددين بشكل نهائي",
-                        "هل أنت متأكد من الحذف النهائي");
+                UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
+                        "سيتم حذف القيود المحددين بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             entries.removeIf(Entry::isSelected);
         }
         table.refresh();
         updateBuksaCount();
+        numberOfUsers = entries.size();
         isAdmit = entries.size() == 0;
     }
 
@@ -248,6 +248,6 @@ public class InAndOutRecordController implements Initializable {
             UIUtil.ErrorInput(quantityTextField);
             Toolkit.getDefaultToolkit().beep();
         } else
-        userTextField.requestFocus();
+            userTextField.requestFocus();
     }
 }

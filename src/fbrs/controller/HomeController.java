@@ -97,8 +97,4 @@ public class HomeController implements Initializable {
         InAndOutRecordController controller = loader.getController();
         controller.setViewType(viewType);
     }
-
-    public void onCopyright() throws IOException {
-        NavigationUtil.createNewPrimaryStage(NavigationUtil.COPYRIGHT_FXML, "©2020 OSMMU", "/fbrs/photos/copyright.png");
-    }
 }

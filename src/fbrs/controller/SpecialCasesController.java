@@ -5,10 +5,10 @@ import fbrs.model.EntryType;
 import fbrs.model.User;
 import fbrs.utils.UIUtil;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.net.URL;
@@ -19,6 +19,7 @@ public class SpecialCasesController implements Initializable {
     //UI
     public ComboBox<EntryType> specialCases;
     public TextField buksaCountTextField;
+    public BorderPane rootPane;
 
     private DatabaseModel model;
     private User user;
@@ -32,6 +33,10 @@ public class SpecialCasesController implements Initializable {
         } else {
             model.addEntry(cases.getId(), user.getId(), model.getUserById(0).getId(),
                     Integer.parseInt(buksaCount), 0, cases.getShortDesc());
+            UIUtil.showAlert("تم العملية بنجاح", "تم إضافة حالة خاصة بنجاح",
+                    specialCases.getValue().getName() + " = " + buksaCountTextField.getText(), Alert.AlertType.INFORMATION);
+            ((Stage) rootPane.getScene().getWindow()).close();
+
         }
     }
 

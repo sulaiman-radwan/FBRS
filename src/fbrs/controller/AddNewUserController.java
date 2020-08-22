@@ -4,10 +4,12 @@ import fbrs.model.DatabaseModel;
 import fbrs.model.Market;
 import fbrs.model.User;
 import fbrs.utils.UIUtil;
+import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
@@ -16,9 +18,11 @@ import org.controlsfx.validation.Validator;
 import java.awt.*;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AddNewUserController implements Initializable {
+    private static final String PHONE_REGEX = "(^$|^05[0-9]{8}$)";
 
     //UI
     public TextField nameTextField;
@@ -26,6 +30,7 @@ public class AddNewUserController implements Initializable {
     public ComboBox<String> userTypeComboBox;
     public ComboBox<Market> marketComboBox;
     public Label marketLabel;
+    public BorderPane rootPane;
 
     private DatabaseModel model;
     private ValidationSupport support;
@@ -88,7 +93,21 @@ public class AddNewUserController implements Initializable {
         support.setErrorDecorationEnabled(false); // we don't want errors to bother us for now.
         support.registerValidator(nameTextField, Validator.createEmptyValidator("يجب ادخال اسم المستخدم", Severity.ERROR));
         support.registerValidator(userTypeComboBox, Validator.createEmptyValidator("يجب إختيار نوع المستخدم", Severity.ERROR));
+        support.registerValidator(phoneTextField, Validator.createRegexValidator("تأكد من إدخال رقم جوال صالح", PHONE_REGEX, Severity.ERROR));
 
+
+        Platform.runLater(() ->
+                rootPane.getScene().getWindow().setOnCloseRequest(event -> {
+                    if (!nameTextField.getText().isEmpty() || !phoneTextField.getText().isEmpty()) {
+                        Optional<ButtonType> result =
+                                UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
+                                        "سيتم فقد البيانات المدخلة في حال عدم حفظها");
+                        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
+                            event.consume();
+                        }
+                    }
+                })
+        );
     }
 
     public void onSelectUserType() {

@@ -1,70 +1,69 @@
 package fbrs.utils;
 
-import fbrs.model.DatabaseManager;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.util.Optional;
-
-import static javafx.application.Platform.exit;
+import javafx.stage.StageStyle;
 
 public class SplashScreen<T> {
 
     private Task<T> task;
 
-    private Stage stage ;
+    private Stage stage;
     private ProgressIndicator progressIndicator;
 
     public SplashScreen(String message) {
         stage = new Stage();
         stage.setResizable(false);
+        //stage.setMaximized(true);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("برنامج إدارة بُكس السمك : الدرش");
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("برنامج الحافظ لإدارة بُكس السمك");
         stage.getIcons().add(new Image("/fbrs/photos/App_icon.png"));
 
         Label label = new Label();
         label.setText(message);
 
-        Image logo = new Image("/fbrs/photos/App_icon.png", 128, 128, true, true);
+        Image logo = new Image("/fbrs/photos/FBRS.png", 256, 256, true, true);
         ImageView imageView = new ImageView(logo);
 
         progressIndicator = new ProgressIndicator();
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 
+        BorderPane borderPane = new BorderPane();
+
         VBox vBox = new VBox();
-        vBox.setSpacing(25);
-        vBox.setPadding(new Insets(30));
+        vBox.setSpacing(16);
+        //vBox.setPadding(new Insets(8));
         vBox.setAlignment(Pos.CENTER);
         vBox.getChildren().addAll(imageView, label, progressIndicator);
 
-        Scene scene = new Scene(vBox, 480, 320);
+        Label copyright = new Label("©2020 OSMMU");
+        copyright.setFont(Font.font(10));
+
+        borderPane.setCenter(vBox);
+        borderPane.setBottom(copyright);
+        BorderPane.setAlignment(copyright, Pos.CENTER_RIGHT);
+        BorderPane.setMargin(copyright, new Insets(16));
+        //BorderPane.setMargin(vBox, new Insets(32,0,0,0));
+
+
+        Scene scene = new Scene(borderPane, 550, 400);
         scene.getStylesheets().add("/fbrs/styles/splash.css");
         scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
         stage.setScene(scene);
-        stage.setOnCloseRequest(event -> {
-            Optional<ButtonType> result =
-                    UIUtil.showConfirmDialog("سيتم إغلاق البرنامج",
-                            "هل أنت متأكد من إغلاق البرنامج");
-            if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                DatabaseManager.getInstance().exit();
-                exit();
-            } else {
-                event.consume();
-            }
-        });
     }
 
     public void activateProgressBar(Task<T> task) {

@@ -33,7 +33,6 @@ public class NavigationUtil {
     public final static String STORAGE_FXML = "/fbrs/view/storage.fxml";
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
-    public static final String COPYRIGHT_FXML = "/fbrs/view/copyright.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
@@ -50,7 +49,7 @@ public class NavigationUtil {
         showPrimaryStage(stageName, photoPath, root);
     }
 
-    public static Stage ViewUserProfile(User user) throws IOException {
+    public static Stage viewUserProfile(User user) throws IOException {
         FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.USERS_PROFILE_FXML));
         Parent root = loader.load();
         Stage stage = showPrimaryStage((user instanceof Seller ? "تعديل تفاصيل التاجر" : "تعديل تفاصيل الصايد"),

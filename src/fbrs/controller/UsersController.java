@@ -96,14 +96,12 @@ public class UsersController implements Initializable {
         table.setRowFactory(tableView -> {
             final TableRow<User> row = new TableRow<>();
             final ContextMenu rowMenu = new ContextMenu();
-            User user = table.getSelectionModel().getSelectedItem();
             MenuItem editItem = new MenuItem("تعديل");
             editItem.setOnAction(event -> {
                 try {
-                    Stage stage = NavigationUtil.ViewUserProfile(user);
+                    Stage stage = NavigationUtil.viewUserProfile(tableView.getSelectionModel().getSelectedItem());
                     stage.setOnCloseRequest(we -> {
-                        table.refresh();
-                        search();
+                        refreshTable();
                     });
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -111,9 +109,8 @@ public class UsersController implements Initializable {
             });
             MenuItem removeItem = new MenuItem("حذف");
             removeItem.setOnAction(event -> {
-                model.deactivateUser(user);
+                model.deactivateUser(tableView.getSelectionModel().getSelectedItem());
                 refreshTable();
-                search();
             });
             rowMenu.getItems().addAll(editItem, removeItem);
 
@@ -148,8 +145,8 @@ public class UsersController implements Initializable {
     }
 
     private void selectAllBoxes(ActionEvent e) {
-        for (User use : users) {
-            use.setSelected(((CheckBox) e.getSource()).isSelected());
+        for (User user : users) {
+            user.setSelected(((CheckBox) e.getSource()).isSelected());
         }
     }
 
@@ -165,7 +162,7 @@ public class UsersController implements Initializable {
             default:
                 throw new IllegalStateException("Unexpected value: " + viewType);
         }
-        stage.setOnCloseRequest(we -> setViewType(viewType));
+        stage.setOnCloseRequest(we -> refreshTable());
     }
 
     public void onClick(MouseEvent mouseEvent) throws IOException {
@@ -175,8 +172,7 @@ public class UsersController implements Initializable {
                 && (user != null)) {
             Stage stage = NavigationUtil.viewUserEntries(user);
             stage.setOnCloseRequest(we -> {
-                setViewType(viewType);
-                search();
+                refreshTable();
             });
         }
     }
@@ -184,6 +180,7 @@ public class UsersController implements Initializable {
     private void refreshTable() {
         setViewType(viewType);
         table.refresh();
+        search();
     }
 
     private List<User> getSelectedUsers() {

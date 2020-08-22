@@ -39,7 +39,7 @@
                 <VBox.margin>
                     <Insets left="50.0" right="50.0"/>
                 </VBox.margin>
-                <TextField nodeOrientation="LEFT_TO_RIGHT" alignment="CENTER_RIGHT" fx:id="idTextField"
+                <TextField fx:id="idTextField"
                            promptText="ادخل الرقم التعريفي الجديد" text="201"
                            GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <font>
@@ -98,12 +98,14 @@
                     <GridPane.margin>
                         <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>
-                    <TextField fx:id="buksaTextField" prefHeight="30.0" prefWidth="135.0"
-                               promptText="ادخل الرصيد الجديد" text="4000">
+                    <Label fx:id="balanceLabel" text="00">
+                        <HBox.margin>
+                            <Insets top="8.0"/>
+                        </HBox.margin>
                         <font>
                             <Font size="14.0"/>
                         </font>
-                    </TextField>
+                    </Label>
                     <Label text="بكسة">
                         <font>
                             <Font name="Times New Roman" size="18.0"/>

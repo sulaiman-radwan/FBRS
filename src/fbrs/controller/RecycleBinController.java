@@ -59,8 +59,8 @@ public class RecycleBinController implements Initializable {
 
     private void confirmDelete(List<User> users) {
         Optional<ButtonType> result =
-                UIUtil.showConfirmDialog("سيتم حذف المستخدمين المحددين بشكل نهائي",
-                        "هل أنت متأكد من الحذف النهائي");
+                UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
+                        "سيتم حذف القيود المحددين بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             model.deactivateUsers(users);
             model.deleteUsers(users);
@@ -108,13 +108,13 @@ public class RecycleBinController implements Initializable {
     }
 
     private void selectAllBoxes(ActionEvent e) {
-        for (User use : users) {
-            use.setSelected(((CheckBox) e.getSource()).isSelected());
+        for (User user : users) {
+            user.setSelected(((CheckBox) e.getSource()).isSelected());
         }
     }
 
     private void search() {
         String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
-        users.setPredicate(p -> p.getName().matches(regex) || String.valueOf(p.getId()).matches(regex));
+        users.setPredicate(user -> user.toString().matches(regex));
     }
 }
