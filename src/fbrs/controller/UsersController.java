@@ -16,6 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -52,12 +54,12 @@ public class UsersController implements Initializable {
     private DatabaseModel model;
 
     @FXML
-    public void back(ActionEvent event) {
-        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, event);
+    public void back() {
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
     }
 
     private void search() {
-        String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
+        String regex = ".*" + searchField.getText().replaceAll("\\s+", ".*").replaceAll("أ", "ا") + ".*";
         users.setPredicate(user -> user.toString().matches(regex));
     }
 
@@ -86,8 +88,6 @@ public class UsersController implements Initializable {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> search());
 
         table.setEditable(true);
-
-        selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
 
         CheckBox selectAll = new CheckBox();
         selectColumn.setGraphic(selectAll);
@@ -120,6 +120,11 @@ public class UsersController implements Initializable {
                             .otherwise((ContextMenu) null));
             return row;
         });
+
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back();
+        });
     }
 
     public void setViewType(int viewType) {
@@ -142,6 +147,7 @@ public class UsersController implements Initializable {
         table.setItems(users);
         table.refresh();
         table.getSortOrder().add(idColumn);
+        searchField.requestFocus();
     }
 
     private void selectAllBoxes(ActionEvent e) {

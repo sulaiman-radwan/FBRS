@@ -35,7 +35,7 @@ public class SplashScreen<T> {
         Label label = new Label();
         label.setText(message);
 
-        Image logo = new Image("/fbrs/photos/FBRS.png", 256, 256, true, true);
+        Image logo = new Image("/fbrs/photos/FBRS.png", 514, 320, true, true);
         ImageView imageView = new ImageView(logo);
 
         progressIndicator = new ProgressIndicator();
@@ -59,7 +59,7 @@ public class SplashScreen<T> {
         //BorderPane.setMargin(vBox, new Insets(32,0,0,0));
 
 
-        Scene scene = new Scene(borderPane, 550, 400);
+        Scene scene = new Scene(borderPane, 650, 500);
         scene.getStylesheets().add("/fbrs/styles/splash.css");
         scene.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 

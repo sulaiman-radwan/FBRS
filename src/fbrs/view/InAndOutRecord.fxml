@@ -62,7 +62,7 @@
                         <Insets right="16.0"/>
                     </HBox.margin>
                 </Button>
-                <Label text="العدد الاجمالي للبُكس : ">
+                <Label text="العدد الاجمالي للبُكس غير المعتمدة : ">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -120,7 +120,7 @@
                         <Insets right="16.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" text="إضافة">
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" onKeyPressed="#onAdd" text="إضافة">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

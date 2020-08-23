@@ -9,7 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
@@ -71,6 +74,8 @@ public class AddNewUserController implements Initializable {
             UIUtil.showAlert(title, header, message, Alert.AlertType.INFORMATION);
             support.setErrorDecorationEnabled(false); // we don't want errors to bother us for now.
             reset();
+            ((Stage) rootPane.getScene().getWindow()).close();
+
         }
     }
 
@@ -96,18 +101,22 @@ public class AddNewUserController implements Initializable {
         support.registerValidator(phoneTextField, Validator.createRegexValidator("تأكد من إدخال رقم جوال صالح", PHONE_REGEX, Severity.ERROR));
 
 
-        Platform.runLater(() ->
-                rootPane.getScene().getWindow().setOnCloseRequest(event -> {
-                    if (!nameTextField.getText().isEmpty() || !phoneTextField.getText().isEmpty()) {
-                        Optional<ButtonType> result =
-                                UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
-                                        "سيتم فقد البيانات المدخلة في حال عدم حفظها");
-                        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
-                            event.consume();
-                        }
+        Platform.runLater(() -> {
+            rootPane.getScene().getWindow().setOnCloseRequest(event -> {
+                if (!nameTextField.getText().isEmpty() || !phoneTextField.getText().isEmpty()) {
+                    Optional<ButtonType> result =
+                            UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
+                                    "سيتم فقد البيانات المدخلة في حال عدم حفظها");
+                    if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
+                        event.consume();
                     }
-                })
-        );
+                }
+            });
+            rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE)
+                    ((Stage) rootPane.getScene().getWindow()).close();
+            });
+        });
     }
 
     public void onSelectUserType() {

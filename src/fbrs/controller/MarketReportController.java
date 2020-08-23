@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -40,6 +42,7 @@ public class MarketReportController implements Initializable {
     public BorderPane rootPane;
     public Text title;
     public DatePicker datePicker;
+    public Button printSellerWithBalance;
 
     private DatabaseModel model;
     private Market market;
@@ -51,6 +54,7 @@ public class MarketReportController implements Initializable {
 
         sellers = new FilteredList<>(model.getSellersByMarket(market.getId()));
         table.setItems(sellers);
+        searchField.requestFocus();
     }
 
     private void refreshTable() {
@@ -65,12 +69,12 @@ public class MarketReportController implements Initializable {
     }
 
     private void search() {
-        String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
+        String regex = ".*" + searchField.getText().replaceAll("\\s+", ".*").replaceAll("أ", "ا") + ".*";
         sellers.setPredicate(seller -> seller.toString().matches(regex));
     }
 
-    public void back(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(rootPane, NavigationUtil.MARKETS_FXML, actionEvent);
+    public void back() {
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.MARKETS_FXML);
     }
 
     public void printBriefReport() {
@@ -129,6 +133,11 @@ public class MarketReportController implements Initializable {
 
         table.setEditable(true);
         UIUtil.formatDatePicker(datePicker);
+
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back();
+        });
     }
 
     public void onClick(MouseEvent mouseEvent) throws IOException {
@@ -145,5 +154,8 @@ public class MarketReportController implements Initializable {
 
     public void onChangeDate() {
         //todo:
+    }
+
+    public void printSellerWithBalance(ActionEvent actionEvent) {
     }
 }

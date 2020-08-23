@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
-            nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #EDE682;"
+            nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #EDE682;" minWidth="1300"
             xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.EntriesController">
     <center>
         <VBox spacing="16.0" BorderPane.alignment="CENTER">
@@ -18,8 +18,9 @@
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
                     <TableColumn fx:id="fromColumn" prefWidth="160.0" sortable="false" text="المعطي"/>
                     <TableColumn fx:id="toColumn" prefWidth="160.0" sortable="false" text="المتلقي"/>
-                    <TableColumn fx:id="typeColumn" prefWidth="100.0" sortable="false" text="نوع القيد"/>
+                    <TableColumn fx:id="typeColumn" prefWidth="160.0" sortable="false" text="نوع القيد"/>
                     <TableColumn fx:id="quantityColumn" prefWidth="100.0" sortable="false" text="الكمية"/>
+                    <TableColumn fx:id="priceColumn" prefWidth="100.0" sortable="false" text="السعر"/>
                     <TableColumn fx:id="dateCreatedColumn" prefWidth="180.0" sortable="false" text="تاريخ الإنشاء"/>
                     <TableColumn fx:id="dateUpdatedColumn" prefWidth="200.0" sortable="false" text="تاريخ التعديل"/>
                     <TableColumn fx:id="comment" prefWidth="200.0" sortable="false" text="ملاحظات"/>
@@ -46,13 +47,19 @@
                     </HBox.margin>
                 </Button>
                 <HBox fx:id="HBoxHeader" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <Button fx:id="EditUserProfileBtn" layoutX="498.0" layoutY="42.0" mnemonicParsing="false"
+                            onAction="#onEditUserProfile" prefWidth="150.0" text="تعديل التفاصيل">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <HBox.margin>
+                            <Insets right="32.0" top="8.0"/>
+                        </HBox.margin>
+                    </Button>
                     <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="جميع القيود">
                         <font>
                             <Font size="28.0"/>
                         </font>
-                        <HBox.margin>
-                            <Insets/>
-                        </HBox.margin>
                     </Text>
                     <Label fx:id="accountLabel" text="الرصيد">
                         <font>
@@ -78,6 +85,16 @@
                             <Insets left="16.0" top="8.0"/>
                         </HBox.margin>
                     </Label>
+                    <Button fx:id="AddFromStorageBtn" minWidth="150.0" mnemonicParsing="false"
+                            onAction="#onAddFromStorage"
+                            text="إضافة بُكس من المخزن">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <HBox.margin>
+                            <Insets left="32.0" top="8.0"/>
+                        </HBox.margin>
+                    </Button>
                 </HBox>
             </HBox>
             <Separator/>
@@ -88,16 +105,7 @@
                 <padding>
                     <Insets bottom="16.0" top="16.0"/>
                 </padding>
-                <Button fx:id="EditUserProfileBtn" layoutX="498.0" layoutY="42.0" mnemonicParsing="false"
-                        onAction="#onEditUserProfile" prefWidth="120.0" text="تعديل التفاصيل">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                    <HBox.margin>
-                        <Insets left="8.0"/>
-                    </HBox.margin>
-                </Button>
-                <Button fx:id="onDeleteBtn" mnemonicParsing="false" onAction="#onDelete" prefWidth="120.0"
+                <Button fx:id="onDeleteBtn" mnemonicParsing="false" onAction="#onDelete" prefWidth="150.0"
                         text="حذف المحدد">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
@@ -129,7 +137,7 @@
                                 promptText="إلى"/>
                 </VBox>
                 <Button fx:id="TypeEntriesBtn" layoutX="42.0" layoutY="42.0" mnemonicParsing="false"
-                        onAction="#onEntryType" prefWidth="120.0" text="نوع القيد">
+                        onAction="#onEntryType" prefWidth="150.0" text="نوع القيد">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>
@@ -138,7 +146,7 @@
                     </HBox.margin>
                 </Button>
                 <Button fx:id="SpecialCasesBtn" layoutX="498.0" layoutY="42.0" mnemonicParsing="false"
-                        onAction="#onSpecialCases" prefWidth="120.0" text="حالات خاصة للبكس">
+                        onAction="#onSpecialCases" prefWidth="150.0" text="حالات خاصة للبكس">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

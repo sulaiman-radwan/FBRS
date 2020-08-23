@@ -6,7 +6,6 @@ import fbrs.controller.UserProfileController;
 import fbrs.model.Market;
 import fbrs.model.Seller;
 import fbrs.model.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,7 +34,7 @@ public class NavigationUtil {
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
 
 
-    public static void navigateTo(Parent rootPane, String path, ActionEvent event) {
+    public static void navigateTo(Parent rootPane, String path) {
         try {
             Parent root = FXMLLoader.load(NavigationUtil.class.getResource(path));
             rootPane.getScene().setRoot(root);

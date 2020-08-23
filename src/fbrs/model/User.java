@@ -19,7 +19,7 @@ public abstract class User {
     public User(int id, int darshKey, String name, String phone, int balance) {
         this.id = id;
         this.darshKey = darshKey;
-        this.name = name;
+        this.name = name.replaceAll("أ", "ا");
         this.phone = phone;
         this.balance = balance;
         this.selected = new SimpleBooleanProperty(false);

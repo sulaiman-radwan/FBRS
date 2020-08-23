@@ -4,6 +4,7 @@ import fbrs.model.DatabaseModel;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
@@ -60,7 +63,7 @@ public class RecycleBinController implements Initializable {
     private void confirmDelete(List<User> users) {
         Optional<ButtonType> result =
                 UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
-                        "سيتم حذف القيود المحددين بشكل نهائي");
+                        "سيتم حذف القيود المحددة بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             model.deactivateUsers(users);
             model.deleteUsers(users);
@@ -69,7 +72,7 @@ public class RecycleBinController implements Initializable {
     }
 
     public void back(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
     }
 
     @Override
@@ -92,6 +95,13 @@ public class RecycleBinController implements Initializable {
         table.setEditable(true);
 
         refreshTable();
+
+
+        Platform.runLater(() -> searchField.requestFocus());
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back(null);
+        });
     }
 
     private void refreshTable() {
@@ -114,7 +124,7 @@ public class RecycleBinController implements Initializable {
     }
 
     private void search() {
-        String regex = ".*" + searchField.getText().replaceAll("/s+", ".*") + ".*";
+        String regex = ".*" + searchField.getText().replaceAll("\\s+", ".*").replaceAll("أ", "ا") + ".*";
         users.setPredicate(user -> user.toString().matches(regex));
     }
 }

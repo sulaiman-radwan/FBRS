@@ -4,19 +4,28 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PrintDetailsController implements Initializable {
     public VBox printList;
+    public BorderPane rootPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String[] array = {"رقم التاجر", "اسم التاجر", "جوال التاجر", "رصيد التاجر"};
         // بس عليك تبعت VBox هوة الي هتعرض عليه و المصفوفة فيها الي بدك تعرضو
         CreateCheckBoxTree(array, printList);
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                ((Stage) rootPane.getScene().getWindow()).close();
+        });
     }
 
     private void CreateCheckBoxTree(String[] array, VBox vBox) {
