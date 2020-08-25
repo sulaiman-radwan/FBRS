@@ -39,13 +39,12 @@ public class HomeController implements Initializable {
 
     }
 
-    public void onStorage() throws IOException {
-        NavigationUtil.createNewPrimaryStage(NavigationUtil.STORAGE_FXML,
-                "المخزن", "/fbrs/photos/Warehouse.png");
+    public void onStorage(ActionEvent actionEvent) throws IOException {
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.STORAGE_FXML);
     }
 
     public void onRecycleBin(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.RECYCLE_BIN_FXML);
     }
 
     public void onAllEntries() {
@@ -64,11 +63,11 @@ public class HomeController implements Initializable {
     }
 
     public void onFishermanInputReport(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.FISHERMAN_INPUT_REPORT_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.FISHERMAN_INPUT_REPORT_FXML);
     }
 
     public void onMarkets(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML, actionEvent);
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.MARKETS_FXML);
     }
 
     public void onBackup() throws IOException {

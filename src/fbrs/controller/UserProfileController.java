@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -158,21 +160,25 @@ public class UserProfileController implements Initializable {
         FishermanTypeComboBox.setPrefWidth(208.0);
         FishermanTypeComboBox.setPrefHeight(25.0);
 
-        Platform.runLater(() ->
-                rootPane.getScene().getWindow().setOnCloseRequest(event -> {
-                    if (user.getDarshKey() != Integer.parseInt(idTextField.getText())
-                            || !user.getName().equals(nameTextField.getText())
-                            || (user.getPhone() == null && phoneTextField.getText() != null)
-                            || (user.getPhone() != null && !user.getPhone().equals(phoneTextField.getText()))) {
-                        Optional<ButtonType> result =
-                                UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
-                                        "سيتم فقد البيانات المدخلة في حال عدم حفظها");
-                        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
-                            event.consume();
-                        }
+        Platform.runLater(() -> {
+            rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE)
+                    ((Stage) rootPane.getScene().getWindow()).close();
+            });
+            rootPane.getScene().getWindow().setOnCloseRequest(event -> {
+                if (user.getDarshKey() != Integer.parseInt(idTextField.getText())
+                        || !user.getName().equals(nameTextField.getText())
+                        || (user.getPhone() == null && phoneTextField.getText() != null)
+                        || (user.getPhone() != null && !user.getPhone().equals(phoneTextField.getText()))) {
+                    Optional<ButtonType> result =
+                            UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ الببانات المدخلة؟",
+                                    "سيتم فقد البيانات المدخلة في حال عدم حفظها");
+                    if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
+                        event.consume();
                     }
-                })
-        );
+                }
+            });
+        });
     }
 
     public void onCheck() {

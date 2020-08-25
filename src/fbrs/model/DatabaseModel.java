@@ -1,5 +1,6 @@
 package fbrs.model;
 
+import fbrs.utils.UIUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -64,6 +65,10 @@ public class DatabaseModel {
             userMap.put(user.getId(), user);
     }
 
+    public int getStorageBalance() {
+        return DatabaseManager.getInstance().getStorageBalance();
+    }
+
     public List<Market> getAllMarkets() {
         if (markets == null) {
             markets = DatabaseManager.getInstance().getAllMarkets();
@@ -82,7 +87,7 @@ public class DatabaseModel {
         List<EntryType> specialCases = new ArrayList<>();
 
         for (EntryType entryType : getEntryTypes())
-            if (entryType.getCategory() == 2)
+            if (entryType.getCategory() == 2 && entryType.getId() != 7)
                 specialCases.add(entryType);
 
         return specialCases;
@@ -100,6 +105,27 @@ public class DatabaseModel {
         return DatabaseManager.getInstance().getAllEntries(FromDateCreated, ToDateCreated, FromDateUpdated, ToDateUpdated, userID);
     }
 
+    public ObservableList<StorageEntry> getAllStorageEntries(Timestamp FromDateCreated, Timestamp ToDateCreated,
+                                                             Timestamp FromDateUpdated, Timestamp ToDateUpdated) {
+        return DatabaseManager.getInstance().getAllStorageEntries(FromDateCreated, ToDateCreated, FromDateUpdated, ToDateUpdated);
+    }
+
+    public String getCausativeByID(int entryID) {
+        String causative = null;
+
+        Entry entry = DatabaseManager.getInstance().getEntryByID(entryID);
+
+        if (entry != null) {
+            if (entry.getTakerId() == entry.getGiverId()) {
+                causative = getUserById(entry.getTakerId()).getName();
+            } else {
+                causative = getUserById(entry.getGiverId()).getName() + "-" + getUserById(entry.getTakerId()).getName();
+            }
+        }
+
+        return causative;
+    }
+
     public Market getMarketByID(int marketID) {
         if (markets == null) {
             markets = DatabaseManager.getInstance().getAllMarkets();
@@ -112,6 +138,7 @@ public class DatabaseModel {
     }
 
     public ObservableList<Seller> getSellersByMarket(int marketId) {
+        UIUtil.setUsersAsUnselected(sellers);
         return FXCollections.observableArrayList(getAllSellers().stream()
                 .filter(seller -> seller.getMarket() == marketId).collect(Collectors.toList()));
     }
@@ -119,12 +146,14 @@ public class DatabaseModel {
     public ObservableList<Seller> getAllSellers() {
         if (sellers == null)
             sellers = DatabaseManager.getInstance().getAllSellers();
+        UIUtil.setUsersAsUnselected(sellers);
         return sellers;
     }
 
     public ObservableList<Fisherman> getAllFishermen() {
         if (fishermen == null)
             fishermen = DatabaseManager.getInstance().getAllFishermen();
+        UIUtil.setUsersAsUnselected(fishermen);
         return fishermen;
     }
 
@@ -174,8 +203,8 @@ public class DatabaseModel {
         userMap = null;
     }
 
-    public void deleteEntry(List<Entry> entries) {
-        DatabaseManager.getInstance().deleteEntry(entries);
+    public void deleteEntries(List<Entry> entries) {
+        DatabaseManager.getInstance().deleteEntries(entries);
         sellers = null;
         fishermen = null;
         userMap = null;
@@ -183,6 +212,20 @@ public class DatabaseModel {
 
     public void deleteEntry(Entry entry) {
         DatabaseManager.getInstance().deleteEntry(entry);
+        sellers = null;
+        fishermen = null;
+        userMap = null;
+    }
+
+    public void deleteStorageEntries(List<StorageEntry> storageEntries) {
+        DatabaseManager.getInstance().deleteStorageEntries(storageEntries);
+        sellers = null;
+        fishermen = null;
+        userMap = null;
+    }
+
+    public void deleteStorageEntry(StorageEntry storageEntry) {
+        DatabaseManager.getInstance().deleteStorageEntry(storageEntry);
         sellers = null;
         fishermen = null;
         userMap = null;
@@ -204,6 +247,10 @@ public class DatabaseModel {
         sellers = null;
         fishermen = null;
         return DatabaseManager.getInstance().addEntry(entryType, giverId, takerId, quantity, price, comment);
+    }
+
+    public int addStorageEntry(int causedBy, int entryType, int quantityDiff, String comment) {
+        return DatabaseManager.getInstance().addStorageEntry(causedBy, entryType, quantityDiff, comment);
     }
 
     public void updateDarshKey(int id, int DarshKey) throws SQLException {
@@ -230,7 +277,25 @@ public class DatabaseModel {
         return DatabaseManager.getInstance().updateFishermanType(id, userType);
     }
 
-    public int calculateUserBalance(int id) {
-        return DatabaseManager.getInstance().calculateUserBalance(id);
+    public boolean updateEntryQuantity(int entryId, int quantity) {
+        sellers = null;
+        fishermen = null;
+        return DatabaseManager.getInstance().updateEntryQuantity(entryId, quantity);
+    }
+
+    public boolean resetBroken() {
+        return DatabaseManager.getInstance().resetBroken();
+    }
+
+    public boolean resetLost() {
+        return DatabaseManager.getInstance().resetLost();
+    }
+
+    public int calculateBroken() {
+        return DatabaseManager.getInstance().calculateBroken();
+    }
+
+    public int calculateLost() {
+        return DatabaseManager.getInstance().calculateLost();
     }
 }

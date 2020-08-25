@@ -80,12 +80,35 @@
                         <Insets left="32.0"/>
                     </HBox.margin>
                 </Label>
-                <Label text="العدد الاجمالي للبُكس : ">
+                <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="8.0"/>
+                    </HBox.margin>
+                </Separator>
+                <Label text="الرصيد المتبقي للصياد : ">
                     <font>
                         <Font size="18.0"/>
                     </font>
                     <HBox.margin>
-                        <Insets left="80.0"/>
+                        <Insets left="8.0"/>
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="fishermanBalance" text="0">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
+                <Separator orientation="VERTICAL">
+                    <HBox.margin>
+                        <Insets left="8.0"/>
+                    </HBox.margin>
+                </Separator>
+                <Label text="العدد الاجمالي للبُكس غير المعتمدة : ">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                    <HBox.margin>
+                        <Insets left="8.0"/>
                     </HBox.margin>
                 </Label>
                 <Label fx:id="numberOfBuksa" text="0">
@@ -118,7 +141,8 @@
                         <Font size="18.0"/>
                     </font>
                 </Label>
-                <TextField fx:id="quantityTextField" onAction="#onQuantity" prefWidth="100.0" promptText="أدخل العدد">
+                <TextField fx:id="quantityTextField" onAction="#onQuantity" prefWidth="100.0"
+                           promptText="أدخل العدد">
                     <HBox.margin>
                         <Insets right="32.0"/>
                     </HBox.margin>
@@ -151,7 +175,8 @@
                         <Insets right="32.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" onKeyPressed="#onAdd" text="إضافة">
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAdd" onKeyPressed="#onAdd"
+                        text="إضافة">
                     <font>
                         <Font size="14.0"/>
                     </font>

@@ -3,6 +3,7 @@ package fbrs.controller;
 import fbrs.model.*;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,28 +11,33 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.*;
 
 public class EntriesController implements Initializable {
@@ -43,7 +49,8 @@ public class EntriesController implements Initializable {
     public TableColumn<Entry, Date> dateUpdatedColumn;
     public TableColumn<Entry, String> toColumn;
     public TableColumn<Entry, String> typeColumn;
-    public TableColumn<Entry, Integer> quantityColumn;
+    public TableColumn<Entry, Number> quantityColumn;
+    public TableColumn<Entry, Number> priceColumn;
     public TableColumn<Entry, String> comment;
     public HBox HBoxHeader;
     public Button backBtn;
@@ -60,6 +67,7 @@ public class EntriesController implements Initializable {
     public DatePicker ToDateCreated;
     public DatePicker FromDateUpdated;
     public DatePicker ToDateUpdated;
+    public Button AddFromStorageBtn;
 
     private Popup popup;
     private User user;
@@ -67,8 +75,8 @@ public class EntriesController implements Initializable {
     private DatabaseModel model;
     private Map<String, Boolean> checkEntries;
 
-    public void back(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+    public void back() {
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
         popup.hide();
     }
 
@@ -105,7 +113,27 @@ public class EntriesController implements Initializable {
         dateCreatedColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
         dateUpdatedColumn.setCellValueFactory(new PropertyValueFactory<>("dateUpdated"));
         typeColumn.setCellValueFactory((param -> new SimpleStringProperty(model.getEntryTypeName(param.getValue().getType()))));
+
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
+        quantityColumn.setOnEditCommit(editEvent -> {
+            if (editEvent.getNewValue().toString().equals("0")) {
+                Toolkit.getDefaultToolkit().beep();
+                table.refresh();
+            } else {
+                editEvent.getRowValue().setQuantity(Integer.parseInt(editEvent.getNewValue().toString()));
+                model.updateEntryQuantity(editEvent.getRowValue().getId(), editEvent.getNewValue().intValue());
+                refreshTable();
+            }
+        });
+
+        priceColumn.setCellValueFactory((param -> {
+            if (param.getValue().getPrice() == 0) {
+                return null;
+            } else {
+                return new SimpleIntegerProperty(param.getValue().getPrice());
+            }
+        }));
         comment.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
         CheckBox selectAll = new CheckBox();
@@ -136,9 +164,9 @@ public class EntriesController implements Initializable {
     public void onDelete() {
         Optional<ButtonType> result =
                 UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
-                        "سيتم حذف القيود المحددين بشكل نهائي");
+                        "سيتم حذف القيود المحددة بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            model.deleteEntry(getSelectedEntry());
+            model.deleteEntries(getSelectedEntries());
             setViewType(user == null ? null : model.getUserById(user.getId()));
         }
     }
@@ -148,18 +176,11 @@ public class EntriesController implements Initializable {
         if (user instanceof Seller) {
             title.setText("قيود التاجر : " + user.getName());
             balance.setText(String.valueOf(user.getBalance()));
+            AddFromStorageBtn.setVisible(false);
         } else if (user instanceof Fisherman) {
             title.setText("قيود الصياد : " + user.getName());
             balance.setText(String.valueOf(user.getBalance()));
-            Button addFromStorage = new Button("إضافة بُكس من المخزن");
-            addFromStorage.setCursor(Cursor.HAND);
-            addFromStorage.setAlignment(Pos.CENTER_LEFT);
-            addFromStorage.setOnAction(event -> {
-                UIUtil.addFromStorage(user);
-                refreshTable();
-            });
-            HBoxHeader.getChildren().add(addFromStorage);
-            HBox.setMargin(addFromStorage, new Insets(8, 0, 0, 32));
+            AddFromStorageBtn.setVisible(true);
         }
         if (user != null) {
             buksaLabel.setVisible(true);
@@ -167,6 +188,10 @@ public class EntriesController implements Initializable {
             balance.setVisible(true);
             EditUserProfileBtn.setVisible(true);
             SpecialCasesBtn.setVisible(true);
+            rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE)
+                    ((Stage) rootPane.getScene().getWindow()).close();
+            });
         } else {
             title.setText("جميع القيود");
             buksaLabel.setVisible(false);
@@ -174,8 +199,14 @@ public class EntriesController implements Initializable {
             balance.setVisible(false);
             EditUserProfileBtn.setVisible(false);
             SpecialCasesBtn.setVisible(false);
+            AddFromStorageBtn.setVisible(false);
+            rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE)
+                    back();
+            });
         }
         refreshTable();
+        FromDateCreated.requestFocus();
     }
 
     public void hideBackButton(boolean visible) {
@@ -223,7 +254,7 @@ public class EntriesController implements Initializable {
         return checkEntries.get(value);
     }
 
-    private List<Entry> getSelectedEntry() {
+    private List<Entry> getSelectedEntries() {
         List<Entry> selectedEntries = new ArrayList<>();
         for (Entry entry : entries) {
             if (entry.isSelected()) {
@@ -273,5 +304,11 @@ public class EntriesController implements Initializable {
 
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
+        balance.setText(String.valueOf(user.getBalance()));
+    }
+
+    public void onAddFromStorage() {
+        UIUtil.addFromStorage(user);
+        refreshTable();
     }
 }

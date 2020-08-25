@@ -1,6 +1,9 @@
 package fbrs.controller;
 
-import fbrs.model.*;
+import fbrs.model.DatabaseModel;
+import fbrs.model.Entry;
+import fbrs.model.Fisherman;
+import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
 import javafx.application.Platform;
@@ -16,14 +19,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FishermanInputReportController implements Initializable {
@@ -47,6 +52,7 @@ public class FishermanInputReportController implements Initializable {
     public Button AdmitBtn;
     public TextField commentTextField;
     public Button deleteBtn;
+    public Label fishermanBalance;
 
     private DatabaseModel model;
     private User currentFisherman;
@@ -54,18 +60,19 @@ public class FishermanInputReportController implements Initializable {
     private ObservableList<Entry> entries;
     private boolean isAdmit = true;
     private int buksaCount = 0;
-    private int numberOfUsers = 0;
+    private int numberOfEntries = 0;
+    private Map<Entry, Integer> overflow;
 
-    public void back(ActionEvent actionEvent) {
+    public void back() {
         if (isAdmit) {
-            NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+            NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
         } else {
             Optional<ButtonType> result =
                     UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ البيانات المدخلة؟",
                             "سيتم فقد البيانات المدخلة في حال عدم إعتمادها");
 
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+                NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
             }
         }
     }
@@ -77,8 +84,9 @@ public class FishermanInputReportController implements Initializable {
         String price = priceTextField.getText().trim();
         String comment = commentTextField.getText().trim();
 
-        if (currentSeller == null) {
+        if (currentSeller == null || currentFisherman == currentSeller) {
             error = true;
+            sellerTextField.clear();
             UIUtil.ErrorInput(sellerTextField);
         }
         if (price.isEmpty()) {
@@ -97,16 +105,28 @@ public class FishermanInputReportController implements Initializable {
         if (error) {
             Toolkit.getDefaultToolkit().beep();
         } else {
-            entries.add(new Entry(numberOfUsers, 2, currentFisherman.getId(), currentSeller.getId(),
-                    Integer.parseInt(quantity), Integer.parseInt(price),
-                    null, null, comment));
+            Entry entry;
+            int remainingBalance = calculateRemainingBalance(currentFisherman.getId());
+            if (Integer.parseInt(quantity) > remainingBalance) {
+                entry = new Entry(numberOfEntries, 2, currentFisherman.getId(), currentSeller.getId(),
+                        remainingBalance, Integer.parseInt(price),
+                        null, null, comment + " ,بيع زيادة = " + (Integer.parseInt(quantity) - remainingBalance));
+                overflow.put(entry, Integer.parseInt(quantity) - remainingBalance);
+            } else {
+                entry = new Entry(numberOfEntries, 2, currentFisherman.getId(), currentSeller.getId(),
+                        Integer.parseInt(quantity), Integer.parseInt(price),
+                        null, null, comment);
+            }
+            entries.add(entry);
+
 
             table.refresh();
             resetTextFields();
             isAdmit = false;
-            numberOfUsers = entries.size();
+            numberOfEntries = entries.size();
             currentSeller = null;
             updateBuksaCount();
+            fishermanBalance.setText(String.valueOf(calculateRemainingBalance(currentFisherman.getId())));
             table.scrollTo(entries.size() - 1);
         }
     }
@@ -119,10 +139,21 @@ public class FishermanInputReportController implements Initializable {
         numberOfBuksa.setText(Integer.toString(buksaCount));
     }
 
+    private int calculateRemainingBalance(int userID) {
+        int remainingBalance = model.getUserById(userID).getBalance();
+        for (Entry entry : entries) {
+            if (entry.getGiverId() == userID) {
+                remainingBalance -= entry.getQuantity();
+            }
+        }
+        return remainingBalance;
+    }
+
     private void reset() {
         resetTextFields();
         fishermanName.setText(null);
         fishermanTextField.setText(null);
+        fishermanBalance.setText("0");
         currentSeller = null;
         currentFisherman = null;
         fishermanTextField.requestFocus();
@@ -140,6 +171,7 @@ public class FishermanInputReportController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         model = DatabaseModel.getModel();
         entries = FXCollections.observableArrayList();
+        overflow = new HashMap<>();
         UIUtil.setNumbersOnly(quantityTextField);
         UIUtil.setNumbersOnly(priceTextField);
 
@@ -155,6 +187,7 @@ public class FishermanInputReportController implements Initializable {
             } else {
                 editEvent.getRowValue().setQuantity(Integer.parseInt(editEvent.getNewValue().toString()));
                 updateBuksaCount();
+                fishermanBalance.setText(String.valueOf(calculateRemainingBalance(currentFisherman.getId())));
             }
             table.refresh();
         });
@@ -182,11 +215,13 @@ public class FishermanInputReportController implements Initializable {
         }).collect(Collectors.toList())).setOnAutoCompleted(event -> {
             currentFisherman = event.getCompletion();
             fishermanName.setText(currentFisherman.toString());
+            fishermanBalance.setText(String.valueOf(calculateRemainingBalance(currentFisherman.getId())));
             quantityTextField.requestFocus();
         });
 
-        ObservableList<Seller> SellersName = model.getAllSellers();
-        TextFields.bindAutoCompletion(sellerTextField, t -> SellersName.stream().filter(user -> {
+        List<User> userList = new ArrayList<>(model.getAllSellers());
+        userList.addAll(model.getAllFishermen());
+        TextFields.bindAutoCompletion(sellerTextField, t -> userList.stream().filter(user -> {
             String regex = ".*".concat(t.getUserText().replaceAll("\\s+", ".*")).concat(".*");
             return user.toString().matches(regex);
         }).collect(Collectors.toList())).setOnAutoCompleted(event -> currentSeller = event.getCompletion());
@@ -200,22 +235,32 @@ public class FishermanInputReportController implements Initializable {
         table.setItems(entries);
 
         Platform.runLater(() -> fishermanTextField.requestFocus());
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back();
+        });
     }
 
     public void onAdmit() {
-        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfUsers;
+        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfEntries;
 
         Optional<ButtonType> result = UIUtil.showConfirmDialog("هل تريد إعتماد البيانات المدخلة؟", contentText);
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             for (Entry entry : entries) {
-                model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(), entry.getPrice(), entry.getComment());
+                int id = model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(),
+                        entry.getPrice(), entry.getComment());
+                if (entry.getComment().contains("بيع زيادة")) {
+                    model.addStorageEntry(id, 10, overflow.get(entry), "بيع الصياد بُكس زيادة عن ما أخد");
+                }
+
             }
             isAdmit = true;
             entries = FXCollections.observableArrayList();
             table.setItems(entries);
             table.refresh();
-            numberOfUsers = 0;
+            numberOfEntries = 0;
             updateBuksaCount();
+            fishermanBalance.setText("0");
             reset();
         }
     }
@@ -245,13 +290,14 @@ public class FishermanInputReportController implements Initializable {
     public void onDelete() {
         Optional<ButtonType> result =
                 UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
-                        "سيتم حذف القيود المحددين بشكل نهائي");
+                        "سيتم حذف القيود المحددة بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             entries.removeIf(Entry::isSelected);
         }
         table.refresh();
         updateBuksaCount();
-        numberOfUsers = entries.size();
+        fishermanBalance.setText(String.valueOf(calculateRemainingBalance(currentFisherman.getId())));
+        numberOfEntries = entries.size();
         isAdmit = entries.size() == 0;
     }
 }

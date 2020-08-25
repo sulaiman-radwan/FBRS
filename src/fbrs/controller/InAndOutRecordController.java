@@ -15,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.util.converter.NumberStringConverter;
@@ -22,6 +24,8 @@ import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -49,23 +53,24 @@ public class InAndOutRecordController implements Initializable {
     public Button deleteBtn;
 
     private int buksaCount = 0;
-    private int numberOfUsers = 0;
+    private int numberOfEntries = 0;
     private int viewType;
     private User currentUser;
     private DatabaseModel model;
     private ObservableList<Entry> entries;
+    private Map<Entry, Integer> overflow;
     private boolean isAdmit = true;
 
-    public void back(ActionEvent actionEvent) {
+    public void back() {
         if (isAdmit) {
-            NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+            NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
         } else {
             Optional<ButtonType> result =
                     UIUtil.showConfirmDialog("هل أنت متأكد من رغبتك في عدم حفظ البيانات المدخلة؟",
                             "سيتم فقد البيانات المدخلة في حال عدم إعتمادها");
 
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+                NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
             }
         }
     }
@@ -92,10 +97,13 @@ public class InAndOutRecordController implements Initializable {
                 case TYPE_SELLER:
                     //todo :
                     // Returns more than the quantity delivered
-                    if (Integer.parseInt(quantity) > currentUser.getBalance()) {
-                        entries.add(new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
-                                currentUser.getBalance(), 0, null, null,
-                                comment + " إرجاع زيادة " + (Integer.parseInt(quantity) - currentUser.getBalance())));
+                    int remainingBalance = calculateRemainingBalance(currentUser.getId());
+                    if (Integer.parseInt(quantity) > remainingBalance) {
+                        Entry entry = new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
+                                remainingBalance, 0, null, null,
+                                comment + " ,إرجاع زيادة " + (Integer.parseInt(quantity) - remainingBalance));
+                        entries.add(entry);
+                        overflow.put(entry, Integer.parseInt(quantity) - remainingBalance);
                     } else {
                         entries.add(new Entry(currentUser.getId(), 3, currentUser.getId(), 0,
                                 Integer.parseInt(quantity), 0, null,
@@ -110,7 +118,7 @@ public class InAndOutRecordController implements Initializable {
             table.refresh();
             resetTextFields();
             isAdmit = false;
-            numberOfUsers = entries.size();
+            numberOfEntries += entries.size();
             updateBuksaCount();
             table.scrollTo(entries.size() - 1);
         }
@@ -166,6 +174,7 @@ public class InAndOutRecordController implements Initializable {
         model = DatabaseModel.getModel();
         UIUtil.setNumbersOnly(quantityTextField);
         entries = FXCollections.observableArrayList();
+        overflow = new HashMap<>();
 
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
         nameColumn.setCellValueFactory(param -> {
@@ -203,25 +212,52 @@ public class InAndOutRecordController implements Initializable {
         table.setEditable(true);
         table.setItems(entries);
         table.refresh();
+
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back();
+        });
+
     }
 
     public void onAdmit() {
-        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfUsers;
+        String contentText = "عدد البُكس المضافة = " + buksaCount + "    ,عدد القيود = " + numberOfEntries;
 
         Optional<ButtonType> result =
                 UIUtil.showConfirmDialog("هل تريد إعتماد البيانات المدخلة؟", contentText);
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             for (Entry entry : entries) {
-                model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(),
+                int id = model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(),
                         entry.getPrice(), entry.getComment());
+                switch (viewType) {
+                    case TYPE_SELLER:
+                        model.addStorageEntry(id, 12, entry.getQuantity(), entry.getComment());
+                        if (entry.getComment().contains("إرجاع زيادة")) {
+                            model.addStorageEntry(id, 9, overflow.get(entry), "ارجاع التاجر بُكس زيادة عن ما أخد");
+                        }
+                        break;
+                    case TYPE_FISHERMAN:
+                        model.addStorageEntry(id, 13, -1 * entry.getQuantity(), entry.getComment());
+
+                }
             }
             isAdmit = true;
             entries = FXCollections.observableArrayList();
             table.setItems(entries);
             table.refresh();
-            numberOfUsers = 0;
+            numberOfEntries = 0;
             updateBuksaCount();
         }
+    }
+
+    private int calculateRemainingBalance(int userID) {
+        int remainingBalance = model.getUserById(userID).getBalance();
+        for (Entry entry : entries) {
+            if (entry.getGiverId() == userID) {
+                remainingBalance -= entry.getQuantity();
+            }
+        }
+        return remainingBalance;
     }
 
     private void selectAllBoxes(ActionEvent e) {
@@ -233,13 +269,13 @@ public class InAndOutRecordController implements Initializable {
     public void onDelete() {
         Optional<ButtonType> result =
                 UIUtil.showConfirmDialog("هل أنت متأكد من الحذف النهائي؟",
-                        "سيتم حذف القيود المحددين بشكل نهائي");
+                        "سيتم حذف القيود المحددة بشكل نهائي");
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             entries.removeIf(Entry::isSelected);
         }
         table.refresh();
         updateBuksaCount();
-        numberOfUsers = entries.size();
+        numberOfEntries = entries.size();
         isAdmit = entries.size() == 0;
     }
 

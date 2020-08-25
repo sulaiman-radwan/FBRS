@@ -114,4 +114,20 @@ public class Entry {
     public BooleanProperty selectedProperty() {
         return selected;
     }
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "selected=" + selected +
+                ", id=" + id +
+                ", type=" + type +
+                ", giverId=" + giverId +
+                ", takerId=" + takerId +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }
