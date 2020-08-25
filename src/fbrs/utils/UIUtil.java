@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -146,9 +147,16 @@ public class UIUtil {
                 addFromStorage(user);
             } else {
                 DatabaseModel.getModel().addEntry(1, 0, user.getId(), Integer.parseInt(number), 0, null);
-                UIUtil.showAlert("تم العملية بنجاح", "تم إضافة البُكس لرصيد الصياد : " + user.getName(),
+                UIUtil.showAlert("تمت العملية بنجاح", "تم إضافة البُكس لرصيد الصياد : " + user.getName(),
                         "عدد البٌكس المضافة = " + number, Alert.AlertType.CONFIRMATION);
             }
         });
+    }
+
+    public static <T extends User> void setUsersAsUnselected(List<T> users) {
+        for (T t : users) {
+            User user = (User) t;
+            user.setSelected(false);
+        }
     }
 }

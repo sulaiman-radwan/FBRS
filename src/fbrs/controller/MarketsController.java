@@ -4,7 +4,6 @@ import fbrs.model.DatabaseModel;
 import fbrs.model.Market;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -14,6 +13,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
@@ -29,14 +30,13 @@ public class MarketsController implements Initializable {
     //UI
     public Button backBtn;
     public Button AddNewMarketBtn;
-    public Button printAllMarketsBtn;
     public BorderPane rootPane;
     public GridPane gridPane;
 
     private DatabaseModel model;
 
-    public void back(ActionEvent actionEvent) {
-        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML, actionEvent);
+    public void back() {
+        NavigationUtil.navigateTo(rootPane, NavigationUtil.HOME_FXML);
     }
 
     public void AddNewMarket() {
@@ -57,7 +57,7 @@ public class MarketsController implements Initializable {
             } else {
                 if (model.isValidMarketName(newMarketName)) {
                     model.addMarket(newMarketName);
-                    UIUtil.showAlert("تم العملية بنجاح", "تم إضافة السوق بنجاح",
+                    UIUtil.showAlert("تمت العملية بنجاح", "تم إضافة السوق بنجاح",
                             "اسم السوق الجديد : " + newMarketName, Alert.AlertType.CONFIRMATION);
                     viewMarkets();
                 } else {
@@ -70,15 +70,15 @@ public class MarketsController implements Initializable {
         });
     }
 
-    public void printAllMarkets() throws IOException {
-        NavigationUtil.createNewPrimaryStage(NavigationUtil.PRINT_DETAILS_FXML,
-                "تفاصيل الطباعة", "/fbrs/photos/print.png");
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = DatabaseModel.getModel();
         viewMarkets();
+
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE)
+                back();
+        });
     }
 
     private void viewMarkets() {

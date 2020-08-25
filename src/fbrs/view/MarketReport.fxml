@@ -15,7 +15,7 @@
             <BorderPane.margin>
                 <Insets/>
             </BorderPane.margin>
-            <TableView onMouseClicked="#onClick" fx:id="table" prefHeight="200.0" prefWidth="200.0"
+            <TableView fx:id="table" onMouseClicked="#onClick" prefHeight="200.0" prefWidth="200.0"
                        VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
@@ -42,23 +42,23 @@
             </TextField>
             <Label text="عرض التقرير من تاريخ">
                 <VBox.margin>
-                    <Insets top="20.0"/>
+                    <Insets top="40.0"/>
                 </VBox.margin>
             </Label>
             <DatePicker fx:id="datePicker" onAction="#onChangeDate" prefWidth="180.0"
                         promptText="عرض التقرير من تاريخ">
             </DatePicker>
             <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport"
-                    prefWidth="180.0" text="طباعة التقارير المختصرة">
+                    prefWidth="180.0" text="طباعة التقرير المختصر">
                 <VBox.margin>
-                    <Insets top="20.0"/>
+                    <Insets top="64.0"/>
                 </VBox.margin>
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
             <Button fx:id="printDetailedReportBtn" mnemonicParsing="false" onAction="#printDetailedReport"
-                    prefWidth="180.0" text="طباعة التقارير مع التفصيل">
+                    prefWidth="180.0" text="طباعة التقرير مع التفصيل">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -66,8 +66,8 @@
                     <Insets top="20.0"/>
                 </VBox.margin>
             </Button>
-            <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
-                    onAction="#newSeller" prefWidth="180.0" text="تاجر جديد">
+            <Button fx:id="printSellerWithBalance" layoutX="26.0" layoutY="202.0" mnemonicParsing="false"
+                    onAction="#printSellerWithBalance" prefWidth="180.0" text="طباعة تقرير  الأرصدة">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -75,13 +75,35 @@
                     <Insets top="20.0"/>
                 </VBox.margin>
             </Button>
+            <Separator prefHeight="0.0" prefWidth="200.0">
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Separator>
             <Button fx:id="resetAccountsBtn" mnemonicParsing="false" onAction="#zeroBalances" prefWidth="180.0"
                     text="تصفير الحسابات">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
                 <VBox.margin>
-                    <Insets top="20.0"/>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Button>
+            <Separator prefWidth="200.0">
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Separator>
+            <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
+                    onAction="#newSeller" prefWidth="180.0" text="تاجر جديد">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <VBox.margin>
+                    <Insets top="10.0"/>
                 </VBox.margin>
             </Button>
         </VBox>
