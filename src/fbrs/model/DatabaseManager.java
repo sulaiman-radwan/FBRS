@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.postgresql.ds.PGSimpleDataSource;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -854,6 +855,51 @@ public class DatabaseManager {
         }
 
         return balance;
+    }
+
+    //This method will return 0 if the backup process completed successfully..
+    public int backup(String path) throws InterruptedException, IOException {
+        ResourceBundle reader = ResourceBundle.getBundle("dbconfig");
+        String[] envp = {
+                "PGHOST=" + reader.getString("db.serverName"),
+                "PGDATABASE=" + reader.getString("db.databaseName"),
+                "PGUSER=" + reader.getString("db.userName"),
+                "PGPASSWORD=" + reader.getString("db.password"),
+                "PGPORT=5432",
+                "path=C:\\Program Files\\PostgreSQL\\12\\bin"
+        };
+        String[] cmdArray = {
+                "cmd",
+                "/c",
+                String.format("pg_dump -f \"%s\"", path)
+        };
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(cmdArray, envp);
+        process.waitFor();
+        return process.exitValue();
+    }
+
+
+    //This method will return 0 if the restore process completed successfully..
+    public int restore(String path) throws IOException, InterruptedException {
+        ResourceBundle reader = ResourceBundle.getBundle("dbconfig");
+        String[] envp = {
+                "PGHOST=" + reader.getString("db.serverName"),
+                "PGDATABASE=" + reader.getString("db.databaseName"),
+                "PGUSER=" + reader.getString("db.userName"),
+                "PGPASSWORD=" + reader.getString("db.password"),
+                "PGPORT=5432",
+                "path=C:\\Program Files\\PostgreSQL\\12\\bin"
+        };
+        String[] cmdArray = {
+                "cmd",
+                "/c",
+                String.format("psql -f \"%s\"", path)
+        };
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(cmdArray, envp);
+        process.waitFor();
+        return process.exitValue();
     }
 
     public void exit() {
