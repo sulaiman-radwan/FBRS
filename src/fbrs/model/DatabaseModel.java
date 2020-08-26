@@ -4,6 +4,7 @@ import fbrs.utils.UIUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -297,5 +298,14 @@ public class DatabaseModel {
 
     public int calculateLost() {
         return DatabaseManager.getInstance().calculateLost();
+    }
+
+    //This method will return true if the backup process completed successfully..
+    public boolean backup(String path) throws InterruptedException, IOException {
+        return DatabaseManager.getInstance().backup(path) == 0;
+    }
+    //This method will return true if the restore process completed successfully..
+    public boolean restore(String path) throws IOException, InterruptedException {
+        return DatabaseManager.getInstance().restore(path) == 0;
     }
 }

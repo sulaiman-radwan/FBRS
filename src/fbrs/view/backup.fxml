@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="16.0"
+<VBox fx:id="rootPane" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="16.0"
       style="-fx-background-color: white;"
       fx:controller="fbrs.controller.BackupController">
     <padding>
@@ -33,11 +33,18 @@
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button onAction="#onExport" mnemonicParsing="false" prefWidth="96.0" text="تصدير">
+                    <Button onAction="#onBrowseExport" mnemonicParsing="false" prefWidth="120.0" text="استعراض المجلد">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </Button>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0">
+                <Button onAction="#onExport" mnemonicParsing="false" prefWidth="96.0" text="تصدير">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Button>
                 </HBox>
             </VBox>
         </StackPane>
@@ -61,12 +68,12 @@
                             <Font size="14.0"/>
                         </font>
                     </Label>
-                    <TextField fx:id="BrowseFile" prefWidth="250.0">
+                    <TextField fx:id="ImportFile" prefWidth="250.0">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button onAction="#onBrowse" mnemonicParsing="false" prefWidth="96.0" text="استعراض">
+                    <Button onAction="#onBrowseImport" mnemonicParsing="false" prefWidth="120.0" text="استعراض الملف">
                         <font>
                             <Font size="14.0"/>
                         </font>
