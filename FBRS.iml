@@ -9,5 +9,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="org.postgresql:postgresql:42.2.12" level="project" />
     <orderEntry type="library" name="org.jfxtras:jmetro:8.6.13" level="project" />
+    <orderEntry type="library" name="org.apache.poi:ooxml-schemas:1.4" level="project" />
+    <orderEntry type="library" name="org.apache.poi:poi-ooxml:4.1.2" level="project" />
   </component>
 </module>
