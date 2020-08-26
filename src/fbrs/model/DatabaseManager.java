@@ -863,7 +863,7 @@ public class DatabaseManager {
         String[] envp = {
                 "PGHOST=" + reader.getString("db.serverName"),
                 "PGDATABASE=" + reader.getString("db.databaseName"),
-                "PGUSER=" + reader.getString("db.userName"),
+                "PGUSER=" + reader.getString("db.username"),
                 "PGPASSWORD=" + reader.getString("db.password"),
                 "PGPORT=5432",
                 "path=C:\\Program Files\\PostgreSQL\\12\\bin"
@@ -886,7 +886,7 @@ public class DatabaseManager {
         String[] envp = {
                 "PGHOST=" + reader.getString("db.serverName"),
                 "PGDATABASE=" + reader.getString("db.databaseName"),
-                "PGUSER=" + reader.getString("db.userName"),
+                "PGUSER=" + reader.getString("db.username"),
                 "PGPASSWORD=" + reader.getString("db.password"),
                 "PGPORT=5432",
                 "path=C:\\Program Files\\PostgreSQL\\12\\bin"
