@@ -2,11 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="16.0"
-      style="-fx-background-color: white;"
-      fx:controller="fbrs.controller.BackupController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT"
+      spacing="16.0" style="-fx-background-color: white;" fx:controller="fbrs.controller.BackupController">
     <padding>
         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
     </padding>
@@ -28,15 +28,18 @@
                             <Font size="14.0"/>
                         </font>
                     </Label>
-                    <TextField fx:id="ExportFile" prefWidth="250.0">
+                    <TextField fx:id="ExportFileNameTextField" prefWidth="250.0">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button onAction="#onExport" mnemonicParsing="false" prefWidth="96.0" text="تصدير">
+                    <Button onAction="#onExport" mnemonicParsing="false" prefWidth="120.0" text="تصدير">
                         <font>
                             <Font size="14.0"/>
                         </font>
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
                     </Button>
                 </HBox>
             </VBox>
@@ -61,22 +64,28 @@
                             <Font size="14.0"/>
                         </font>
                     </Label>
-                    <TextField fx:id="BrowseFile" prefWidth="250.0">
+                    <TextField fx:id="ImportPathTextField" prefWidth="250.0">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </TextField>
-                    <Button onAction="#onBrowse" mnemonicParsing="false" prefWidth="96.0" text="استعراض">
+                    <Button onAction="#onBrowse" mnemonicParsing="false" prefWidth="120.0" text="استعراض الملف">
                         <font>
                             <Font size="14.0"/>
                         </font>
                     </Button>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0">
                     <Button onAction="#onImport" mnemonicParsing="false" prefWidth="96.0" text="استيراد">
                         <font>
                             <Font size="14.0"/>
                         </font>
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
                     </Button>
                 </HBox>
             </VBox>
