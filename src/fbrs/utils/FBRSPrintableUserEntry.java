@@ -45,7 +45,7 @@ public class FBRSPrintableUserEntry {
         this.arrearsCount = arrearsCount;
     }
 
-    public boolean isDetailed() {
+    public boolean isUserDetailed() {
         return getUser().isSelected();
     }
 
@@ -61,8 +61,15 @@ public class FBRSPrintableUserEntry {
         this.returnedToday = returnedToday;
     }
 
-    public int rowCount() {
-        return 2 + todaysEntries.size();
+    public int rowCount(boolean isReportDetailed) {
+        return 3 + ((isReportDetailed || this.isUserDetailed()) ? todaysEntries.size() : 1);
+    }
+
+    public int todaysBuksaCount() {
+        int count = 0;
+        for (Entry entry : todaysEntries)
+            count += entry.getQuantity();
+        return count;
     }
 
 }
