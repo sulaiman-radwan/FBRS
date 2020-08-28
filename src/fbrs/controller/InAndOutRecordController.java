@@ -95,7 +95,6 @@ public class InAndOutRecordController implements Initializable {
         } else {
             switch (viewType) {
                 case TYPE_SELLER:
-                    //todo :
                     // Returns more than the quantity delivered
                     int remainingBalance = calculateRemainingBalance(currentUser.getId());
                     if (Integer.parseInt(quantity) > remainingBalance) {
@@ -247,6 +246,7 @@ public class InAndOutRecordController implements Initializable {
             table.refresh();
             numberOfEntries = 0;
             updateBuksaCount();
+            model.fetchData();
         }
     }
 

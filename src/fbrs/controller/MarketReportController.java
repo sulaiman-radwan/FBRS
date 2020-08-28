@@ -1,12 +1,10 @@
 package fbrs.controller;
 
-import fbrs.model.DatabaseModel;
-import fbrs.model.Market;
-import fbrs.model.Seller;
-import fbrs.model.User;
-import fbrs.utils.NavigationUtil;
-import fbrs.utils.UIUtil;
+import fbrs.model.*;
+import fbrs.utils.*;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,10 +18,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.util.*;
 
 public class MarketReportController implements Initializable {
 
@@ -44,9 +43,16 @@ public class MarketReportController implements Initializable {
     public DatePicker datePicker;
     public Button printSellerWithBalance;
 
+    private FBRSPrintUtil printUtil;
     private DatabaseModel model;
     private Market market;
     private FilteredList<Seller> sellers;
+
+    private File homeDirectory;
+    private File reportsDirectory;
+    private File briefReportsDirectory;
+    private File detailedReportsDirectory;
+    private File balanceReportDirectory;
 
     public void setMarket(Market market) {
         this.market = market;
@@ -78,11 +84,68 @@ public class MarketReportController implements Initializable {
     }
 
     public void printBriefReport() {
-        //todo:
+        printReport(false);
     }
 
     public void printDetailedReport() {
-        //todo:
+        printReport(true);
+    }
+
+    public void printReport(boolean isDetailed) {
+        List<FBRSPrintableUserEntry> printableUserEntries = new ArrayList<>();
+        Date selectedDate = UIUtil.datePickerToDate(datePicker);
+        Date selectedDateMinusOneDay = UIUtil.localDateToDate(datePicker.getValue().minusDays(1));
+        Date today = UIUtil.localDateToDate(LocalDate.now());
+
+        LoadingDialog<Void> loadingDialog = new LoadingDialog<>("جارِ اعداد التقرير...");
+
+        Task<Void> prepareDataTask = new Task<Void>() {
+            @Override
+            protected Void call() {
+                int progress = 0;
+                List<Seller> sellersList = sellers.filtered(seller -> seller.getBalance() > 0);
+                updateProgress(progress, sellersList.size());
+                FBRSPrintableUserEntry printableUserEntry;
+                ObservableList<Entry> userEntries;
+                for (Seller user : sellersList) {
+                    userEntries = model.getAllEntries(selectedDate, today, selectedDate, today, user.getId());
+
+                    printableUserEntry = new FBRSPrintableUserEntry(user,
+                            userEntries.filtered(entry -> entry.getType() == 2),
+                            model.calculateUserBalanceToDateInc(user.getId(), selectedDateMinusOneDay),
+                            userEntries.filtered(entry -> entry.getType() == 3).stream().mapToInt(Entry::getQuantity).sum());
+
+                    printableUserEntries.add(printableUserEntry);
+
+                    updateProgress(++progress, sellersList.size());
+                }
+                return null;
+            }
+        };
+
+        prepareDataTask.setOnSucceeded(event -> {
+            boolean isSingleDay = UIUtil.localDateToDate(LocalDate.now()).equals(selectedDate);
+            if (printableUserEntries.isEmpty()) {
+                UIUtil.showAlert("لم يتم تنفيذ العملية",
+                        "جميع أرصدة التجار تساوي صفر",
+                        market.getName(),
+                        Alert.AlertType.INFORMATION);
+            } else {
+                String fileName = isDetailed ? "التقرير المفصل" : "التقرير المختصر";
+
+                fileName += isSingleDay ? String.format("_%s_%s.docx", market.getName(), LocalDate.now())
+                        : String.format("_%s_من_%s_إلى_%s.docx", market.getName(), datePicker.getValue(), LocalDate.now());
+
+                File file = new File(isDetailed ? detailedReportsDirectory : briefReportsDirectory, fileName);
+
+                printUtil.printMarketReport(file.getAbsolutePath(), printableUserEntries,
+                        isDetailed, isSingleDay, (isSingleDay ? null : selectedDate));
+            }
+            loadingDialog.getDialogStage().close();
+        });
+
+        loadingDialog.activateProgress(prepareDataTask);
+        new Thread(prepareDataTask).start();
     }
 
     public void newSeller() throws IOException {
@@ -99,7 +162,7 @@ public class MarketReportController implements Initializable {
                 numberOfUsers += 1;
             }
         }
-        String contentText = "عدد البُكس التي سوف يتم إرجها = " + buksaCount + "    ,عدد التجار = " + numberOfUsers;
+        String contentText = "عدد البُكس التي سوف يتم إرجاعها = " + buksaCount + "    ,عدد التجار = " + numberOfUsers;
         Optional<ButtonType> result
                 = UIUtil.showConfirmDialog("هل أنت متأكد من تصفير جميع حسابات التجار في هذا السوق؟", contentText);
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
@@ -116,6 +179,19 @@ public class MarketReportController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = DatabaseModel.getModel();
+        printUtil = FBRSPrintUtil.getInstance();
+
+        homeDirectory = new File(System.getProperty("user.home"), "Desktop");
+        reportsDirectory = new File(homeDirectory, "التقارير");
+        balanceReportDirectory = new File(reportsDirectory, "تقارير الأرصدة");
+        briefReportsDirectory = new File(reportsDirectory, "التقارير المختصرة");
+        detailedReportsDirectory = new File(reportsDirectory, "التقارير المفصلة");
+
+        // Create Directory if not Exists
+        reportsDirectory.mkdir();
+        balanceReportDirectory.mkdir();
+        briefReportsDirectory.mkdir();
+        detailedReportsDirectory.mkdir();
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("darshKey"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -152,10 +228,18 @@ public class MarketReportController implements Initializable {
         }
     }
 
-    public void onChangeDate() {
-        //todo:
-    }
+    public void printSellerWithBalance() {
+        List<Seller> balancesReport = sellers.filtered(seller -> seller.getBalance() > 0);
 
-    public void printSellerWithBalance(ActionEvent actionEvent) {
+        if (balancesReport.isEmpty()) {
+            UIUtil.showAlert("لم يتم تنفيذ العملية",
+                    "جميع أرصدة التجار تساوي صفر",
+                    market.getName(),
+                    Alert.AlertType.INFORMATION);
+        } else {
+            File file = new File(balanceReportDirectory,
+                    String.format("%s_%s_%s.docx", "تقرير_الأرصدة", market.getName(), LocalDate.now()));
+            printUtil.printMarketBalanceReport(file.getAbsolutePath(), balancesReport);
+        }
     }
 }

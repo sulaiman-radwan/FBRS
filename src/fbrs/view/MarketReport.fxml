@@ -35,7 +35,7 @@
             <padding>
                 <Insets bottom="16.0" left="16.0" right="16.0" top="8.0"/>
             </padding>
-            <TextField fx:id="searchField" prefWidth="180.0" promptText=" بحث">
+            <TextField fx:id="searchField" prefWidth="190.0" promptText=" بحث">
                 <VBox.margin>
                     <Insets/>
                 </VBox.margin>
@@ -45,29 +45,20 @@
                     <Insets top="40.0"/>
                 </VBox.margin>
             </Label>
-            <DatePicker fx:id="datePicker" onAction="#onChangeDate" prefWidth="180.0"
+            <DatePicker fx:id="datePicker" prefWidth="190.0"
                         promptText="عرض التقرير من تاريخ">
             </DatePicker>
             <Button fx:id="printBriefReportBtn" mnemonicParsing="false" onAction="#printBriefReport"
-                    prefWidth="180.0" text="طباعة التقرير المختصر">
+                    prefWidth="190.0" text="${'طباعة التقرير المختصر\nمع تفاصيل المحدد'}" textAlignment="CENTER">
                 <VBox.margin>
-                    <Insets top="64.0"/>
+                    <Insets top="20.0"/>
                 </VBox.margin>
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
             <Button fx:id="printDetailedReportBtn" mnemonicParsing="false" onAction="#printDetailedReport"
-                    prefWidth="180.0" text="طباعة التقرير مع التفصيل">
-                <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-                <VBox.margin>
-                    <Insets top="20.0"/>
-                </VBox.margin>
-            </Button>
-            <Button fx:id="printSellerWithBalance" layoutX="26.0" layoutY="202.0" mnemonicParsing="false"
-                    onAction="#printSellerWithBalance" prefWidth="180.0" text="طباعة تقرير  الأرصدة">
+                    prefWidth="190.0" text="طباعة التقرير مع التفصيل للجميع">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -83,7 +74,24 @@
                     <Insets top="10.0"/>
                 </VBox.margin>
             </Separator>
-            <Button fx:id="resetAccountsBtn" mnemonicParsing="false" onAction="#zeroBalances" prefWidth="180.0"
+            <Button fx:id="printSellerWithBalance" layoutX="26.0" layoutY="202.0" mnemonicParsing="false"
+                    onAction="#printSellerWithBalance" prefWidth="190.0" text="طباعة تقرير  الأرصدة">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Button>
+            <Separator prefHeight="0.0" prefWidth="200.0">
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Separator>
+            <Button fx:id="resetAccountsBtn" mnemonicParsing="false" onAction="#zeroBalances" prefWidth="190.0"
                     text="تصفير الحسابات">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
@@ -98,7 +106,7 @@
                 </VBox.margin>
             </Separator>
             <Button fx:id="newSellerBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
-                    onAction="#newSeller" prefWidth="180.0" text="تاجر جديد">
+                    onAction="#newSeller" prefWidth="190.0" text="تاجر جديد">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>

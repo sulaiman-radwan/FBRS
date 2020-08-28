@@ -43,11 +43,30 @@ public class UIUtil {
         return new Timestamp(date.getTime());
     }
 
+    // convert DatePicker to Date
+    public static Date datePickerToDate(DatePicker datePicker) {
+        LocalDate localDate = datePicker.getValue();
+        Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+        return Date.from(instant);
+    }
+
+    // convert LocalDate to Date
+    public static Date localDateToDate(LocalDate localDate) {
+        Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+        return Date.from(instant);
+    }
+
+    public static Timestamp dateTimestamp(LocalDate localDate) {
+        Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+        Date date = Date.from(instant);
+        return new Timestamp(date.getTime());
+    }
+
     public static void formatDatePicker(DatePicker datePicker) {
         datePicker.setOnShowing(event -> Locale.setDefault(Locale.Category.FORMAT, new Locale("ar")));
         datePicker.setValue(LocalDate.now());
         datePicker.setConverter(new StringConverter<LocalDate>() {
-            private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             @Override
             public String toString(LocalDate localDate) {

@@ -35,8 +35,8 @@ public class FBRSPrintUtil {
     public static final int CELL_FONT_SIZE = 10;
     public static final int SELLER_CELL_FONT_SIZE = 12;
 
-    private static final String ENTRY_CELL_NORMAL_FORMAT = "ـ   %1$s×%2$s\t%3$s";
-    private static final String ENTRY_CELL_DETAILED_FORMAT = "ـ %1$s ـ %2$s×%3$s\t%4$s";
+    private static final String ENTRY_CELL_NORMAL_FORMAT = "ـ   %1$s×%2$s  %3$s";
+    private static final String ENTRY_CELL_DETAILED_FORMAT = "ـ %1$s ـ %2$s×%3$s  %4$s";
 
     private static final int MAX_ROW_COUNT = 33;
     private static final int MAX_COLUMN_COUNT = 6;
@@ -160,7 +160,7 @@ public class FBRSPrintUtil {
      * @param user        printable user
      * @param userEntries all user entries to be printed
      */
-    public void printSellerEntries(String path, User user, List<Entry> userEntries) {
+    public void printUserEntries(String path, User user, List<Entry> userEntries) {
         freshStartNewReport();
 
         File file = new File(path);
@@ -508,8 +508,8 @@ public class FBRSPrintUtil {
             buksaSumCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             formatParagraph(buksaSumCell.getParagraphs().get(0), LEFT, CELL_FONT_SIZE, BLACK,
                     (sellerData.getReturnedToday() != 0) ? String.format("المجموع: %d - %d = %d",
-                            buksaSum, sellerData.getArrearsCount(),
-                            buksaSum - sellerData.getArrearsCount())
+                            buksaSum, sellerData.getReturnedToday(),
+                            buksaSum - sellerData.getReturnedToday())
                             : String.format("المجموع: %d", buksaSum),
                     false
             );

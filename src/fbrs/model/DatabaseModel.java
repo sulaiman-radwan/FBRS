@@ -6,11 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DatabaseModel {
@@ -102,12 +98,12 @@ public class DatabaseModel {
         return "خطأ";
     }
 
-    public ObservableList<Entry> getAllEntries(Timestamp FromDateCreated, Timestamp ToDateCreated, Timestamp FromDateUpdated, Timestamp ToDateUpdated, int userID) {
+    public ObservableList<Entry> getAllEntries(Date FromDateCreated, Date ToDateCreated, Date FromDateUpdated, Date ToDateUpdated, int userID) {
         return DatabaseManager.getInstance().getAllEntries(FromDateCreated, ToDateCreated, FromDateUpdated, ToDateUpdated, userID);
     }
 
-    public ObservableList<StorageEntry> getAllStorageEntries(Timestamp FromDateCreated, Timestamp ToDateCreated,
-                                                             Timestamp FromDateUpdated, Timestamp ToDateUpdated) {
+    public ObservableList<StorageEntry> getAllStorageEntries(Date FromDateCreated, Date ToDateCreated,
+                                                             Date FromDateUpdated, Date ToDateUpdated) {
         return DatabaseManager.getInstance().getAllStorageEntries(FromDateCreated, ToDateCreated, FromDateUpdated, ToDateUpdated);
     }
 
@@ -300,6 +296,10 @@ public class DatabaseModel {
         return DatabaseManager.getInstance().calculateLost();
     }
 
+    public int calculateUserBalanceToDateInc(int id, Date date) {
+        return DatabaseManager.getInstance().calculateUserBalanceToDateInc(id, date);
+    }
+
     //This method will return true if the backup process completed successfully..
     public boolean backup(String path) throws InterruptedException, IOException {
         return DatabaseManager.getInstance().backup(path) == 0;
@@ -308,5 +308,13 @@ public class DatabaseModel {
     //This method will return true if the restore process completed successfully..
     public boolean restore(String path) throws IOException, InterruptedException {
         return DatabaseManager.getInstance().restore(path) == 0;
+    }
+
+    public void dropDataBaseTables() throws SQLException {
+        DatabaseManager.getInstance().dropDataBaseTables();
+    }
+
+    public void closeConnection() {
+        DatabaseManager.getInstance().exit();
     }
 }
