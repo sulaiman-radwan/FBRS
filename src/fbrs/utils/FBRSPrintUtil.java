@@ -3,6 +3,7 @@ package fbrs.utils;
 import fbrs.model.DatabaseModel;
 import fbrs.model.Entry;
 import fbrs.model.Seller;
+import fbrs.model.User;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -25,15 +26,17 @@ public class FBRSPrintUtil {
     public static final String BLACK = "000000";
     public static final String DARK_GRAY = "BFBFBF";
     public static final String LIGHT_GRAY = "D0D0D0";
+    public static final String LIGHTER_GRAY = "F2F2F2";
 
     public static final String BORDER_THICKNESS = "15";
     public static final int TABLE_HEADER_FONT_SIZE = 14;
+    public static final int ENTRY_HEADER_FONT_SIZE = 10;
     public static final int HEADER_FONT_SIZE = 10;
     public static final int CELL_FONT_SIZE = 10;
     public static final int SELLER_CELL_FONT_SIZE = 12;
 
-    private static final String SELLER_NAME_FORMAT = "ـ %1$s : %2$d متأخر";
-    private static final String ENTRY_CELL_NORMAL_FORMAT = "ـ   %1$s×%2$s %3$s";
+    private static final String ENTRY_CELL_NORMAL_FORMAT = "ـ   %1$s×%2$s\t%3$s";
+    private static final String ENTRY_CELL_DETAILED_FORMAT = "ـ %1$s ـ %2$s×%3$s\t%4$s";
 
     private static final int MAX_ROW_COUNT = 33;
     private static final int MAX_COLUMN_COUNT = 6;
@@ -45,16 +48,20 @@ public class FBRSPrintUtil {
     private static final int DOCUMENT_PORTRAIT_WIDTH = 11900;
     private static final int DOCUMENT_PORTRAIT_HEIGHT = 16840;
 
+    private static FBRSPrintUtil instance;
+
     private final SimpleDateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat CELL_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+    private final DatabaseModel model;
 
     private int column;
     private int row;
     private int dataIndex;
     private int marketBuksaCount;
 
-    private final DatabaseModel model;
-
-    private static FBRSPrintUtil instance;
+    private FBRSPrintUtil() {
+        model = DatabaseModel.getModel();
+    }
 
     public static FBRSPrintUtil getInstance() {
         if (instance == null)
@@ -62,16 +69,13 @@ public class FBRSPrintUtil {
         return instance;
     }
 
-    private FBRSPrintUtil() {
-        model = DatabaseModel.getModel();
-    }
-
     /**
      * @param path       the path where the result file is printed
      * @param marketData list of all printable sellers to be printed
      * @param isDetailed determines whether the whole table is Detailed or not
      */
-    public void printMarketReport(String path, List<FBRSPrintableUserEntry> marketData, boolean isDetailed) {
+    public void printMarketReport(String path, List<FBRSPrintableUserEntry> marketData,
+                                  boolean isDetailed, boolean isSingleDay, Date fromDate) {
         freshStartNewReport();
 
         File file = new File(path);
@@ -91,7 +95,7 @@ public class FBRSPrintUtil {
                         ((Seller) marketData.get(0).getUser()).getMarket()).getName(),
                         MAX_COLUMN_COUNT - 1
                 );
-                addMarketContent(table, marketData, isDetailed);
+                addMarketContent(table, marketData, isDetailed, isSingleDay);
                 addTableBorders(table, new BigInteger(BORDER_THICKNESS));
 
                 while (!isInvalidCell()) {
@@ -103,7 +107,7 @@ public class FBRSPrintUtil {
                 reset();
             }
 
-            addDocHeaderFooter(document, true, true, true);
+            addDocHeaderFooter(document, fromDate, true, true, true);
 
             document.write(out);
             Desktop.getDesktop().print(file);
@@ -126,7 +130,8 @@ public class FBRSPrintUtil {
 
             while (dataIndex < sellers.size()) {
                 // Creating new table
-                XWPFTable table = document.createTable(MAX_SELLERS_ROW_COUNT, MAX_SELLERS_COLUMN_COUNT);
+                XWPFTable table = document
+                        .createTable(MAX_SELLERS_ROW_COUNT, MAX_SELLERS_COLUMN_COUNT);
                 // Set text direction to RTL
                 table.getCTTbl().addNewTblPr().addNewBidiVisual().setVal(STOnOff.ON);
                 table.setWidth("100%");
@@ -141,7 +146,7 @@ public class FBRSPrintUtil {
                 reset();
             }
 
-            addDocHeaderFooter(document, true, true, true);
+            addDocHeaderFooter(document, null, true, true, true);
 
             document.write(out);
             Desktop.getDesktop().print(file);
@@ -151,11 +156,11 @@ public class FBRSPrintUtil {
     }
 
     /**
-     * @param path          the path where the result file is printed
-     * @param seller        printable seller
-     * @param sellerEntries all seller entries to be printed
+     * @param path        the path where the result file is printed
+     * @param user        printable user
+     * @param userEntries all user entries to be printed
      */
-    public void printSellerEntries(String path, Seller seller, List<Entry> sellerEntries) {
+    public void printSellerEntries(String path, User user, List<Entry> userEntries) {
         freshStartNewReport();
 
         File file = new File(path);
@@ -164,22 +169,22 @@ public class FBRSPrintUtil {
             XWPFDocument document = new XWPFDocument();
             formatDocument(document, PORTRAIT, BigInteger.valueOf(720L));
 
-            while (dataIndex < sellerEntries.size()) {
+            while (dataIndex < userEntries.size()) {
                 // Creating new table
                 XWPFTable table = document.createTable(MAX_ENTRY_ROW_COUNT, MAX_ENTRY_COLUMN_COUNT);
                 // Set text direction to RTL
                 table.getCTTbl().addNewTblPr().addNewBidiVisual().setVal(STOnOff.ON);
                 table.setWidth("100%");
 
-                addEntryHeader(table, seller);
-                addEntryContent(table, sellerEntries);
+                addEntryHeader(table, user);
+                addEntryContent(table, userEntries);
                 addTableBorders(table, new BigInteger(BORDER_THICKNESS));
 
                 formatEmptyCells(table, MAX_ENTRY_ROW_COUNT, MAX_ENTRY_COLUMN_COUNT);
                 reset();
             }
 
-            addDocHeaderFooter(document, true, false, true);
+            addDocHeaderFooter(document, null, true, false, true);
 
             document.write(out);
             Desktop.getDesktop().print(file);
@@ -199,24 +204,30 @@ public class FBRSPrintUtil {
         }
     }
 
-    private void addDocHeaderFooter(XWPFDocument document, boolean hasHeader,
+    private void addDocHeaderFooter(XWPFDocument document, Date fromDate, boolean hasHeader,
                                     boolean withSumHeader, boolean hasFooter) {
         XWPFHeaderFooterPolicy headerFooterPolicy = document.createHeaderFooterPolicy();
 
         if (hasHeader) {
-            XWPFHeader documentHeader = headerFooterPolicy.createHeader(XWPFHeaderFooterPolicy.DEFAULT);
+            XWPFHeader documentHeader = headerFooterPolicy
+                    .createHeader(XWPFHeaderFooterPolicy.DEFAULT);
             if (withSumHeader) {
                 formatParagraph(documentHeader.createParagraph(), CENTER, HEADER_FONT_SIZE, BLACK,
                         String.format("مجموع أرصدة جميع التجار : %d", marketBuksaCount), false
                 );
             }
             formatParagraph(documentHeader.createParagraph(), RIGHT, HEADER_FONT_SIZE, BLACK,
-                    HEADER_DATE_FORMAT.format(new Date()), false
+                    fromDate != null ? String.format("من %s إلى %s",
+                            HEADER_DATE_FORMAT.format(new Date()),
+                            HEADER_DATE_FORMAT.format(fromDate))
+                            : String.format("%s", HEADER_DATE_FORMAT.format(new Date())),
+                    false
             );
         }
 
         if (hasFooter) {
-            XWPFFooter documentFooter = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
+            XWPFFooter documentFooter = headerFooterPolicy
+                    .createFooter(XWPFHeaderFooterPolicy.DEFAULT);
             XWPFParagraph paragraph = documentFooter.createParagraph();
             paragraph.setAlignment(ParagraphAlignment.CENTER);
 
@@ -301,34 +312,34 @@ public class FBRSPrintUtil {
         numberHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         numberHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(numberHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "الرقم", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "الرقم", true
         );
 
         XWPFTableCell darshKeyHeaderCell = sellersHeaderRow.getCell(1);
         darshKeyHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         darshKeyHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(darshKeyHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "رقم الدرش", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "رقم الدرش", true
         );
 
         XWPFTableCell nameHeaderCell = sellersHeaderRow.getCell(2);
         nameHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         nameHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(nameHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "الاسم", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "الاسم", true
         );
 
         XWPFTableCell balanceHeaderCell = sellersHeaderRow.getCell(3);
         balanceHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         balanceHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(balanceHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "الرصيد", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "الرصيد", true
         );
 
         addRow();
     }
 
-    private void addEntryHeader(XWPFTable table, Seller seller) {
+    private void addEntryHeader(XWPFTable table, User user) {
         XWPFTableRow sellerHeaderRow = table.getRow(0);
         mergeCellsHorizontal(sellerHeaderRow, 0, MAX_ENTRY_COLUMN_COUNT - 1);
 
@@ -336,7 +347,7 @@ public class FBRSPrintUtil {
         sellerHeaderCell.setColor(DARK_GRAY);
         formatParagraph(sellerHeaderCell.getParagraphs().get(0), CENTER,
                 TABLE_HEADER_FONT_SIZE, BLACK,
-                String.format("%s : %d بكسة", seller.getName(), seller.getBalance()), true
+                String.format("الاسم: %s، الرصيد: %d", user.getName(), user.getBalance()), true
         );
 
         row++;
@@ -347,62 +358,63 @@ public class FBRSPrintUtil {
         giverHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         giverHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(giverHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "المعطي", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "المعطي", true
         );
 
         XWPFTableCell takerHeaderCell = entryHeaderRow.getCell(1);
         takerHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         takerHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(takerHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "المتلقي", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "المتلقي", true
         );
 
         XWPFTableCell entryTypeHeaderCell = entryHeaderRow.getCell(2);
         entryTypeHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         entryTypeHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(entryTypeHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "نوع القيد", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "نوع القيد", true
         );
 
         XWPFTableCell quantityHeaderCell = entryHeaderRow.getCell(3);
         quantityHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         quantityHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(quantityHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "الكمية", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "الكمية", true
         );
 
         XWPFTableCell priceHeaderCell = entryHeaderRow.getCell(4);
         priceHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         priceHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(priceHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "السعر", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "السعر", true
         );
 
         XWPFTableCell dateCreatedHeaderCell = entryHeaderRow.getCell(5);
         dateCreatedHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         dateCreatedHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(dateCreatedHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "تاريخ الإنشاء", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "تاريخ الإنشاء", true
         );
 
         XWPFTableCell dateUpdatedHeaderCell = entryHeaderRow.getCell(6);
         dateUpdatedHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         dateUpdatedHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(dateUpdatedHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "تاريخ التعديل", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "تاريخ التعديل", true
         );
 
         XWPFTableCell notesHeaderCell = entryHeaderRow.getCell(7);
         notesHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         notesHeaderCell.setColor(LIGHT_GRAY);
         formatParagraph(notesHeaderCell.getParagraphs().get(0), CENTER,
-                TABLE_HEADER_FONT_SIZE, BLACK, "ملاحظات", true
+                ENTRY_HEADER_FONT_SIZE, BLACK, "ملاحظات", true
         );
 
         row++;
     }
 
-    private void addMarketContent(XWPFTable mainTable, List<FBRSPrintableUserEntry> marketData, boolean isDetailed) {
+    private void addMarketContent(XWPFTable mainTable, List<FBRSPrintableUserEntry> marketData,
+                                  boolean isDetailed, boolean isSingleDay) {
         for (; dataIndex < marketData.size(); dataIndex++) {
             FBRSPrintableUserEntry sellerData = marketData.get(dataIndex);
 
@@ -417,21 +429,18 @@ public class FBRSPrintUtil {
                 addRow();
             }
 
-            // Checking if table has enough cells for the seller entries
-            if (isInvalidCell() || sellerData.rowCount() > getRemainingCells()) {
+            // Checking if table has enough cells for seller entries
+            if (isInvalidCell() || sellerData.rowCount(isDetailed) > getRemainingCells()) {
                 break;
             }
 
-            marketBuksaCount += sellerData.getArrearsCount();
             XWPFTableRow headerRow = mainTable.getRow(row);
 
             XWPFTableCell sellerHeaderCell = headerRow.getCell(column);
             sellerHeaderCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             sellerHeaderCell.setColor(LIGHT_GRAY);
             formatParagraph(sellerHeaderCell.getParagraphs().get(0), CENTER, HEADER_FONT_SIZE, BLACK,
-                    isDetailed || sellerData.isDetailed() ? String.format(SELLER_NAME_FORMAT,
-                            sellerData.getUser().getName(), sellerData.getArrearsCount())
-                            : String.format("%s", sellerData.getUser().getName())
+                    String.format("%s", sellerData.getUser().getName())
                     , false
             );
 
@@ -440,33 +449,68 @@ public class FBRSPrintUtil {
             );
             addRow();
 
-            int buksaSum = sellerData.getArrearsCount();
-            for (Entry entry : sellerData.getTodaysEntries()) {
-                marketBuksaCount += entry.getQuantity();
-                buksaSum += entry.getQuantity();
+            XWPFTableRow arrearsCountRow = mainTable.getRow(row);
+            XWPFTableCell arrearsCountCell = arrearsCountRow.getCell(column);
+            arrearsCountCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            arrearsCountCell.setColor(LIGHTER_GRAY);
+            formatParagraph(arrearsCountCell.getParagraphs().get(0), LEFT, HEADER_FONT_SIZE, BLACK,
+                    String.format("متأخرات: %7d", sellerData.getArrearsCount())
+                    , false
+            );
 
-                XWPFTableRow entryRow = mainTable.getRow(row);
+            setCellBorders(arrearsCountRow.getCell(column),
+                    new boolean[]{false, false, true, false}
+            );
+            addRow();
 
-                XWPFTableCell entryCell = entryRow.getCell(column);
-                entryCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
-                formatParagraph(entryCell.getParagraphs().get(0), LEFT, CELL_FONT_SIZE, BLACK,
-                        String.format(ENTRY_CELL_NORMAL_FORMAT, entry.getPrice(),
-                                entry.getQuantity(), model.getUserById(entry.getGiverId()).getName()),
+            if (isDetailed || sellerData.isUserDetailed()) {
+                for (Entry entry : sellerData.getTodaysEntries()) {
+                    XWPFTableRow entryRow = mainTable.getRow(row);
+
+                    XWPFTableCell entryCell = entryRow.getCell(column);
+                    entryCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    formatParagraph(entryCell.getParagraphs().get(0), LEFT, CELL_FONT_SIZE, BLACK,
+                            isSingleDay ? String.format(ENTRY_CELL_NORMAL_FORMAT, entry.getPrice(),
+                                    entry.getQuantity(), model.getUserById(entry.getGiverId())
+                                            .getName())
+                                    : String.format(ENTRY_CELL_DETAILED_FORMAT,
+                                    CELL_DATE_FORMAT.format(entry.getDateCreated()),
+                                    entry.getPrice(), entry.getQuantity(),
+                                    model.getUserById(entry.getGiverId()).getName()),
+                            false
+                    );
+
+                    setCellBorders(entryCell,
+                            new boolean[]{false, false, true, false}
+                    );
+                    addRow();
+                }
+            } else {
+                XWPFTableRow todaysCountRow = mainTable.getRow(row);
+                XWPFTableCell todaysCountCell = todaysCountRow.getCell(column);
+                todaysCountCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                todaysCountCell.setColor(LIGHTER_GRAY);
+                formatParagraph(todaysCountCell.getParagraphs().get(0), LEFT, HEADER_FONT_SIZE,
+                        BLACK, String.format("بُكس اليوم: %5d", sellerData.todaysBuksaCount()),
                         false
                 );
 
-                setCellBorders(entryCell,
+                setCellBorders(todaysCountRow.getCell(column),
                         new boolean[]{false, false, true, false}
                 );
                 addRow();
             }
+            int buksaSum = sellerData.getArrearsCount() + sellerData.todaysBuksaCount();
+            marketBuksaCount += buksaSum;
 
             headerRow = mainTable.getRow(row);
             XWPFTableCell buksaSumCell = headerRow.getCell(column);
             buksaSumCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             formatParagraph(buksaSumCell.getParagraphs().get(0), LEFT, CELL_FONT_SIZE, BLACK,
-                    String.format("المجموع: %d - %d = %d", buksaSum,
-                            sellerData.getArrearsCount(), buksaSum - sellerData.getArrearsCount()),
+                    (sellerData.getReturnedToday() != 0) ? String.format("المجموع: %d - %d = %d",
+                            buksaSum, sellerData.getArrearsCount(),
+                            buksaSum - sellerData.getArrearsCount())
+                            : String.format("المجموع: %d", buksaSum),
                     false
             );
 
@@ -512,9 +556,9 @@ public class FBRSPrintUtil {
         }
     }
 
-    private void addEntryContent(XWPFTable table, List<Entry> sellerEntries) {
-        for (; dataIndex < sellerEntries.size() && row < MAX_ENTRY_ROW_COUNT; dataIndex++) {
-            Entry entry = sellerEntries.get(dataIndex);
+    private void addEntryContent(XWPFTable table, List<Entry> userEntries) {
+        for (; dataIndex < userEntries.size() && row < MAX_ENTRY_ROW_COUNT; dataIndex++) {
+            Entry entry = userEntries.get(dataIndex);
 
             XWPFTableRow entryRow = table.getRow(row);
 
