@@ -1,5 +1,6 @@
 package fbrs.controller;
 
+import fbrs.model.DatabaseManager;
 import fbrs.model.DatabaseModel;
 import fbrs.utils.LoadingDialog;
 import fbrs.utils.UIUtil;
@@ -83,10 +84,15 @@ public class BackupController implements Initializable {
                 @Override
                 protected Boolean call() {
                     try {
+                        model.dropDataBaseTables();
+                        model.closeConnection();
                         return model.restore(path);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return false;
+                    } finally {
+                        DatabaseManager.getInstance().getConnection();
+                        DatabaseModel.getModel().fetchData();
                     }
                 }
             };

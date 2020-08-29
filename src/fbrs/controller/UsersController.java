@@ -1,15 +1,13 @@
 package fbrs.controller;
 
-import fbrs.model.DatabaseModel;
-import fbrs.model.Fisherman;
-import fbrs.model.Seller;
-import fbrs.model.User;
-import fbrs.utils.NavigationUtil;
+import fbrs.model.*;
+import fbrs.utils.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,8 +22,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 public class UsersController implements Initializable {
@@ -52,6 +52,11 @@ public class UsersController implements Initializable {
     private FilteredList<User> users;
     private int viewType;
     private DatabaseModel model;
+    private FBRSPrintUtil printUtil;
+
+    private File homeDirectory;
+    private File reportsDirectory;
+    private File userReportsDirectory;
 
     @FXML
     public void back() {
@@ -67,6 +72,15 @@ public class UsersController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         model = DatabaseModel.getModel();
         shipTypes = new HashMap<>();
+        printUtil = FBRSPrintUtil.getInstance();
+
+        homeDirectory = new File(System.getProperty("user.home"), "Desktop");
+        reportsDirectory = new File(homeDirectory, "التقارير");
+        userReportsDirectory = new File(reportsDirectory, "تقارير قيود المستخدمين");
+
+        // Create Directory if not Exists
+        reportsDirectory.mkdir();
+        userReportsDirectory.mkdir();
 
         shipTypes.put(5, "لنش");
         shipTypes.put(6, "حسكة");
@@ -200,7 +214,30 @@ public class UsersController implements Initializable {
     }
 
     public void printUser() {
-        //Todo
+        Date todayDate = UIUtil.localDateToDate(LocalDate.now());
+        Date firstDate = new Date(0);
+
+        LoadingDialog<Void> loadingDialog = new LoadingDialog<>("جارِ اعداد التقرير...");
+
+        Task<Void> prepareDataTask = new Task<Void>() {
+            @Override
+            protected Void call() {
+                int progress = 0;
+                File file;
+                List<User> selectedUsers = getSelectedUsers();
+                for (User user : selectedUsers) {
+                    file = new File(userReportsDirectory,
+                            String.format("%s_%s_%s.docx", "تقرير_قيود_المستخدم", user.getName(), LocalDate.now()));
+                    printUtil.printUserEntries(file.getAbsolutePath(), user,
+                            model.getAllEntries(firstDate, todayDate, firstDate, todayDate, user.getId()));
+                    updateProgress(++progress, selectedUsers.size());
+                }
+                return null;
+            }
+        };
+        prepareDataTask.setOnSucceeded(event -> loadingDialog.getDialogStage().close());
+        loadingDialog.activateProgress(prepareDataTask);
+        new Thread(prepareDataTask).start();
     }
 
     public void deleteSelected() {

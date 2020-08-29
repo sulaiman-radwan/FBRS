@@ -97,8 +97,8 @@ public class StorageController implements Initializable {
     public void refreshTable() {
         ObservableList<StorageEntry> observableList = FXCollections.observableArrayList();
         storageEntries = new FilteredList<>(observableList);
-        observableList.addAll(model.getAllStorageEntries(UIUtil.dateTimestamp(FromDateCreated), UIUtil.dateTimestamp(ToDateCreated),
-                UIUtil.dateTimestamp(FromDateUpdated), UIUtil.dateTimestamp(ToDateUpdated)));
+        observableList.addAll(model.getAllStorageEntries(UIUtil.datePickerToDate(FromDateCreated), UIUtil.datePickerToDate(ToDateCreated),
+                UIUtil.datePickerToDate(FromDateUpdated), UIUtil.datePickerToDate(ToDateUpdated)));
         table.setItems(storageEntries);
         storageBalance.setText(String.valueOf(model.getStorageBalance()));
         brokenCount.setText(String.valueOf(model.calculateBroken() * -1));

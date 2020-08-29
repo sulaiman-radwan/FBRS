@@ -262,6 +262,7 @@ public class FishermanInputReportController implements Initializable {
             updateBuksaCount();
             fishermanBalance.setText("0");
             reset();
+            model.fetchData();
         }
     }
 

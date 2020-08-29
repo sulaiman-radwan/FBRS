@@ -31,7 +31,7 @@
                 <Insets bottom="16.0" left="16.0" right="16.0" top="8.0"/>
             </padding>
             <TextField fx:id="searchField" prefWidth="150.0" promptText=" بحث"/>
-            <Button fx:id="newUserBtn" mnemonicParsing="false" onAction="#newUser" prefWidth="150.0"
+            <Button fx:id="newUserBtn" mnemonicParsing="false" onAction="#newUser" prefWidth="190.0"
                     text="مستخدم جديد">
                 <VBox.margin>
                     <Insets top="16.0"/>
@@ -40,8 +40,16 @@
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
-            <Button fx:id="printUserBtn" mnemonicParsing="false" onAction="#printUser" prefWidth="150.0"
-                    text="طباعة مستخدم">
+            <Separator prefHeight="0.0" prefWidth="200.0">
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Separator>
+            <Button fx:id="printUserBtn" mnemonicParsing="false" onAction="#printUser" prefWidth="190.0"
+                    text="طباعة قيود مستخدم">
                 <VBox.margin>
                     <Insets top="16.0"/>
                 </VBox.margin>
@@ -49,8 +57,16 @@
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
+            <Separator prefHeight="0.0" prefWidth="200.0">
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Separator>
             <Button fx:id="deleteSelectedBtn" layoutX="26.0" layoutY="155.0" mnemonicParsing="false"
-                    onAction="#deleteSelected" prefWidth="150.0" text="حذف المحدد">
+                    onAction="#deleteSelected" prefWidth="190.0" text="حذف المحدد">
                 <VBox.margin>
                     <Insets top="16.0"/>
                 </VBox.margin>

@@ -148,8 +148,8 @@ public class EntriesController implements Initializable {
     public void refreshTable() {
         ObservableList<Entry> observableList = FXCollections.observableArrayList();
         entries = new FilteredList<>(observableList);
-        observableList.addAll(model.getAllEntries(UIUtil.dateTimestamp(FromDateCreated), UIUtil.dateTimestamp(ToDateCreated),
-                UIUtil.dateTimestamp(FromDateUpdated), UIUtil.dateTimestamp(ToDateUpdated), user == null ? -1 : user.getId()));
+        observableList.addAll(model.getAllEntries(UIUtil.datePickerToDate(FromDateCreated), UIUtil.datePickerToDate(ToDateCreated),
+                UIUtil.datePickerToDate(FromDateUpdated), UIUtil.datePickerToDate(ToDateUpdated), user == null ? -1 : user.getId()));
         table.setItems(entries);
         entries.setPredicate(entry -> getSelectCheckBox(model.getEntryTypeName(entry.getType())));
         table.refresh();

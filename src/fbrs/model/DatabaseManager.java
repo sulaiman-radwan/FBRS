@@ -7,6 +7,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -445,40 +446,30 @@ public class DatabaseManager {
         return entryTypes;
     }
 
-    public ObservableList<Entry> getAllEntries(Timestamp FromDateCreated, Timestamp ToDateCreated,
-                                               Timestamp FromDateUpdated, Timestamp ToDateUpdated, int userID) {
+    public ObservableList<Entry> getAllEntries(Date FromDateCreated, Date ToDateCreated,
+                                               Date FromDateUpdated, Date ToDateUpdated, int userID) {
         ObservableList<Entry> entries = FXCollections.observableArrayList();
-
-        //Change the creation hour to the last hour of the day to request today's Entries
-        ToDateCreated.setHours(24);
-        ToDateCreated.setMinutes(59);
-        ToDateCreated.setSeconds(59);
-
-        //Change the deletion hour to the last hour of the day to request today's Entries
-        ToDateUpdated.setHours(24);
-        ToDateUpdated.setMinutes(59);
-        ToDateUpdated.setSeconds(59);
 
         try {
             String query;
             if (userID == -1) {
                 query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment " +
                         "FROM entries " +
-                        "WHERE ((date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?)) AND entry_id <> 0" +
+                        "WHERE (date_trunc('day', date_created) BETWEEN ? AND ?) OR (date_trunc('day', date_updated) BETWEEN ? AND ?) " +
                         "ORDER BY date_created DESC;";
             } else {
                 query = "SELECT entry_id, entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment " +
                         "FROM entries " +
-                        "WHERE ((date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?)) " +
-                        "AND ((giver_id = ?) OR (taker_id = ?)) AND entry_id <> 0 " +
+                        "WHERE ((date_trunc('day', date_created) BETWEEN ? AND ?) OR ((date_trunc('day', date_updated) BETWEEN ? AND ?))) " +
+                        "AND ((giver_id = ?) OR (taker_id = ?)) " +
                         "ORDER BY date_created DESC;";
             }
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
-            preparedStmt.setTimestamp(1, FromDateCreated);
-            preparedStmt.setTimestamp(2, ToDateCreated);
-            preparedStmt.setTimestamp(3, FromDateUpdated);
-            preparedStmt.setTimestamp(4, ToDateUpdated);
+            preparedStmt.setTimestamp(1, new Timestamp(FromDateCreated.getTime()));
+            preparedStmt.setTimestamp(2, new Timestamp(ToDateCreated.getTime()));
+            preparedStmt.setTimestamp(3, new Timestamp(FromDateUpdated.getTime()));
+            preparedStmt.setTimestamp(4, new Timestamp(ToDateUpdated.getTime()));
             if (userID != -1) {
                 preparedStmt.setInt(5, userID);
                 preparedStmt.setInt(6, userID);
@@ -561,32 +552,23 @@ public class DatabaseManager {
         return entry;
     }
 
-    public ObservableList<StorageEntry> getAllStorageEntries(Timestamp FromDateCreated, Timestamp ToDateCreated,
-                                                             Timestamp FromDateUpdated, Timestamp ToDateUpdated) {
+    public ObservableList<StorageEntry> getAllStorageEntries(Date FromDateCreated, Date ToDateCreated,
+                                                             Date FromDateUpdated, Date ToDateUpdated) {
         ObservableList<StorageEntry> storageEntries = FXCollections.observableArrayList();
-
-        //Change the creation hour to the last hour of the day to request today's Entries
-        ToDateCreated.setHours(24);
-        ToDateCreated.setMinutes(59);
-        ToDateCreated.setSeconds(59);
-
-        //Change the deletion hour to the last hour of the day to request today's Entries
-        ToDateUpdated.setHours(24);
-        ToDateUpdated.setMinutes(59);
-        ToDateUpdated.setSeconds(59);
 
         try {
             String query = "SELECT storage_id, caused_by, entry_type, quantity_diff, date_created, date_updated, comment " +
                     "FROM storage_entry " +
-                    "WHERE ((date_created BETWEEN ? AND ?) OR (date_updated BETWEEN ? AND ?)) AND entry_type <> 14" +
+                    "WHERE ((date_trunc('day', date_created) BETWEEN ? AND ?) OR (date_trunc('day', date_updated) BETWEEN ? AND ?)) " +
+                    "AND entry_type <> 14" +
                     "ORDER BY date_created DESC;";
 
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
-            preparedStmt.setTimestamp(1, FromDateCreated);
-            preparedStmt.setTimestamp(2, ToDateCreated);
-            preparedStmt.setTimestamp(3, FromDateUpdated);
-            preparedStmt.setTimestamp(4, ToDateUpdated);
+            preparedStmt.setTimestamp(1, new Timestamp(FromDateCreated.getTime()));
+            preparedStmt.setTimestamp(2, new Timestamp(ToDateCreated.getTime()));
+            preparedStmt.setTimestamp(3, new Timestamp(FromDateUpdated.getTime()));
+            preparedStmt.setTimestamp(4, new Timestamp(ToDateUpdated.getTime()));
             ResultSet resultSet = preparedStmt.executeQuery();
 
             int id;
@@ -637,7 +619,7 @@ public class DatabaseManager {
                 darshKey = resultSet.getInt("darsh_key");
                 name = resultSet.getString("name");
                 phone = resultSet.getString("phone");
-                balance = calculateUserBalance(id);
+                balance = calculateUserBalanceToDateInc(id, new Date(new java.util.Date().getTime()));
                 users.add(new User(id, darshKey, name, phone, balance) {
                 });
             }
@@ -835,15 +817,17 @@ public class DatabaseManager {
         return lost;
     }
 
-    public int calculateUserBalance(int id) {
+    public int calculateUserBalanceToDateInc(int id, Date date) {
         int balance = 0;
 
         try {
-            String query = "SELECT COALESCE ((SELECT SUM(quantity) FROM entries e1 WHERE taker_id = ?), 0) - " +
-                    "COALESCE ((SELECT SUM(quantity) FROM entries e2 WHERE giver_id = ?), 0);";
+            String query = "SELECT COALESCE ((SELECT SUM(quantity) FROM entries e1 WHERE taker_id = ? AND (date_trunc('day', date_created) <= ?)), 0) - " +
+                    "COALESCE ((SELECT SUM(quantity) FROM entries e2 WHERE giver_id = ? AND (date_trunc('day', date_created) <= ?)), 0);";
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
             preparedStmt.setInt(1, id);
-            preparedStmt.setInt(2, id);
+            preparedStmt.setTimestamp(2, new Timestamp(date.getTime()));
+            preparedStmt.setInt(3, id);
+            preparedStmt.setTimestamp(4, new Timestamp(date.getTime()));
 
             preparedStmt.executeQuery();
             ResultSet resultSet = preparedStmt.getResultSet();
@@ -902,6 +886,12 @@ public class DatabaseManager {
         return process.exitValue();
     }
 
+    public void dropDataBaseTables() throws SQLException {
+        String query = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
+        PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+        preparedStmt.executeUpdate();
+    }
+
     public void exit() {
         try {
             getConnection().close();
@@ -910,6 +900,6 @@ public class DatabaseManager {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-        System.out.print("Exit");
+        System.out.println("Exit");
     }
 }
