@@ -25,13 +25,13 @@ public class NavigationUtil {
     public final static String IN_AND_OUT_RECORD_FXML = "/fbrs/view/InAndOutRecord.fxml";
     public final static String MARKET_REPORT_FXML = "/fbrs/view/MarketReport.fxml";
     public final static String MARKETS_FXML = "/fbrs/view/Markets.fxml";
-    public final static String PRINT_DETAILS_FXML = "/fbrs/view/printDetails.fxml";
     public final static String RECYCLE_BIN_FXML = "/fbrs/view/RecycleBin.fxml";
     public final static String USERS_PROFILE_FXML = "/fbrs/view/UserProfile.fxml";
     public final static String SPECIAL_CASES_FXML = "/fbrs/view/SpecialCases.fxml";
     public final static String STORAGE_FXML = "/fbrs/view/storage.fxml";
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
+    public static final String FAQ_FXML = "/fbrs/view/FAQ.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path) {

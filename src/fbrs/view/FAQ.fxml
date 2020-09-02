@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" nodeOrientation="RIGHT_TO_LEFT"
+            style="-fx-background-color: white;" fx:controller="fbrs.controller.FAQController">
+    <top>
+        <HBox prefHeight="60.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="8.0"/>
+            </padding>
+            <Button mnemonicParsing="false" onAction="#back" text="رجوع">
+                <HBox.margin>
+                    <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                </HBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="الأسئلة الشائعة">
+                    <font>
+                        <Font size="28.0"/>
+                    </font>
+                </Text>
+            </HBox>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane BorderPane.alignment="CENTER" fitToWidth="true">
+            <HBox alignment="CENTER">
+                <Accordion fx:id="accordion" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets topRightBottomLeft="32"/>
+                    </padding>
+                </Accordion>
+            </HBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -16,6 +16,7 @@ public class DatabaseModel {
     private ObservableList<Seller> sellers;
     private ObservableList<Fisherman> fishermen;
     private List<EntryType> entryTypes;
+    private List<FAQ> faqs;
     private Map<Integer, User> userMap;
 
     private DatabaseModel() {
@@ -64,6 +65,13 @@ public class DatabaseModel {
 
     public int getStorageBalance() {
         return DatabaseManager.getInstance().getStorageBalance();
+    }
+
+    public List<FAQ> getAllFAQ() {
+        if (faqs == null) {
+            faqs = DatabaseManager.getInstance().getAllFAQ();
+        }
+        return faqs;
     }
 
     public List<Market> getAllMarkets() {
