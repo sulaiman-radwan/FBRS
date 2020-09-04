@@ -323,6 +323,31 @@ public class DatabaseManager {
         return markets;
     }
 
+    public List<FAQ> getAllFAQ() {
+        List<FAQ> faqs = new ArrayList<>();
+
+        try {
+            String query = "SELECT question, answer FROM faq";
+
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+
+            String question;
+            String answer;
+
+            while (resultSet.next()) {
+                question = resultSet.getString("question");
+                answer = resultSet.getString("answer");
+                faqs.add(new FAQ(question, answer));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return faqs;
+    }
+
     public int getStorageBalance() {
         int balance = -1;
 

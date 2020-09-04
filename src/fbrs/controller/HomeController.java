@@ -77,6 +77,7 @@ public class HomeController implements Initializable {
 
     public void onHelp() {
         //Todo;
+        NavigationUtil.navigateTo(homeVBox, NavigationUtil.FAQ_FXML);
     }
 
     public void onInAndOutRecordSeller() throws IOException {
