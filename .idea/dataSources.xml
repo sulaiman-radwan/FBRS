@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://osama-radwan.com:5432/fbrsdb</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="fbrs@localhost" uuid="1654571d-55a1-4915-babc-ce13d1960a53">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/fbrs</jdbc-url>
+    </data-source>
   </component>
 </project>

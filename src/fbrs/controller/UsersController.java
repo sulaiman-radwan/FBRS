@@ -1,12 +1,19 @@
 package fbrs.controller;
 
-import fbrs.model.*;
-import fbrs.utils.*;
+import fbrs.model.DatabaseModel;
+import fbrs.model.Fisherman;
+import fbrs.model.Seller;
+import fbrs.model.User;
+import fbrs.utils.FBRSPrintUtil;
+import fbrs.utils.LoadingDialog;
+import fbrs.utils.NavigationUtil;
+import fbrs.utils.UIUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -159,8 +166,12 @@ public class UsersController implements Initializable {
         }
 
         table.setItems(users);
+
+        SortedList sortedList = new SortedList<>(users);
+        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedList);
+
         table.refresh();
-        table.getSortOrder().add(idColumn);
         searchField.requestFocus();
     }
 
@@ -214,6 +225,14 @@ public class UsersController implements Initializable {
     }
 
     public void printUser() {
+        List<User> selectedUsers = getSelectedUsers();
+        if (selectedUsers.isEmpty()) {
+            UIUtil.showAlert("لم يتم تنفيذ عملية الطباعة",
+                    null,
+                    "الرجاء تحديد مستخدم واحد على الأقل قبل الطباعة",
+                    Alert.AlertType.INFORMATION);
+            return;
+        }
         Date todayDate = UIUtil.localDateToDate(LocalDate.now());
         Date firstDate = new Date(0);
 
@@ -224,7 +243,7 @@ public class UsersController implements Initializable {
             protected Void call() {
                 int progress = 0;
                 File file;
-                List<User> selectedUsers = getSelectedUsers();
+
                 for (User user : selectedUsers) {
                     file = new File(userReportsDirectory,
                             String.format("%s_%s_%s.docx", "تقرير_قيود_المستخدم", user.getName(), LocalDate.now()));

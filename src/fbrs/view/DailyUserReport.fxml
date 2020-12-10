@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="600"
+            minWidth="800" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #EDE682;"
+            xmlns="http://javafx.com/javafx/8" fx:controller="fbrs.controller.DailyUserReport">
+    <center>
+        <VBox alignment="CENTER" BorderPane.alignment="TOP_CENTER">
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+            <TableView fx:id="table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="date" prefWidth="120.0" text="التاريخ"/>
+                </columns>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+            </TableView>
+            <TableView fx:id="sumTable" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="sumColumn" prefWidth="120.0" sortable="false" text="المجموع"/>
+                </columns>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+            </TableView>
+        </VBox>
+    </center>
+    <top>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets bottom="16.0" top="16.0"/>
+                </padding>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="التقرير اليومي">
+                    <font>
+                        <Font size="28.0"/>
+                    </font>
+                </Text>
+            </HBox>
+        </VBox>
+    </top>
+</BorderPane>

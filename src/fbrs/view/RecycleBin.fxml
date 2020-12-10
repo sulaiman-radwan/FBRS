@@ -18,10 +18,10 @@
             <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
-                    <TableColumn fx:id="idColumn" prefWidth="120.0" sortable="false" text="رفم المستخدم"/>
-                    <TableColumn fx:id="nameColumn" prefWidth="250.0" sortable="false" text="اسم المستخدم"/>
-                    <TableColumn fx:id="phoneColumn" prefWidth="180.0" sortable="false" text="الجوال"/>
-                    <TableColumn fx:id="balanceColumn" prefWidth="85.0" sortable="false" text="الرصيد"/>
+                    <TableColumn fx:id="idColumn" prefWidth="120.0" text="رفم المستخدم"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="250.0" text="اسم المستخدم"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="180.0" text="الجوال"/>
+                    <TableColumn fx:id="balanceColumn" prefWidth="85.0" text="الرصيد"/>
                 </columns>
             </TableView>
         </VBox>

@@ -68,7 +68,8 @@ public class FBRSPrintableUserEntry {
     public int todaysBuksaCount() {
         int count = 0;
         for (Entry entry : todaysEntries)
-            count += entry.getQuantity();
+            if (entry.getTakerId() == user.getId())
+                count += entry.getQuantity();
         return count;
     }
 

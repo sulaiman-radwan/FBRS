@@ -4,6 +4,7 @@ import fbrs.model.*;
 import fbrs.utils.*;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -60,6 +61,11 @@ public class MarketReportController implements Initializable {
 
         sellers = new FilteredList<>(model.getSellersByMarket(market.getId()));
         table.setItems(sellers);
+
+        SortedList<Seller> sortedList = new SortedList<>(sellers);
+        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedList);
+
         searchField.requestFocus();
     }
 
@@ -113,7 +119,9 @@ public class MarketReportController implements Initializable {
                     printableUserEntry = new FBRSPrintableUserEntry(user,
                             userEntries.filtered(entry -> entry.getType() == 2),
                             model.calculateUserBalanceToDateInc(user.getId(), selectedDateMinusOneDay),
-                            userEntries.filtered(entry -> entry.getType() == 3).stream().mapToInt(Entry::getQuantity).sum());
+                            userEntries.filtered(entry -> entry.getType() == 3 ||
+                                    (entry.getType() == 2 && entry.getGiverId() == user.getId())).stream()
+                                    .mapToInt(Entry::getQuantity).sum());
 
                     printableUserEntries.add(printableUserEntry);
 
@@ -172,6 +180,7 @@ public class MarketReportController implements Initializable {
                             "تم تصفير الرصيد = " + seller.getBalance());
                 }
             }
+            model.fetchData();
             refreshTable();
         }
     }

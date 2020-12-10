@@ -170,11 +170,12 @@ public class UIUtil {
                         "عدد البٌكس المضافة = " + number, Alert.AlertType.CONFIRMATION);
             }
         });
+        DatabaseModel.getModel().fetchData();
     }
 
     public static <T extends User> void setUsersAsUnselected(List<T> users) {
         for (T t : users) {
-            User user = (User) t;
+            User user = t;
             user.setSelected(false);
         }
     }

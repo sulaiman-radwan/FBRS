@@ -67,6 +67,10 @@ public class DatabaseModel {
         return DatabaseManager.getInstance().getStorageBalance();
     }
 
+    public int getNumberManufactured() {
+        return DatabaseManager.getInstance().getNumberManufactured();
+    }
+
     public List<FAQ> getAllFAQ() {
         if (faqs == null) {
             faqs = DatabaseManager.getInstance().getAllFAQ();
@@ -86,6 +90,16 @@ public class DatabaseModel {
             entryTypes = DatabaseManager.getInstance().getEntryTypes();
         }
         return entryTypes;
+    }
+
+    public List<EntryType> getEntryTypesByCategory(int category) {
+        List<EntryType> result = new ArrayList<>();
+        for (EntryType entryType : getEntryTypes()) {
+            if (entryType.getCategory() == category) {
+                result.add(entryType);
+            }
+        }
+        return result;
     }
 
     public List<EntryType> getEntryTypesSpecialCases() {
@@ -155,11 +169,31 @@ public class DatabaseModel {
         return sellers;
     }
 
+    public int getSellersBalance() {
+        int sum = 0;
+        for (Seller seller : sellers) {
+            if (seller != null && seller.getBalance() > 0) {
+                sum += seller.getBalance();
+            }
+        }
+        return sum;
+    }
+
     public ObservableList<Fisherman> getAllFishermen() {
         if (fishermen == null)
             fishermen = DatabaseManager.getInstance().getAllFishermen();
         UIUtil.setUsersAsUnselected(fishermen);
         return fishermen;
+    }
+
+    public int getFishermenBalance() {
+        int sum = 0;
+        for (Fisherman fisherman : fishermen) {
+            if (fisherman != null && fisherman.getBalance() > 0) {
+                sum += fisherman.getBalance();
+            }
+        }
+        return sum;
     }
 
     public ObservableList<User> getDeletedUsers() {
@@ -236,7 +270,7 @@ public class DatabaseModel {
         userMap = null;
     }
 
-    public int addUser(int marketId, String name, String phone, int userType) {
+    public int addUser(int marketId, String name, String phone, int userType) throws SQLException {
         sellers = null;
         fishermen = null;
         userMap = null;

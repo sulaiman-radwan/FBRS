@@ -1,6 +1,8 @@
 package fbrs.controller;
 
-import fbrs.model.*;
+import fbrs.model.DatabaseModel;
+import fbrs.model.Entry;
+import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,10 +26,8 @@ import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InAndOutRecordController implements Initializable {
@@ -147,7 +147,8 @@ public class InAndOutRecordController implements Initializable {
                 SellerOrFisherman.setText("تاجر");
                 rootPane.setStyle("-fx-background-color: #ADE498;");
 
-                ObservableList<Seller> SellersName = model.getAllSellers();
+                List<User> SellersName = new ArrayList<>(model.getAllSellers());
+                SellersName.addAll(model.getAllFishermen());
                 TextFields.bindAutoCompletion(userTextField, t -> SellersName.stream().filter(user -> {
                     String regex = ".*".concat(t.getUserText().replaceAll("\\s+", ".*")).concat(".*");
                     return user.toString().matches(regex);
@@ -158,7 +159,8 @@ public class InAndOutRecordController implements Initializable {
                 SellerOrFisherman.setText("صياد");
                 rootPane.setStyle("-fx-background-color: #FEBF63;");
 
-                ObservableList<Fisherman> FishermenName = model.getAllFishermen();
+                List<User> FishermenName = new ArrayList<>(model.getAllFishermen());
+                FishermenName.addAll(model.getAllSellers());
                 TextFields.bindAutoCompletion(userTextField, t -> FishermenName.stream().filter(user -> {
                     String regex = ".*".concat(t.getUserText().replaceAll("\\s+", ".*")).concat(".*");
                     return user.toString().matches(regex);

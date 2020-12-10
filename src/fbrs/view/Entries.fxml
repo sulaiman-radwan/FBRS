@@ -16,13 +16,13 @@
             <TableView fx:id="table" prefWidth="200.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
-                    <TableColumn fx:id="fromColumn" prefWidth="160.0" sortable="false" text="المعطي"/>
-                    <TableColumn fx:id="toColumn" prefWidth="160.0" sortable="false" text="المتلقي"/>
-                    <TableColumn fx:id="typeColumn" prefWidth="160.0" sortable="false" text="نوع القيد"/>
-                    <TableColumn fx:id="quantityColumn" prefWidth="100.0" sortable="false" text="الكمية"/>
-                    <TableColumn fx:id="priceColumn" prefWidth="100.0" sortable="false" text="السعر"/>
-                    <TableColumn fx:id="dateCreatedColumn" prefWidth="180.0" sortable="false" text="تاريخ الإنشاء"/>
-                    <TableColumn fx:id="dateUpdatedColumn" prefWidth="200.0" sortable="false" text="تاريخ التعديل"/>
+                    <TableColumn fx:id="fromColumn" prefWidth="160.0" text="المعطي"/>
+                    <TableColumn fx:id="toColumn" prefWidth="160.0" text="المتلقي"/>
+                    <TableColumn fx:id="typeColumn" prefWidth="160.0" text="نوع القيد"/>
+                    <TableColumn fx:id="quantityColumn" prefWidth="100.0" text="الكمية"/>
+                    <TableColumn fx:id="priceColumn" prefWidth="100.0" text="السعر"/>
+                    <TableColumn fx:id="dateCreatedColumn" prefWidth="180.0" text="تاريخ الإنشاء"/>
+                    <TableColumn fx:id="dateUpdatedColumn" prefWidth="200.0" text="تاريخ التعديل"/>
                     <TableColumn fx:id="comment" prefWidth="200.0" sortable="false" text="ملاحظات"/>
                 </columns>
                 <VBox.margin>
@@ -107,6 +107,15 @@
                 </padding>
                 <Button fx:id="onDeleteBtn" mnemonicParsing="false" onAction="#onDelete" prefWidth="150.0"
                         text="حذف المحدد">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="onDailyReportBtn" mnemonicParsing="false" onAction="#onDailyReport" prefWidth="150.0"
+                        text="تقرير يومي للمعروض">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

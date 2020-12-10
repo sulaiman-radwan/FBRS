@@ -2,7 +2,6 @@ package fbrs.controller;
 
 import fbrs.model.DatabaseModel;
 import fbrs.model.Entry;
-import fbrs.model.Fisherman;
 import fbrs.model.User;
 import fbrs.utils.NavigationUtil;
 import fbrs.utils.UIUtil;
@@ -109,14 +108,15 @@ public class FishermanInputReportController implements Initializable {
             int remainingBalance = calculateRemainingBalance(currentFisherman.getId());
             if (Integer.parseInt(quantity) > remainingBalance) {
                 entry = new Entry(numberOfEntries, 2, currentFisherman.getId(), currentSeller.getId(),
-                        remainingBalance, Integer.parseInt(price),
-                        null, null, comment + " ,بيع زيادة = " + (Integer.parseInt(quantity) - remainingBalance));
+                        Integer.parseInt(quantity), Integer.parseInt(price), null, null,
+                        comment + " ,بيع زيادة = " + (Integer.parseInt(quantity) - remainingBalance));
                 overflow.put(entry, Integer.parseInt(quantity) - remainingBalance);
             } else {
                 entry = new Entry(numberOfEntries, 2, currentFisherman.getId(), currentSeller.getId(),
                         Integer.parseInt(quantity), Integer.parseInt(price),
                         null, null, comment);
             }
+
             entries.add(entry);
 
 
@@ -161,7 +161,7 @@ public class FishermanInputReportController implements Initializable {
 
     private void resetTextFields() {
         quantityTextField.clear();
-        priceTextField.clear();
+        priceTextField.setText("0");
         sellerTextField.setText(null);
         commentTextField.clear();
         quantityTextField.requestFocus();
@@ -208,7 +208,8 @@ public class FishermanInputReportController implements Initializable {
                 new SimpleStringProperty(model.getUserById(param.getValue().getTakerId()).getName()));
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
-        ObservableList<Fisherman> FishermenNames = model.getAllFishermen();
+        List<User> FishermenNames = new ArrayList<>(model.getAllFishermen());
+        FishermenNames.addAll(model.getAllSellers());
         TextFields.bindAutoCompletion(fishermanTextField, t -> FishermenNames.stream().filter(user -> {
             String regex = ".*".concat(t.getUserText().replaceAll("\\s+", ".*")).concat(".*");
             return user.toString().matches(regex);
@@ -250,7 +251,8 @@ public class FishermanInputReportController implements Initializable {
                 int id = model.addEntry(entry.getType(), entry.getGiverId(), entry.getTakerId(), entry.getQuantity(),
                         entry.getPrice(), entry.getComment());
                 if (entry.getComment().contains("بيع زيادة")) {
-                    model.addStorageEntry(id, 10, overflow.get(entry), "بيع الصياد بُكس زيادة عن ما أخد");
+                    model.addEntry(16, 0, entry.getGiverId(), overflow.get(entry), 0,
+                            "بيع الصياد بُكس زيادة عن ما أخد");
                 }
 
             }
