@@ -25,36 +25,28 @@ public class DatabaseManager {
         return instance;
     }
 
-    public Connection getConnection() {
-        try {
-            if (connection == null || connection.isClosed()) {
-                connect();
-            }
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connect();
         }
 
         return connection;
     }
 
-    private void connect() {
+    private void connect() throws SQLException {
         ResourceBundle reader;
 
-        try {
-            reader = ResourceBundle.getBundle("dbconfig");
+        reader = ResourceBundle.getBundle("dbconfig");
 
-            PGSimpleDataSource source = new PGSimpleDataSource();
-            source.setServerName(reader.getString("db.serverName"));
-            source.setDatabaseName(reader.getString("db.databaseName"));
-            source.setUser(reader.getString("db.username"));
-            source.setPassword(reader.getString("db.password"));
+        PGSimpleDataSource source = new PGSimpleDataSource();
+        source.setServerName(reader.getString("db.serverName"));
+        source.setDatabaseName(reader.getString("db.databaseName"));
+        source.setUser(reader.getString("db.username"));
+        source.setPassword(reader.getString("db.password"));
 
-            connection = source.getConnection();
-            System.out.println("Connected to database " + reader.getString("db.databaseName"));
+        connection = source.getConnection();
+        System.out.println("Connected to database " + reader.getString("db.databaseName"));
 
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
     }
 
 
@@ -106,7 +98,11 @@ public class DatabaseManager {
             String query = "UPDATE users SET phone = ? WHERE user_id = ?";
 
             PreparedStatement preparedStmt = getConnection().prepareStatement(query);
-            preparedStmt.setString(1, phone);
+            if (phone == null || phone.isEmpty()) {
+                preparedStmt.setNull(1, Types.VARCHAR);
+            } else {
+                preparedStmt.setString(1, phone);
+            }
             preparedStmt.setInt(2, id);
             return preparedStmt.executeUpdate() > 0;
 
@@ -366,6 +362,26 @@ public class DatabaseManager {
         }
 
         return balance;
+    }
+
+    public int getNumberManufactured() {
+        int num = 0;
+
+        try {
+            String query = "SELECT SUM(quantity_diff) FROM storage_entry WHERE entry_type = 15;";
+
+            PreparedStatement preparedStmt = getConnection().prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+
+            while (resultSet.next()) {
+                num = resultSet.getInt(1);
+            }
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        return num;
     }
 
     public ObservableList<Seller> getAllSellers() {
@@ -656,7 +672,7 @@ public class DatabaseManager {
         return users;
     }
 
-    public int addUser(int marketID, String name, String phone, int userType) {
+    public int addUser(int marketID, String name, String phone, int userType) throws SQLException {
         int id;
         Connection connection = getConnection();
 
@@ -695,9 +711,9 @@ public class DatabaseManager {
 
     public int addMarket(String marketName) {
         int id = -1;
-        Connection connection = getConnection();
 
         try {
+            Connection connection = getConnection();
 
             String query = "INSERT INTO markets(market_name) VALUES (?);";
 
@@ -720,9 +736,9 @@ public class DatabaseManager {
 
     public int addEntry(int entryType, int giverId, int takerId, int quantity, int price, String comment) {
         int id = -1;
-        Connection connection = getConnection();
 
         try {
+            Connection connection = getConnection();
 
             String query = "INSERT INTO entries(entry_type, giver_id, taker_id, quantity, unit_price, date_created, date_updated, comment) " +
                     "VALUES (?,?,?,?,?,now(), now(),?);";
@@ -751,9 +767,9 @@ public class DatabaseManager {
 
     public int addStorageEntry(int causedBy, int entryType, int quantityDiff, String comment) {
         int id = -1;
-        Connection connection = getConnection();
 
         try {
+            Connection connection = getConnection();
 
             String query = "INSERT INTO storage_entry(caused_by, entry_type, quantity_diff, date_created, date_updated, comment) " +
                     "VALUES (?,?,?,now(), now(),?);";

@@ -60,7 +60,7 @@ public class UserProfileController implements Initializable {
 
         String newID = idTextField.getText().trim();
         String newName = nameTextField.getText().trim();
-        String newPhone = phoneTextField.getText().trim();
+        String newPhone = phoneTextField.getText() == null ? null : phoneTextField.getText().trim();
 
         if (!newID.isEmpty() && user.getDarshKey() != Integer.parseInt(newID)) {
             try {
@@ -85,7 +85,7 @@ public class UserProfileController implements Initializable {
             }
         }
 
-        if (user.getPhone() == null || !user.getPhone().equals(newPhone)) {
+        if (newPhone != null && (user.getPhone() == null || !user.getPhone().equals(newPhone))) {
             if (newPhone.matches(PHONE_REGEX)) {
                 if (model.updateUserPhone(user.getId(), newPhone)) {
                     updatedFields += "\n تم تغيير رقم الجوال ل : " + newPhone;

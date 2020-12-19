@@ -20,6 +20,7 @@ import org.controlsfx.validation.Validator;
 
 import java.awt.*;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -38,7 +39,7 @@ public class AddNewUserController implements Initializable {
     private DatabaseModel model;
     private ValidationSupport support;
 
-    public void onClickAdd() {
+    public void onClickAdd() throws SQLException {
         support.setErrorDecorationEnabled(true); // validate and show errors now!
 
         int id = -1;

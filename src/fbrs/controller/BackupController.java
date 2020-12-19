@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class BackupController implements Initializable {
@@ -82,7 +83,7 @@ public class BackupController implements Initializable {
 
             Task<Boolean> importTask = new Task<Boolean>() {
                 @Override
-                protected Boolean call() {
+                protected Boolean call() throws SQLException {
                     try {
                         model.dropDataBaseTables();
                         model.closeConnection();

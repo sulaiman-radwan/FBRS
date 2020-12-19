@@ -16,11 +16,11 @@
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="35.0" sortable="false"/>
                     <TableColumn fx:id="idColumn" prefWidth="75.0" text="الرقم"/>
-                    <TableColumn fx:id="nameColumn" prefWidth="160.0" sortable="false" text="الاسم"/>
-                    <TableColumn fx:id="phoneColumn" prefWidth="120.0" sortable="false" text="الجوال"/>
-                    <TableColumn fx:id="balanceColumn" prefWidth="85.0" sortable="false" text="الرصيد"/>
-                    <TableColumn fx:id="marketColumn" prefWidth="150.0" sortable="false" text="السوق"/>
-                    <TableColumn fx:id="shipTypeColumn" prefWidth="95.0" sortable="false" text="نوع المركبة"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="160.0" text="الاسم"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="120.0" text="الجوال"/>
+                    <TableColumn fx:id="balanceColumn" prefWidth="85.0" text="الرصيد"/>
+                    <TableColumn fx:id="marketColumn" prefWidth="150.0" text="السوق"/>
+                    <TableColumn fx:id="shipTypeColumn" prefWidth="95.0" text="نوع المركبة"/>
                 </columns>
             </TableView>
         </VBox>

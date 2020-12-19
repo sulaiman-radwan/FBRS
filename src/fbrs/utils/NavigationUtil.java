@@ -32,6 +32,7 @@ public class NavigationUtil {
     public final static String USERS_FXML = "/fbrs/view/users.fxml";
     public static final String BACKUP_FXML = "/fbrs/view/backup.fxml";
     public static final String FAQ_FXML = "/fbrs/view/FAQ.fxml";
+    public static final String DAILY_USER_REPORT_FXML = "/fbrs/view/DailyUserReport.fxml";
 
 
     public static void navigateTo(Parent rootPane, String path) {
@@ -58,7 +59,7 @@ public class NavigationUtil {
         return stage;
     }
 
-    private static Stage showPrimaryStage(String stageName, String photoPath, Parent root) {
+    public static Stage showPrimaryStage(String stageName, String photoPath, Parent root) {
         Stage primaryStage = new Stage();
         primaryStage.setTitle(stageName);
         primaryStage.getIcons().add(new Image(photoPath));

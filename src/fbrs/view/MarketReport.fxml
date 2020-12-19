@@ -19,10 +19,10 @@
                        VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="selectColumn" prefWidth="50.0" sortable="false"/>
-                    <TableColumn fx:id="idColumn" prefWidth="88.0" sortable="false" text="رفم التاجر"/>
-                    <TableColumn fx:id="nameColumn" prefWidth="213.0" sortable="false" text="اسم التاجر"/>
-                    <TableColumn fx:id="phoneColumn" prefWidth="181.0" sortable="false" text="الجوال"/>
-                    <TableColumn fx:id="balanceColumn" prefWidth="86.0" sortable="false" text="الرصيد"/>
+                    <TableColumn fx:id="idColumn" prefWidth="88.0" text="رفم التاجر"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="213.0" text="اسم التاجر"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="181.0" text="الجوال"/>
+                    <TableColumn fx:id="balanceColumn" prefWidth="86.0" text="الرصيد"/>
                 </columns>
                 <VBox.margin>
                     <Insets left="16.0"/>

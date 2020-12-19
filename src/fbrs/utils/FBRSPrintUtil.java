@@ -51,7 +51,7 @@ public class FBRSPrintUtil {
     private static FBRSPrintUtil instance;
 
     private final SimpleDateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-    private final SimpleDateFormat CELL_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+    private final SimpleDateFormat CELL_DATE_FORMAT = new SimpleDateFormat("MM/dd");
     private final DatabaseModel model;
 
     private int column;
@@ -467,16 +467,19 @@ public class FBRSPrintUtil {
                 for (Entry entry : sellerData.getTodaysEntries()) {
                     XWPFTableRow entryRow = mainTable.getRow(row);
 
+                    boolean isSell = entry.getGiverId() == sellerData.getUser().getId();
+                    String otherUserName = model.getUserById(isSell ? entry.getTakerId() : entry.getGiverId()).getName();
+                    if (isSell) otherUserName = "بيع لـ " + otherUserName;
+
                     XWPFTableCell entryCell = entryRow.getCell(column);
                     entryCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
                     formatParagraph(entryCell.getParagraphs().get(0), LEFT, CELL_FONT_SIZE, BLACK,
-                            isSingleDay ? String.format(ENTRY_CELL_NORMAL_FORMAT, entry.getPrice(),
-                                    entry.getQuantity(), model.getUserById(entry.getGiverId())
-                                            .getName())
+                            isSingleDay ? String.format(ENTRY_CELL_NORMAL_FORMAT,
+                                    entry.getQuantity(), entry.getPrice(), otherUserName)
                                     : String.format(ENTRY_CELL_DETAILED_FORMAT,
                                     CELL_DATE_FORMAT.format(entry.getDateCreated()),
-                                    entry.getPrice(), entry.getQuantity(),
-                                    model.getUserById(entry.getGiverId()).getName()),
+                                    entry.getQuantity(), entry.getPrice(),
+                                    otherUserName),
                             false
                     );
 
@@ -501,7 +504,7 @@ public class FBRSPrintUtil {
                 addRow();
             }
             int buksaSum = sellerData.getArrearsCount() + sellerData.todaysBuksaCount();
-            marketBuksaCount += buksaSum;
+            marketBuksaCount += buksaSum - sellerData.getReturnedToday();
 
             headerRow = mainTable.getRow(row);
             XWPFTableCell buksaSumCell = headerRow.getCell(column);

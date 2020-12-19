@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -68,6 +69,7 @@ public class EntriesController implements Initializable {
     public DatePicker FromDateUpdated;
     public DatePicker ToDateUpdated;
     public Button AddFromStorageBtn;
+    public Button onDailyReportBtn;
 
     private Popup popup;
     private User user;
@@ -86,7 +88,8 @@ public class EntriesController implements Initializable {
         checkEntries = new HashMap<>();
         popup = new Popup();
 
-        List<EntryType> entryTypeList = model.getEntryTypes();
+        List<EntryType> entryTypeList = model.getEntryTypesByCategory(1);
+        entryTypeList.addAll(model.getEntryTypesByCategory(2));
         for (EntryType entryType : entryTypeList) {
             checkEntries.put(entryType.getName(), true);
         }
@@ -150,9 +153,18 @@ public class EntriesController implements Initializable {
         entries = new FilteredList<>(observableList);
         observableList.addAll(model.getAllEntries(UIUtil.datePickerToDate(FromDateCreated), UIUtil.datePickerToDate(ToDateCreated),
                 UIUtil.datePickerToDate(FromDateUpdated), UIUtil.datePickerToDate(ToDateUpdated), user == null ? -1 : user.getId()));
+
         table.setItems(entries);
+
+        SortedList<Entry> sortedList = new SortedList<>(entries);
+        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedList);
+
         entries.setPredicate(entry -> getSelectCheckBox(model.getEntryTypeName(entry.getType())));
         table.refresh();
+
+        user = model.getUserById(user.getId());
+        balance.setText(String.valueOf(user.getBalance()));
     }
 
     private void selectAllBoxes(ActionEvent e) {
@@ -169,6 +181,7 @@ public class EntriesController implements Initializable {
             model.deleteEntries(getSelectedEntries());
             setViewType(user == null ? null : model.getUserById(user.getId()));
         }
+        model.fetchData();
     }
 
     public void setViewType(User user) {
@@ -310,5 +323,14 @@ public class EntriesController implements Initializable {
     public void onAddFromStorage() {
         UIUtil.addFromStorage(user);
         refreshTable();
+    }
+
+    public void onDailyReport() throws IOException {
+        FXMLLoader loader = new FXMLLoader(NavigationUtil.class.getResource(NavigationUtil.DAILY_USER_REPORT_FXML));
+        Parent root = loader.load();
+        NavigationUtil.showPrimaryStage("التقرير اليومي", "/fbrs/photos/App_icon.png", root);
+
+        DailyUserReport controller = loader.getController();
+        controller.showReport(entries);
     }
 }

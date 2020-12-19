@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -111,6 +112,10 @@ public class RecycleBinController implements Initializable {
         observableList.addAll(model.getDeletedUsers());
 
         table.setItems(users);
+
+        SortedList<User> sortedList = new SortedList<>(users);
+        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedList);
     }
 
     private List<User> getSelectedUsers() {

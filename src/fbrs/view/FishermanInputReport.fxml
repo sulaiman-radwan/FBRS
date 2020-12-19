@@ -155,7 +155,8 @@
                         <Font size="18.0"/>
                     </font>
                 </Label>
-                <TextField fx:id="priceTextField" onAction="#onPrice" prefWidth="100.0" promptText="أدخل السعر">
+                <TextField fx:id="priceTextField" onAction="#onPrice" prefWidth="100.0" promptText="أدخل السعر"
+                           text="0">
                     <HBox.margin>
                         <Insets right="32.0"/>
                     </HBox.margin>
