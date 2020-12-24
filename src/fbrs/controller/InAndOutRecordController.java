@@ -117,7 +117,7 @@ public class InAndOutRecordController implements Initializable {
             table.refresh();
             resetTextFields();
             isAdmit = false;
-            numberOfEntries += entries.size();
+            numberOfEntries = entries.size();
             updateBuksaCount();
             table.scrollTo(entries.size() - 1);
         }
@@ -133,8 +133,13 @@ public class InAndOutRecordController implements Initializable {
 
     public void updateBuksaCount() {
         int count = 0;
+
         for (Entry entry : entries)
             count += entry.getQuantity();
+
+        for (Integer integer : overflow.values())
+            count += integer;
+
         buksaCount = count;
         numberOfBuksa.setText(Integer.toString(buksaCount));
     }
