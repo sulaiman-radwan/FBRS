@@ -64,6 +64,7 @@ public class StorageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        onDeleteBtn.setVisible(false);
         model = DatabaseModel.getModel();
         checkStorageEntries = new HashMap<>();
         popup = new Popup();

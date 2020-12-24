@@ -146,7 +146,10 @@ public class FishermanInputReportController implements Initializable {
                 remainingBalance -= entry.getQuantity();
             }
         }
-        return remainingBalance;
+        if (remainingBalance <= 0)
+            return 0;
+        else
+            return remainingBalance;
     }
 
     private void reset() {
